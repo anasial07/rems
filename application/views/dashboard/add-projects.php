@@ -104,7 +104,7 @@
                                 <div class="input-groupicon">
                                     <input class="projectData" name="projBasePrice" id="basePrice" type="text" placeholder="0.0">
                                     <div class="addonset">
-                                        <img src="<?= base_url('assets/img/icon/rs.png'); ?>" alt="img" width="20">
+                                        <img src="<?= base_url('assets/img/icon/rs.png'); ?>" alt="img" width="21">
                                     </div>
                                 </div>
                             </div>

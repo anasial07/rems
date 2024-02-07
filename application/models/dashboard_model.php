@@ -82,6 +82,14 @@ class dashboard_model extends CI_Model{
 			return false;
 		}
 	}
+	public function add_designation($data){
+		$this->db->insert('designations', $data);
+		if($this->db->affected_rows() > 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
 
 	// ---------------------------- Select Queries ------------------------------------
 
@@ -105,6 +113,11 @@ class dashboard_model extends CI_Model{
 		$this->db->from('projects')->order_by('projectId', 'DESC');
 		return $this->db->get()->result();
 	}
+	public function getDesignations(){
+		$this->db->select('*');
+		$this->db->from('designations')->order_by('desigId', 'DESC');
+		return $this->db->get()->result();
+	}
 	public function activeProvinces(){
 		return $this->db->select('*')->from('provinces')->where('provStatus', 1)->order_by('provinceId', 'DESC')->get()->result();
 	}
@@ -113,6 +126,15 @@ class dashboard_model extends CI_Model{
 	}
 	public function activeProjects(){
 		return $this->db->select('*')->from('projects')->where('projStatus', 1)->order_by('projectId', 'DESC')->get()->result();
+	}
+	public function activeDepart(){
+		return $this->db->select('*')->from('departments')->where('departStatus', 1)->order_by('departId', 'DESC')->get()->result();
+	}
+	public function activeOffices(){
+		return $this->db->select('*')->from('offices')->where('officeStatus', 1)->order_by('officeId', 'DESC')->get()->result();
+	}
+	public function activeDesignations(){
+		return $this->db->select('*')->from('designations')->where('desigStatus', 1)->order_by('desigId', 'DESC')->get()->result();
 	}
 	public function activeCategories($id){
 		$this->db->select('*');

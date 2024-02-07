@@ -35,7 +35,7 @@
         <div class="main-wrapper">
             <div class="header">
                 <div class="header-left active">
-                    <a href="" class="logo">
+                    <a href="<?= base_url(); ?>" class="logo">
                         <img src="<?= base_url('assets/img/logo.png'); ?>" alt="">
                     </a>
                     <a href="" class="logo-small">
@@ -59,7 +59,7 @@
                     </li>
                     <li class="nav-item dropdown has-arrow main-drop">
                         <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
-                            <span class="user-img"><img src="<?= base_url('assets/img/favicon.png'); ?>" alt="">
+                            <span class="user-img"><img src="<?= base_url('assets/img/AH.png'); ?>" alt="">
                             <span class="status online"></span></span>
                         </a>
                         <div class="dropdown-menu menu-drop-user">
@@ -92,6 +92,7 @@
                             <li class="submenu">
                                 <a><img src="<?= base_url('assets/img/icons/purchase1.svg'); ?>" alt="img"><span>Setup Forms</span> <span class="menu-arrow"></span></a>
                                 <ul>
+                                    <li><a href="<?= base_url('dashboard/addDesignation'); ?>">Designations</a></li>
                                     <li><a href="<?= base_url('dashboard/provinces'); ?>">Geolocation</a></li>
                                     <li><a href="<?= base_url('dashboard/addProject'); ?>">Projects</a></li>
                                     <li><a href="<?= base_url('dashboard/paymentPlan'); ?>">Payment Plans</a></li>

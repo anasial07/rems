@@ -94,6 +94,12 @@ class Dashboard extends CI_Controller {
 		$data['body'] = 'dashboard/add-offers';
 		$this->load->view('components/template', $data);
 	}
+	public function addDesignation(){
+		$data['title'] = 'Dashboard | REMS';
+		$data['body'] = 'dashboard/add-designation';
+		$data['designations'] = $this->dashboard_model->getDesignations();
+		$this->load->view('components/template', $data);
+	}
 	public function calculatePrice($progId){	// Calculate price for depreciation
 		$data = $this->dashboard_model->calculate_price($progId);
 		echo json_encode($data);
@@ -302,6 +308,22 @@ class Dashboard extends CI_Controller {
 			}
 		}
 	}
+	public function saveDesignation(){	// Add Designation
+		$data = array(
+			'desigCode' => strtoupper($this->input->post('desigCode')),
+			'desigName' => ucwords($this->input->post('designName')),
+			'addedBy' => $this->session->userdata('userId')
+		);
+		$this->form_validation->set_rules('desigCode', 'Designation Code', 'required');
+		$this->form_validation->set_rules('designName', 'Designation Name', 'required');
+		if($this->form_validation->run() == TRUE){
+			if($this->dashboard_model->add_designation($data)){
+				echo true;
+			}else{
+				echo false;
+			}
+		}
+	}	
 	public function addPaymentPlan(){	// Add Payment Plan
 		$data = array(
 			'projectId' => $this->input->post('projectId'),

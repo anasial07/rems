@@ -102,16 +102,22 @@
                             <div class="form-group">
                                 <label>Total Price</label>
                                 <div class="input-groupicon">
-                                    <input class="text-danger" id="totalPrice" name="totalPrice" type="text" disabled placeholder="0.0">
-                                    <p style="font-size:10px;" class="text-muted mt-1">This field cannot be edited.</p>
+                                    <input disabled class="text-danger" name="totalPrice" id="totalPrice" type="text" placeholder="0.0">
+                                    <div class="addonset">
+                                        <img src="<?= base_url('assets/img/icon/rs.png'); ?>" alt="img" width="22">
+                                    </div>
                                 </div>
+                                <p style="font-size:10px;" class="text-muted mt-1">This field cannot be edited.</p>
                             </div>
                         </div>
                         <div class="col-sm-6 col-12">
                             <div class="form-group">
                                 <label>Discount <span style="font-size:12px;" class="text-muted">(Optional)</span></label>
                                 <div class="input-groupicon">
-                                    <input id="typeDiscount" name="typeDiscount" type="text" placeholder="0.0">
+                                    <input name="typeDiscount" id="typeDiscount" type="text" placeholder="0.0">
+                                    <div class="addonset">
+                                        <img src="<?= base_url('assets/img/icon/percent.png'); ?>" alt="img" width="18">
+                                    </div>
                                 </div>
                             </div>
                         </div>
