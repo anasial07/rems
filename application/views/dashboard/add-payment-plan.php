@@ -169,7 +169,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach($payPlans as $payPlan): ?>
+                        <?php 
+                            foreach($payPlans as $payPlan):
+                            $status=$payPlan->planStatus;
+                        ?>
                         <tr>
                             <!-- <td class="text-start"><?= $payPlan->projCode; ?></td> -->
                             <!-- <td class="text-start"><?= $payPlan->subCatName; ?></td> -->
@@ -180,7 +183,13 @@
                             <td class="text-danger"><?= $payPlan->confirmPay; ?>%</td>
                             <td class="text-danger"><?= $payPlan->semiAnnual; ?>%</td>
                             <td class="text-danger"><?= $payPlan->possession; ?>%</td> -->
-                            <td class="text-center"><span class="badges bg-lightgreen">Active</span></td>
+                            <td class="text-center">
+                                <?php if($status==1){ ?>
+                                    <span class="badges bg-lightgreen">Active</span>
+                                <?php }else{ ?>
+                                    <span class="badges bg-lightred">Inactive</span>
+                                <?php } ?>
+                            </td>
                             <td>
                                 <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
                                     <i class="fa fa-ellipsis-v" aria-hidden="true"></i>

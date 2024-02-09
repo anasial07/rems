@@ -2,6 +2,7 @@
     .product-details{ height:90px!important; cursor: pointer; }
     .product-details img{ width:38px!important; }
 </style>
+<?php $role=$this->session->userdata('role'); ?>
 <div class="page-wrapper px-4 mt-4">
     <div class="page-header">
         <div class="page-title">
@@ -40,7 +41,8 @@
                 <thead>
                     <tr>
                         <th>Sr</th>
-                        <th>Code</th>
+                        <th>Code | Name</th>
+                        <th>Team</th>
                         <th>Post</th>
                         <th>Phone</th>
                         <th>Department</th>
@@ -48,33 +50,53 @@
                         <th>City</th>
                         <th>Joined</th>
                         <th class="text-center">Status</th>
-                        <th class="text-center">Action</th>
+                        <?php if($role=='admin'){ ?>
+                            <th class="text-center">Action</th>
+                        <?php } ?>
                     </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>01</td>
-                    <td>1481</td>
-                    <td>ZM</td>
-                    <td>+12163547758 </td>
-                    <td>Finance</td>
-                    <td>S2S, JB Towers</td>
-                    <td>Islamabad</td>
-                    <td>Jan 03, 1972</td>
-                    <td class="text-center"><span class="badges bg-lightgreen">Active</span></td>
-                    <td class="text-center">
-                        <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
-                            <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Agent</a>
-                            </li>
-                            <li>
-                                <a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img">Delete Agent</a>
-                            </li>
-                        </ul>
-                    </td>
+                <?php
+                    $sr=1;
+                    foreach($agents as $agent):
+                    $status=$agent->agentStatus;
+                ?>
+                    <tr>
+                        <td><?= sprintf("%02d", $sr++); ?></td>
+                        <td><?= $agent->agentCode." &middot; ".$agent->agentName; ?></td>
+                        <td>
+                            <?php echo ($agent->teamId != "") ? $agent->teamName : "<span class='text-danger'>N/A</span>"; ?>
+                        </td>
+                        <td><?= $agent->desigCode; ?></td>
+                        <td><?= $agent->agentPhone; ?></td>
+                        <td><?= $agent->departName; ?></td>
+                        <td><?= $agent->officeName; ?></td>
+                        <td><?= $agent->locName; ?></td>
+                        <td><?= date('M d, Y',strtotime($agent->doj)); ?></td>
+                        <td class="text-center">
+                            <?php if($status==1){ ?>
+                                <span class="badges bg-lightgreen">Active</span>
+                            <?php }else{ ?>
+                                <span class="badges bg-lightred">Inactive</span>
+                            <?php } ?>
+                        </td>
+                        <?php if($role=='admin'):?>
+                            <td class="text-center">
+                                <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
+                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Agent</a>
+                                    </li>
+                                    <li>
+                                        <a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img">Delete Agent</a>
+                                    </li>
+                                </ul>
+                            </td>
+                        <?php endif; ?>
+                    </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>

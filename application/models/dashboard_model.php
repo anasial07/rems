@@ -90,6 +90,14 @@ class dashboard_model extends CI_Model{
 			return false;
 		}
 	}
+	public function add_team($data){
+		$this->db->insert('teams', $data);
+		if($this->db->affected_rows() > 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
 
 	// ---------------------------- Select Queries ------------------------------------
 
@@ -215,6 +223,25 @@ class dashboard_model extends CI_Model{
 		$this->db->join('types', 'payment_plans.typeId = types.typeId', 'left');
 		$this->db->order_by('payment_plans.payPlanId', 'DESC');
 		$id && $this->db->where('payment_plans.payPlanId', $id);
+		return $this->db->get()->result();
+	}
+	public function getTeams($id = null){
+		$this->db->select('teams.*,
+									CONCAT(agents.agentName) AS teamLead,
+									CONCAT(agents1.agentName) AS bdm,
+									CONCAT(agents2.agentName) AS bcm,
+									CONCAT(agents3.agentName) AS zm,
+									locations.locName,
+									offices.officeName');
+		$this->db->from('teams');
+		$this->db->join('agents', 'teams.teamLead = agents.agentId', 'left');
+		$this->db->join('agents agents1', 'teams.bdm = agents1.agentId', 'left');
+		$this->db->join('agents agents2', 'teams.bcm = agents2.agentId', 'left');
+		$this->db->join('agents agents3', 'teams.zm = agents3.agentId', 'left');
+		$this->db->join('locations', 'teams.locationId = locations.locationId', 'left');
+		$this->db->join('offices', 'teams.officeId = offices.officeId', 'left');
+		$this->db->order_by('teams.teamId', 'DESC');
+		$id && $this->db->where('teams.teamId', $id); // single team
 		return $this->db->get()->result();
 	}
 }

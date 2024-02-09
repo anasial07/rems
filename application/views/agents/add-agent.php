@@ -14,7 +14,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-sm-6 col-lg-6">
+                        <div class="col-sm-6 col-lg-3">
                             <div class="form-group">
                                 <label>Employee Code</label>
                                 <div class="input-groupicon">
@@ -22,7 +22,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-lg-6">
+                        <div class="col-sm-6 col-lg-3">
                             <div class="form-group">
                                 <label>Employee Name</label>
                                 <div class="input-groupicon">
@@ -46,7 +46,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-12 col-lg-6">
+                        <div class="col-sm-12 col-lg-3">
                             <div class="form-group">
                                 <label>Select Designation</label>
                                 <select id="empDesign" name="empDesign" class="form-control">
@@ -79,7 +79,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-12 col-lg-6">
+                        <div class="col-sm-12 col-lg-3">
                             <div class="form-group">
                                 <label>Select Office</label>
                                 <select id="empOffice" name="empOffice" class="form-control">
@@ -95,7 +95,20 @@
                                 <label>Select Team</label>
                                 <select id="empTeam" name="empTeam" class="form-control">
                                     <option selected disabled>Select Team</option>
-                                    <option value="1">Category</option>
+                                    <?php foreach($teams as $team): ?>
+                                        <option value="<?= $team->teamId; ?>"><?= $team->teamName; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-lg-3">
+                            <div class="form-group">
+                                <label>Report to</label>
+                                <select id="reporto" name="reporto" class="form-control">
+                                    <option selected disabled>Report to</option>
+                                    <?php foreach($designations as $designation): ?>
+                                        <option value="<?= $designation->desigId; ?>"><?= $designation->desigCode." - ".$designation->desigName; ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
@@ -104,11 +117,10 @@
                                 <label>Select Manager</label>
                                 <select id="empManger" name="empManger" class="form-control">
                                     <option selected disabled>Select Manager</option>
-                                    <option value="1">Category</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-12 col-lg-6">
+                        <div class="col-sm-12 col-lg-3">
                             <div class="form-group">
                                 <label>Date of Joining</label>
                                 <div class="input-groupicon">
@@ -134,19 +146,34 @@
     </div>
 </div>
 <script>
+    $('#reporto').change(function(){
+        var id = $(this).val();
+        $.ajax({
+            url: "<?php echo base_url('agents/getManagers/'); ?>" + id,
+            method: 'POST',
+            dataType: 'JSON',
+            data: {id: id},
+            success: function(res){
+                $('#empManger').find('option').not(':first').remove();
+                $.each(res, function(index, data){
+                    $('#empManger').append('<option value="' + data['agentId'] + '">' + data['agentName'] + '</option>');
+                });
+            }
+        });
+    });
     $('.addAgent').on('click', function(){
         var agentCode = $('#empCode').val();
-        // var agentName = $('#empName').val();
-        // var agentPhone = $('#empContact').val();
-        // var agentEmail = $('#empEmail').val();
-        // var designationId = $('#empDesign').val();
-        // var departId = $('#empDepart').val();
-        // var locationId = $('#empCity').val();
-        // var officeId = $('#empOffice').val();
-        // var doj = $('#empDOJ').val();
-        // var empTeam = $('#empTeam').val();
-        // var empManger = $('#empManger').val();
-        // if(agentCode!="" && agentName!="" && agentPhone!="" && agentEmail!="" && designationId!="Select Designation" && departId!="Select Department" && locationId!="Select City" && officeId!="Select Office" && doj!=""){
+        var agentName = $('#empName').val();
+        var agentPhone = $('#empContact').val();
+        var agentEmail = $('#empEmail').val();
+        var designationId = $('#empDesign').val();
+        var departId = $('#empDepart').val();
+        var locationId = $('#empCity').val();
+        var officeId = $('#empOffice').val();
+        var doj = $('#empDOJ').val();
+        var empTeam = $('#empTeam').val();
+        var empManger = $('#empManger').val();
+        if(agentCode!=="" && agentName!=="" && agentPhone!="" && agentEmail!=="" && designationId!=="Select Designation" && departId!=="Select Department" && locationId!=="Select City" && officeId!=="Select Office" && doj!==""){
             swal({
                 title: "Are you sure?",
                 text: "You want to add the agent!",
@@ -165,45 +192,41 @@
                         url: "<?php echo base_url("agents/saveAgent"); ?>",
                         type: "POST",
                         data: {
-                            agentCode: agentCode
-                            // agentName: agentName,
-                            // agentPhone: agentPhone,
-                            // agentEmail: agentEmail,
-                            // designationId: designationId,
-                            // departId: departId,
-                            // locationId: locationId,
-                            // officeId: officeId,
-                            // doj: doj,
-                            // empTeam: empTeam,
-                            // empManger: empManger
+                            agentCode: agentCode,
+                            agentName: agentName,
+                            agentPhone: agentPhone,
+                            agentEmail: agentEmail,
+                            designationId: designationId,
+                            departId: departId,
+                            locationId: locationId,
+                            officeId: officeId,
+                            doj: doj,
+                            empTeam: empTeam,
+                            empManger: empManger
                         },
                         cache: false,
                         success: function(dataResult){
                             console.log(dataResult);
-                        //     if(dataResult==true){
-                        //         swal({
-                        //             title: "Congratulation!", 
-                        //             text: "Agent has been added successfully.", 
-                        //             type: "success"
-                        //             },function(){ 
-                        //                 location.reload();
-                        //             }
-                        //         );
-                        //     }else{
-                        //         swal("Ops!", dataResult, "error");
-                        //     }
-                        // },
-                        // error: function(xhr, status, error) {
-                        //     console.error("AJAX Request Error:", status, error);
-                        //     console.log(xhr.responseText); // Log the response text for more details
+                            if(dataResult==true){
+                                swal({
+                                    title: "Congratulation!", 
+                                    text: "Agent has been added successfully.", 
+                                    type: "success"
+                                    },function(){ 
+                                        location.reload();
+                                    }
+                                );
+                            }else{
+                                swal("Ops!", "Something went wrong.", "error");
+                            }
                         }
                     });
                 }else{
                     swal.close()
                 }
             });
-        // }else{
-        //     swal("Sorry!", "Please fill all the field.", "info");
-        // }
+        }else{
+            swal("Sorry!", "Please fill all the field.", "info");
+        }
 	});
 </script>

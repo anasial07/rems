@@ -214,7 +214,6 @@
                         <div class="col-3">
                             <img src="${imgUrl}uploads/customers/${res[0].custmPic}" style="height:160px!important; width:160px!important; border-radius:10px;">
                             <span>Customer Status: ${custmStatus}</span>
-                            <p>Created at: ${moment(res.updatedAt).format('MMM D, YYYY')}</p>
                         </div>
                     </div>
                 `);

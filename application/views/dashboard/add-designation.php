@@ -141,7 +141,7 @@
                         },
                         cache: false,
                         success: function(dataResult){
-                            if(dataResult == "true"){
+                            if(dataResult == true){
                                 swal({
                                     title: "Congratulation!", 
                                     text: "Designation has been added successfully.", 

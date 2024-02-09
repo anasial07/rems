@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Dashboard extends CI_Controller {
 	public function __construct(){
 		parent::__construct();
-		$this->load->model(array('dashboard_model'));
+		$this->load->model(array('dashboard_model','agent_model'));
 		if(!$this->session->userdata('userId')){
 			redirect('');
 		}
@@ -87,6 +87,10 @@ class Dashboard extends CI_Controller {
 	public function addTeam(){
 		$data['title'] = 'Dashboard | REMS';
 		$data['body'] = 'dashboard/add-team';
+		$data['cities'] = $this->dashboard_model->activeCities();
+		$data['offices'] = $this->dashboard_model->activeOffices();
+		$data['agents'] = $this->agent_model->activeAgents();
+		$data['teams'] = $this->dashboard_model->getTeams();
 		$this->load->view('components/template', $data);
 	}
 	public function addOffers(){
@@ -122,6 +126,10 @@ class Dashboard extends CI_Controller {
 	}
 	public function getPlanDetail($planID){	// Get Payment Plan Details
 		$data = $this->dashboard_model->getPaymentPlans($planID);
+		echo json_encode($data);
+	}
+	public function getTeamInfo($id){	// Get Team Details
+		$data = $this->dashboard_model->getTeams($id);
 		echo json_encode($data);
 	}
 
@@ -350,6 +358,26 @@ class Dashboard extends CI_Controller {
 		$this->form_validation->set_rules('possession', 'Possession', 'required');
 		if($this->form_validation->run() == TRUE){
 			if($this->dashboard_model->add_paymentPlan($data)){
+				echo true;
+			}else{
+				echo false;
+			}
+		}
+	}
+	public function saveTeam(){	// Add Team
+		$data = array(
+			'teamName' => ucwords($this->input->post('teamName')),
+			'teamLead' => $this->input->post('teamLead'),
+			'bdm' => $this->input->post('bdm'),
+			'bcm' => $this->input->post('bcm'),
+			'zm' => $this->input->post('zm'),
+			'locationId' => $this->input->post('cityId'),
+			'officeId' => $this->input->post('officeId'),
+			'addedBy' => $this->session->userdata('userId')
+		);
+		$this->form_validation->set_rules('teamName', 'Team Name', 'required');
+		if($this->form_validation->run() == TRUE){
+			if($this->dashboard_model->add_team($data)){
 				echo true;
 			}else{
 				echo false;
