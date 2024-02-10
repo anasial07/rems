@@ -70,7 +70,7 @@
                             <div class="form-group">
                                 <label>Office Name</label>
                                 <div class="input-groupicon">
-                                    <input class="officeData" id="officeName" name="officeName" type="text" placeholder="Enter City Name" required>
+                                    <input oninput="validate(event)" class="officeData" id="officeName" name="officeName" type="text" placeholder="Enter City Name" required>
                                 </div>
                             </div>
                         </div>

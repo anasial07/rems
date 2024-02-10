@@ -19,7 +19,7 @@
                             <div class="form-group">
                                 <label>Team Name</label>
                                 <div class="input-groupicon">
-                                    <input id="teamName" name="teamName" type="text" placeholder="Enter Team Name">
+                                    <input oninput="validate(event)" id="teamName" name="teamName" type="text" placeholder="Enter Team Name">
                                 </div>
                             </div>
                         </div>

@@ -70,7 +70,7 @@
                             <div class="form-group">
                                 <label>Category Name</label>
                                 <div class="input-groupicon">
-                                    <input id="catName" name="catName" class="catData" type="text" placeholder="Enter Category">
+                                    <input oninput="validate(event)" id="catName" name="catName" class="catData" type="text" placeholder="Enter Category">
                                 </div>
                             </div>
                         </div>

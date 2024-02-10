@@ -21,7 +21,7 @@
                         <div class="col-sm-6 col-12">
                             <div class="form-group">
                                 <label>Select Project</label>
-                                <select id="projID" NAME="projID" class="form-control">
+                                <select id="projID" name="projID" class="form-control">
                                     <option selected disabled>Select Project</option>
                                     <?php foreach($projects as $project): ?>
                                         <option value="<?= $project->projectId; ?>"><?= $project->projName; ?></option>
@@ -57,7 +57,7 @@
                             <div class="form-group">
                                 <label>Plan Name</label>
                                 <div class="input-groupicon">
-                                    <input id="planName" name="planName" type="text" placeholder="Enter Plan Name">
+                                    <input oninput="validateMix(event)" id="planName" name="planName" type="text" placeholder="Enter Plan Name">
                                 </div>
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                             <div class="form-group">
                                 <label>Plan Year</label>
                                 <div class="input-groupicon">
-                                    <input name="planYear" id="planYear" type="text" placeholder="Enter Plan Year">
+                                    <input oninput="validateNmbr(event)" name="planYear" id="planYear" type="text" placeholder="Enter Plan Year">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/calendar.png'); ?>" alt="img" width="20">
                                     </div>
@@ -76,7 +76,7 @@
                             <div class="form-group">
                                 <label>Down Payment</label>
                                 <div class="input-groupicon">
-                                    <input name="downPay" id="downPay" type="text" placeholder="0">
+                                    <input oninput="validateNmbr(event)" name="downPay" id="downPay" type="text" placeholder="0">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/percent.png'); ?>" alt="img" width="16">
                                     </div>
@@ -87,7 +87,7 @@
                             <div class="form-group">
                                 <label>Confirmation</label>
                                 <div class="input-groupicon">
-                                    <input name="confirmation" id="confirmation" type="text" placeholder="0">
+                                    <input oninput="validateNmbr(event)" name="confirmation" id="confirmation" type="text" placeholder="0">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/percent.png'); ?>" alt="img" width="16">
                                     </div>
@@ -98,7 +98,7 @@
                             <div class="form-group">
                                 <label>Semi Annual</label>
                                 <div class="input-groupicon">
-                                    <input name="semiAnnual" id="semiAnnual" type="text" placeholder="0">
+                                    <input oninput="validateNmbr(event)" name="semiAnnual" id="semiAnnual" type="text" placeholder="0">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/percent.png'); ?>" alt="img" width="16">
                                     </div>
@@ -109,7 +109,7 @@
                             <div class="form-group">
                                 <label>Possession</label>
                                 <div class="input-groupicon">
-                                    <input name="possession" id="possession" type="text" placeholder="0">
+                                    <input oninput="validateNmbr(event)" name="possession" id="possession" type="text" placeholder="0">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/percent.png'); ?>" alt="img" width="16">
                                     </div>

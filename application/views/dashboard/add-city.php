@@ -70,7 +70,7 @@
                             <div class="form-group">
                                 <label>City Code</label>
                                 <div class="input-groupicon">
-                                    <input class="cityData" name="cityCode" id="cityCode" type="text" placeholder="Enter City Code" required>
+                                    <input oninput="validate(event)" class="cityData" name="cityCode" id="cityCode" type="text" placeholder="Enter City Code" required>
                                 </div>
                             </div>
                         </div>
@@ -78,7 +78,7 @@
                             <div class="form-group">
                                 <label>City Name</label>
                                 <div class="input-groupicon">
-                                    <input class="cityData" name="cityName" id="cityName" type="text" placeholder="Enter City Name" required>
+                                    <input oninput="validate(event)" class="cityData" name="cityName" id="cityName" type="text" placeholder="Enter City Name" required>
                                 </div>
                             </div>
                         </div>

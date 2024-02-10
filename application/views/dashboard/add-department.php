@@ -59,7 +59,7 @@
                             <div class="form-group">
                                 <label>Department Code</label>
                                 <div class="input-groupicon">
-                                    <input id="departCode" name="departCode" class="departData" type="text" placeholder="Enter Department Code">
+                                    <input oninput="validate(event)" id="departCode" name="departCode" class="departData" type="text" placeholder="Enter Department Code">
                                 </div>
                             </div>
                         </div>
@@ -67,7 +67,7 @@
                             <div class="form-group">
                                 <label>Department Name</label>
                                 <div class="input-groupicon">
-                                    <input id="departName" name="departName" class="departData" type="text" placeholder="Enter Department Name">
+                                    <input oninput="validate(event)" id="departName" name="departName" class="departData" type="text" placeholder="Enter Department Name">
                                 </div>
                             </div>
                         </div>

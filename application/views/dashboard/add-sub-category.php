@@ -78,7 +78,7 @@
                             <div class="form-group">
                                 <label>Sub-Category Name</label>
                                 <div class="input-groupicon">
-                                    <input id="subCatName" name="subCatName" type="text" placeholder="Enter Sub-Category">
+                                    <input oninput="validate(event)" id="subCatName" name="subCatName" type="text" placeholder="Enter Sub-Category">
                                 </div>
                             </div>
                         </div>

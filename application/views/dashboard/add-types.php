@@ -58,10 +58,10 @@
                         <div class="col-sm-12 col-12">
                             <div class="form-group">
                                 <label>Select Project</label>
-                                <select id="projID" name="projID" class="form-control">
+                                <select name="projID" id="projID" class="form-control">
                                     <option selected disabled>Select Project</option>
                                     <?php foreach($projects as $project): ?>
-                                    <option value="<?= $project->projectId; ?>"><?= $project->projName; ?></option>
+                                        <option value="<?= $project->projectId; ?>"><?= $project->projName; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -86,15 +86,23 @@
                             <div class="form-group">
                                 <label>Type Name</label>
                                 <div class="input-groupicon">
-                                    <input id="typeName" name="typeName" type="text" placeholder="Enter Type Name">
+                                    <input oninput="validateMix(event)" id="typeName" name="typeName" type="text" placeholder="Enter Type Name">
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-6 col-12">
                             <div class="form-group">
-                                <label>Marla Size</label>
+                                <label>Number of Marlas</label>
                                 <div class="input-groupicon">
-                                    <input id="typeSize" name="typeSize" class="typeSize" type="text" placeholder="5, 8, 11 etc...">
+                                    <input oninput="validateNmbr(event)" id="typeSize" name="marlaSize" class="typeSize" type="text" placeholder="5, 8, 11 etc...">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Dimensions</label>
+                                <div class="input-groupicon">
+                                    <input oninput="validateX(event)" id="typeDimenssion" name="dimenssion" type="text" placeholder="Enter Dimensions">
                                 </div>
                             </div>
                         </div>
@@ -110,11 +118,12 @@
                                 <p style="font-size:10px;" class="text-muted mt-1">This field cannot be edited.</p>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-12">
+                        <input type="hidden" value="0" id="base_price">
+                        <div class="col-sm-12 col-12">
                             <div class="form-group">
-                                <label>Discount <span style="font-size:12px;" class="text-muted">(Optional)</span></label>
+                                <label>Discount Per Marla <span style="font-size:12px;" class="text-muted">(Optional)</span></label>
                                 <div class="input-groupicon">
-                                    <input name="typeDiscount" id="typeDiscount" type="text" placeholder="0.0">
+                                    <input oninput="validateDecimal(event)" name="typeDiscount" id="typeDiscount" type="text" placeholder="0.0">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/percent.png'); ?>" alt="img" width="18">
                                     </div>
@@ -157,13 +166,13 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table  datanew">
+                    <table class="table datanew">
                         <thead>
                             <tr class="text-center">
                                 <th class="text-start">Project</th>
                                 <th class="text-start">Type Name</th>
                                 <th>Size</th>
-                                <th>Price</th>
+                                <th>Total Price</th>
                                 <th>Discount</th>
                                 <th>Status</th>
                                 <?php if($role=='admin'): ?>
@@ -179,8 +188,8 @@
                             <tr class="text-center">
                                 <td class="text-start"><?= $type->projCode; ?></td>
                                 <td class="text-start"><?= $type->typeName; ?></td>
-                                <td><?= $type->marlaSize; ?> Marla</td>
-                                <td><?= number_format($type->discountedPrice); ?></td>
+                                <td><?= $type->marlaSize; ?></td>
+                                <td><?= number_format($type->totalPrice); ?></td>
                                 <td class="text-danger"><?= $type->discount; ?>%</td>
                                 <td class="text-center">
                                     <?php if($status==1){ ?>
@@ -247,29 +256,26 @@
             }
         });
     });
-    $('#typeSize').keyup(calculatePrice);
     $('#projID').change(calculatePrice);
+    $('#typeSize').keyup(calculatePrice);
+    $('#typeDiscount').keyup(calculatePrice);
     function calculatePrice(){
         var projId = $('#projID').val();
         var typeSize = $('#typeSize').val();
+        var discount = $('#typeDiscount').val();
+        if(discount==""){ discount =0; }
         if(typeSize != "" && projId != "Select Project"){
             $.ajax({
-                url: "<?php echo base_url('dashboard/calculatePrice/'); ?>" + projId,
+                url: "<?php echo base_url('dashboard/projectDetail/'); ?>" + projId,
                 method: 'POST',
                 dataType: 'JSON',
-                data: { projectId: projId },
+                data: { projId: projId },
                 success: function(res){
                     var finalPrice= 0;
-                    var basePrice = res.projBasePrice;
-                    var depreciation = res.depreciation;
-
-                    if(typeSize < 6){
-                        finalPrice=basePrice*typeSize;
-                    }else{
-                        finalPrice = "Pending";
-                    }
-
-                    // var finalPrice = (depreciation - (basePrice * (basePrice / 100))) * typeSize;
+                    var basePrice = res[0].projBasePrice;
+                    $("#base_price").val(basePrice);
+                    var percent = (discount/100);
+                    finalPrice = (basePrice-(percent*basePrice))*typeSize;
                     $('#totalPrice').val(finalPrice.toLocaleString());
                 }
             });
@@ -281,10 +287,11 @@
         var subCatId = $('#subCatId').val();
         var typeName = $('#typeName').val();
         var typeSize = $('#typeSize').val();
-        var totalPrice = $('#totalPrice').val();
         var typeDiscount = $('#typeDiscount').val();
+        var typeDimenssion = $('#typeDimenssion').val();
+        var base_price = $('#base_price').val();
 
-        if (projID != "Select Project" && catId != "Select Category" && subCatId != "Select Sub-Category" && typeName != "" && typeSize!="") {
+        if (projID !== "Select Project" && catId !== "Select Category" && subCatId !== "Select Sub-Category" && typeName !== "" && typeSize !== "" && typeDimenssion !== "") {
             swal({
                 title: "Are you sure?",
                 text: "You want to add the type!",
@@ -307,21 +314,22 @@
                             subCatId: subCatId,
                             typeName: typeName,
                             marlaSize: typeSize,
-                            totalPrice: totalPrice,
+                            dimenssion: typeDimenssion,
+                            base_price: base_price,
                             discount: typeDiscount
                         },
                         cache: false,
                         success: function (dataResult) {
-                            if (dataResult) {
+                            if (dataResult == true) {
                                 swal({
                                     title: "Congratulation!",
                                     text: "Type has been added successfully.",
                                     type: "success"
-                                }, function(){
+                                }, function () {
                                     location.reload();
                                 });
-                            }else{
-                                swal("Ops!", "Something went wrong.", "error");
+                            } else {
+                                swal("Ops!", "Something went wrong", "error");
                             }
                         }
                     });

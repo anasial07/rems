@@ -55,23 +55,23 @@
             <div class="card mt-4">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-sm-6 col-12">
+                        <div class="col-sm-6 col-lg-6">
                             <div class="form-group">
                                 <label>Project Code</label>
                                 <div class="input-groupicon">
-                                    <input class="projectData" name="projCode" id="projectCode" type="text" placeholder="Enter Project Code">
+                                    <input oninput="validate(event)" class="projectData" name="projCode" id="projectCode" type="text" placeholder="Enter Project Code">
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-12">
+                        <div class="col-sm-6 col-lg-6">
                             <div class="form-group">
                                 <label>Project Name</label>
                                 <div class="input-groupicon">
-                                    <input class="projectData" name="projName" id="projectName" type="text" placeholder="Enter Project Name">
+                                    <input oninput="validateSpecial(event)" class="projectData" name="projName" id="projectName" type="text" placeholder="Enter Project Name">
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-12">
+                        <div class="col-sm-6 col-lg-6">
                             <div class="form-group">
                                 <label>Select Location</label>
                                 <select name="projLocation" id="projectCity" class="form-control projectData">
@@ -82,40 +82,21 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-12">
+                        <div class="col-sm-6 col-lg-3">
                             <div class="form-group">
                                 <label>Project Area</label>
                                 <div class="input-groupicon">
-                                    <input class="projectData" name="projArea" id="projectArea" type="text" placeholder="Project Area">
+                                    <input oninput="validateNmbr(event)" class="projectData" name="projArea" id="projectArea" type="text" placeholder="Project Area">
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-12">
-                            <div class="form-group">
-                                <label>Marla Size</label>
-                                <div class="input-groupicon">
-                                    <input class="projectData" name="projMarlaSize" id="marlaSize" type="text" placeholder="Set Marla Size">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3 col-12">
+                        <div class="col-sm-6 col-lg-3">
                             <div class="form-group">
                                 <label>Base Price</label>
                                 <div class="input-groupicon">
-                                    <input class="projectData" name="projBasePrice" id="basePrice" type="text" placeholder="0.0">
+                                    <input oninput="validateNmbr(event)" class="projectData" name="projBasePrice" id="basePrice" type="text" placeholder="0.0">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/rs.png'); ?>" alt="img" width="21">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3 col-12">
-                            <div class="form-group">
-                                <label>Depreciation</label>
-                                <div class="input-groupicon">
-                                    <input class="projectData" name="depre" id="depre" type="text" placeholder="0.0">
-                                    <div class="addonset">
-                                        <img src="<?= base_url('assets/img/icon/percent.png'); ?>" alt="img" width="18">
                                     </div>
                                 </div>
                             </div>
@@ -212,7 +193,6 @@
                                 <th>Sr</th>
                                 <th>Code</th>
                                 <th>Name</th>
-                                <th class="text-center">Depreciation</th>
                                 <th class="text-center">Status</th>
                                 <th class="text-center">Action</th>
                             </tr>
@@ -228,14 +208,6 @@
                                 <td><?= sprintf("%02d", $sr++); ?></td>
                                 <td><?= $project->projCode; ?></td>
                                 <td><?= $project->projName; ?></td>
-                                <td class="text-center">
-                                    <?php if($deprc>0): ?>
-                                        <span class="text-danger">
-                                            <i class="fas fa-angle-down"></i>
-                                            <?= $deprc.'%'; ?>
-                                        </span>
-                                    <?php else: echo $deprc.'%'; endif; ?>
-                                </td>
                                 <td class="text-center">
                                     <?php if($status==1){ ?>
                                         <span class="badges bg-lightgreen">Active</span>
@@ -291,17 +263,14 @@
         var projectName = $('#projectName').val();
         var projectCity = $('#projectCity').val();
         var projectArea = $('#projectArea').val();
-        var marlaSize = $('#marlaSize').val();
         var basePrice = $('#basePrice').val();
-        var depre = $('#depre').val();
         var webAddress = $('#webAddress').val();
         var mailAddress = $('#mailAddress').val();
         var projAddress = $('#projAddress').val();
         var projLogo = $('#projLogo')[0].files[0];
 
         if (projectCode !== "" && projectName !== "" && projectCity !== "Select Location" &&
-            projectArea !== "" && marlaSize !== "" && basePrice !== "" &&
-            webAddress !== "" && mailAddress !== "" && projAddress !== "") {
+            projectArea !== "" && basePrice !== "" && webAddress !== "" && mailAddress !== "" && projAddress !== "") {
 
             swal({
                 title: "Are you sure?",
@@ -322,9 +291,7 @@
                         formData.append('projName', projectName);
                         formData.append('projLocation', projectCity);
                         formData.append('projArea', projectArea);
-                        formData.append('projMarlaSize', marlaSize);
                         formData.append('projBasePrice', basePrice);
-                        formData.append('depreciation', depre);
                         formData.append('webAddress', webAddress);
                         formData.append('mailAddress', mailAddress);
                         formData.append('projAddress', projAddress);
@@ -378,34 +345,26 @@
             data: {projId: projId},
             success: function(res){
                 $('#modalBody').html('');
-                $('#modelTitle').html(res.projName);
+                $('#modelTitle').html(res[0].projName);
                 $('#modalBody').html(`
                     <div class="row">
                         <div class="col-5">
                             <table class="table">
                                 <tr>
                                     <td>Project Code</td>
-                                    <td>${res.projCode}</td>
+                                    <td>${res[0].projCode}</td>
                                 </tr>
                                 <tr>
                                     <td>Location</td>
-                                    <td>${res.locName}</td>
+                                    <td>${res[0].locName}</td>
                                 </tr>
                                 <tr>
                                     <td>Project Area</td>
-                                    <td>${res.projArea}</td>
-                                </tr>
-                                <tr>
-                                    <td>Marla Size</td>
-                                    <td>${res.projMarlaSize}</td>
+                                    <td>${res[0].projArea}</td>
                                 </tr>
                                 <tr>
                                     <td>Base Price</td>
-                                    <td>${new Intl.NumberFormat().format(res.projBasePrice)}</td>
-                                </tr>
-                                <tr>
-                                    <td>Depreciation</td>
-                                    <td>${res.depreciation}%</td>
+                                    <td>${new Intl.NumberFormat().format(res[0].projBasePrice)}</td>
                                 </tr>
                             </table>
                         </div>
@@ -413,12 +372,12 @@
                         <div class="col">
                             <div class="row">
                                 <div class="col-12">
-                                    <img src="${imgUrl}uploads/letterHead/${res.projLogo}">
+                                    <img src="${imgUrl}uploads/letterHead/${res[0].projLogo}">
                                 </div>
                                 <div class="col-12 text-start mt-4">
-                                    <p><i class="fa fa-map-marker"></i>&emsp;${res.projAddress}</p>
-                                    <p><i class="fa fa-globe"></i>&emsp;${res.webAddress}</p>
-                                    <p><i class="fa fa-envelope"></i>&emsp;${res.mailAddress}</p>
+                                    <p><i class="fa fa-map-marker"></i>&emsp;${res[0].projAddress}</p>
+                                    <p><i class="fa fa-globe"></i>&emsp;${res[0].webAddress}</p>
+                                    <p><i class="fa fa-envelope"></i>&emsp;${res[0].mailAddress}</p>
                                 </div>
                             </div>
                         </div>

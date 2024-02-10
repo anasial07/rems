@@ -18,6 +18,12 @@ class customer_model extends CI_Model{
 		$id && $this->db->where('customers.customerId', $id);
 		return $this->db->get()->result();
 	}
+	public function getCustmInfo($CNIC){
+		$this->db->select('*');
+		$this->db->from('customers');
+		$this->db->where(array('custmCNIC' => $CNIC, 'custmStatus' => 1));
+		return $this->db->get()->row();
+	}
 
 	// ---------------------------- Insert Records ------------------------------------
 

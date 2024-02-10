@@ -98,6 +98,14 @@ class dashboard_model extends CI_Model{
 			return false;
 		}
 	}
+	public function addBank($data){
+		$this->db->insert('banks', $data);
+		if($this->db->affected_rows() > 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
 
 	// ---------------------------- Select Queries ------------------------------------
 
@@ -116,9 +124,11 @@ class dashboard_model extends CI_Model{
 		$this->db->from('departments')->order_by('departId', 'DESC');
 		return $this->db->get()->result();
 	}
-	public function getProjects(){
+	public function getProjects($id = null){
 		$this->db->select('*');
-		$this->db->from('projects')->order_by('projectId', 'DESC');
+		$this->db->from('projects');
+		$this->db->join('locations', 'projects.projLocation = locations.locationId', 'left');
+		$id && $this->db->where('projects.projectId', $id);
 		return $this->db->get()->result();
 	}
 	public function getDesignations(){
@@ -143,6 +153,21 @@ class dashboard_model extends CI_Model{
 	}
 	public function activeDesignations(){
 		return $this->db->select('*')->from('designations')->where('desigStatus', 1)->order_by('desigId', 'DESC')->get()->result();
+	}
+	public function activeBanks(){
+		return $this->db->select('*')->from('banks')->where('bankStatus', 1)->order_by('bankId', 'DESC')->get()->result();
+	}
+	public function cityAgents($id){
+		$this->db->select('*');
+		$this->db->from('agents');
+		$this->db->where(array('locationId' => $id, 'agentStatus' => 1));
+		return $this->db->get()->result();
+	}
+	public function getPayPlans($id){
+		$this->db->select('*');
+		$this->db->from('payment_plans');
+		$this->db->where(array('projectId' => $id, 'planStatus' => 1));
+		return $this->db->get()->result();
 	}
 	public function activeCategories($id){
 		$this->db->select('*');
@@ -177,7 +202,7 @@ class dashboard_model extends CI_Model{
 		$this->db->from('users');
 		$this->db->join('locations', 'users.locationId = locations.locationId', 'left');
 		$this->db->join('departments', 'users.departmentId = departments.departId', 'left');
-		$id && $this->db->where('users.id', $id); // single user
+		$id && $this->db->where('users.id', $id);
 		return $this->db->get()->result();
 	}
 	public function getCategories(){
@@ -195,24 +220,12 @@ class dashboard_model extends CI_Model{
 		$this->db->order_by('sub_categories.subCatId', 'DESC');
 		return $this->db->get()->result();
 	}
-	public function calculate_price($projId){
-		$this->db->select('projBasePrice, depreciation');
-		$this->db->from('projects')->where('projectId', $projId);
-		return $this->db->get()->row();
-	}
 	public function getTypes(){
 		$this->db->select('*');
 		$this->db->from('types');
 		$this->db->join('projects', 'types.projectId = projects.projectId', 'left');
 		$this->db->order_by('types.typeId', 'DESC');
 		return $this->db->get()->result();
-	}
-	public function get_project_detail($projId){
-		$this->db->select('*');
-		$this->db->from('projects');
-		$this->db->join('locations', 'projects.projLocation = locations.locationId', 'left');
-		$this->db->where('projects.projectId', $projId);
-		return $this->db->get()->row();
 	}
 	public function getPaymentPlans($id = null){
 		$this->db->select('*');

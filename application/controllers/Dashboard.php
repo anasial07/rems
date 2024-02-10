@@ -104,12 +104,8 @@ class Dashboard extends CI_Controller {
 		$data['designations'] = $this->dashboard_model->getDesignations();
 		$this->load->view('components/template', $data);
 	}
-	public function calculatePrice($progId){	// Calculate price for depreciation
-		$data = $this->dashboard_model->calculate_price($progId);
-		echo json_encode($data);
-	}
 	public function projectDetail($progId){	// Get Project Full Details (View in Model)
-		$data = $this->dashboard_model->get_project_detail($progId);
+		$data = $this->dashboard_model->getProjects($progId);
 		echo json_encode($data);
 	}
 	public function getCats($progId){	// Filter Categories
@@ -130,6 +126,18 @@ class Dashboard extends CI_Controller {
 	}
 	public function getTeamInfo($id){	// Get Team Details
 		$data = $this->dashboard_model->getTeams($id);
+		echo json_encode($data);
+	}
+	public function fetchBank(){	// Get Banks
+		$data= $this->dashboard_model->activeBanks();
+		echo json_encode($data);
+	}
+	public function cityAgents($id){	// Get Agents Against City
+		$data= $this->dashboard_model->cityAgents($id);
+		echo json_encode($data);
+	}
+	public function getPayPlans($id){	// Get Paymentplans Against Project
+		$data= $this->dashboard_model->getPayPlans($id);
 		echo json_encode($data);
 	}
 
@@ -221,9 +229,7 @@ class Dashboard extends CI_Controller {
 			'projName' => $this->input->post('projName'),
 			'projLocation' => $this->input->post('projLocation'),
 			'projArea' => $this->input->post('projArea'),
-			'projMarlaSize' => $this->input->post('projMarlaSize'),
 			'projBasePrice' => $this->input->post('projBasePrice'),
-			'depreciation' => $this->input->post('depreciation'),
 			'webAddress' => $this->input->post('webAddress'),
 			'mailAddress' => $this->input->post('mailAddress'),
 			'projAddress' => $this->input->post('projAddress'),
@@ -281,37 +287,43 @@ class Dashboard extends CI_Controller {
 			}
 		}
 	}
-	public function addType() { // Add Type
+	public function addType(){	//Add Type
 		$projID = $this->input->post('projectId');
 		$catId = $this->input->post('catId');
 		$subCatId = $this->input->post('subCatId');
-		$typeName = ucwords($this->input->post('typeName'));
+		$typeName = ucwordds($this->input->post('typeName'));
 		$marlaSize = $this->input->post('marlaSize');
-		$totalPrice = str_replace(',', '', $this->input->post('totalPrice'));
+		$dimenssion = $this->input->post('dimenssion');
+		$base_price = $this->input->post('base_price');
 		$typeDiscount = $this->input->post('discount');
-		if($typeDiscount=="NaN" || $typeDiscount==""){ $typeDiscount=0; }
+	
 		$this->form_validation->set_rules('projectId', 'Select Project', 'required');
 		$this->form_validation->set_rules('catId', 'Select Category', 'required');
 		$this->form_validation->set_rules('subCatId', 'Select Sub-Category', 'required');
 		$this->form_validation->set_rules('typeName', 'Type Name', 'required');
 		$this->form_validation->set_rules('marlaSize', 'Marla Size', 'required');
+		$this->form_validation->set_rules('dimenssion', 'Dimensions', 'required');
+	
 		if ($this->form_validation->run() == TRUE) {
-			$discountedPrice = $totalPrice - ($totalPrice * ($typeDiscount / 100));
+			$percent = $typeDiscount / 100;
+			$perMarla = $base_price - ($percent * $base_price);
+			$totalPrice = $perMarla * $marlaSize;
 			$data = array(
 				'projectId' => $projID,
 				'catId' => $catId,
 				'subCatId' => $subCatId,
 				'typeName' => $typeName,
+				'base_price' => $base_price,
 				'marlaSize' => $marlaSize,
-				'perMarla' => $totalPrice / $marlaSize,
+				'perMarla' => $perMarla,
 				'totalPrice' => $totalPrice,
-				'discountedPrice' => $discountedPrice,
+				'dimenssion' => $dimenssion,
 				'discount' => $typeDiscount,
 				'addedBy' => $this->session->userdata('userId')
 			);
-			if ($this->dashboard_model->add_type($data)) {
+			if($this->dashboard_model->add_type($data)) {
 				echo true;
-			} else {
+			}else{
 				echo false;
 			}
 		}
@@ -378,6 +390,24 @@ class Dashboard extends CI_Controller {
 		$this->form_validation->set_rules('teamName', 'Team Name', 'required');
 		if($this->form_validation->run() == TRUE){
 			if($this->dashboard_model->add_team($data)){
+				echo true;
+			}else{
+				echo false;
+			}
+		}
+	}
+	public function addBank(){	// Add Bank
+		$data = array(
+			'bankName' => ucfirst($this->input->post('bankName')),
+			'branchCode' => $this->input->post('branchCode'),
+			'branchAddr' => ucwords($this->input->post('branchAddr')),
+			'addedBy' => $this->session->userdata('userId')
+		);
+		$this->form_validation->set_rules('bankName', 'Bank Name', 'required');
+		$this->form_validation->set_rules('branchCode', 'Branch Code', 'required');
+		$this->form_validation->set_rules('branchAddr', 'Bank Address', 'required');
+		if($this->form_validation->run() == TRUE){
+			if($this->dashboard_model->addBank($data)){
 				echo true;
 			}else{
 				echo false;

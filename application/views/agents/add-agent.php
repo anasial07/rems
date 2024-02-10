@@ -18,7 +18,7 @@
                             <div class="form-group">
                                 <label>Employee Code</label>
                                 <div class="input-groupicon">
-                                    <input id="empCode" name="empCode" type="text" placeholder="Enter Employee Code">
+                                    <input oninput="validateMix(event)" id="empCode" name="empCode" type="text" placeholder="Enter Employee Code">
                                 </div>
                             </div>
                         </div>
@@ -26,7 +26,7 @@
                             <div class="form-group">
                                 <label>Employee Name</label>
                                 <div class="input-groupicon">
-                                    <input id="empName" name="empName" type="text" placeholder="Enter Employee Name">
+                                    <input oninput="validate(event)" id="empName" name="empName" type="text" placeholder="Enter Employee Name">
                                 </div>
                             </div>
                         </div>
@@ -34,7 +34,7 @@
                             <div class="form-group">
                                 <label>Employee Contact</label>
                                 <div class="input-groupicon">
-                                    <input id="empContact" name="empContact" type="text" placeholder="Enter Contact no">
+                                    <input oninput="validateNmbr(event)" id="empContact" name="empContact" type="text" placeholder="Enter Contact no">
                                 </div>
                             </div>
                         </div>

@@ -19,7 +19,7 @@
                             <div class="form-group">
                                 <label>Designation Code</label>
                                 <div class="input-groupicon">
-                                    <input type="text" placeholder="Enter Designation Code" id="designCode" name="designCode" required>
+                                    <input oninput="validate(event)" type="text" placeholder="Enter Designation Code" id="designCode" name="designCode" required>
                                 </div>
                             </div>
                         </div>
@@ -27,7 +27,7 @@
                             <div class="form-group">
                                 <label>Designation Name</label>
                                 <div class="input-groupicon">
-                                    <input type="text" placeholder="Enter Designation Name" id="designName" name="designName" required>
+                                    <input oninput="validate(event)" type="text" placeholder="Enter Designation Name" id="designName" name="designName" required>
                                 </div>
                             </div>
                         </div>

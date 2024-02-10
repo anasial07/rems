@@ -25,6 +25,10 @@ class Customers extends CI_Controller {
 		$data = $this->customer_model->getCustomers($id);
 		echo json_encode($data);
 	}
+	public function getCustmInfo($CNIC){	// Get Customer Info against CNIC
+		$data = $this->customer_model->getCustmInfo($CNIC);
+		echo json_encode($data);
+	}
 
 
 

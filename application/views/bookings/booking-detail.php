@@ -1,6 +1,7 @@
 <style>
     .heading{ font-size:14px; color:#7367F0; font-weight:600; line-height: 35px; padding-left:2.5%!important; }
     .bookingTable tr td{ border:none!important; line-height:0.3; }
+    .topBtn{ border-radius:0px; }
 </style>
 <div class="page-wrapper">
     <div class="content">
@@ -10,12 +11,12 @@
                 <h6>Membership#</h6>
             </div>
             <div class="page-btn">
-            <button type="button" class="btn btn-rounded btn-danger">Cancellation Request</button>
-            <button type="button" class="btn btn-rounded btn-primary">Booking Memo</button>
-            <button type="button" class="btn btn-rounded btn-secondary">Welcome Letter</button>
-            <button type="button" class="btn btn-rounded btn-info text-white">Confirmation Latter</button>
-            <button type="button" class="btn btn-rounded btn-dark">Booking Form</button>
-            <button type="button" class="btn btn-rounded btn-success">Payment Plan</button>
+            <button type="button" class="btn btn-rounded topBtn btn-danger">Cancellation Request</button>
+            <button type="button" class="btn btn-rounded topBtn btn-primary">Booking Memo</button>
+            <button type="button" class="btn btn-rounded topBtn btn-secondary">Welcome Letter</button>
+            <button type="button" class="btn btn-rounded topBtn btn-info text-white">Confirmation Latter</button>
+            <button type="button" class="btn btn-rounded topBtn btn-dark">Booking Form</button>
+            <button type="button" class="btn btn-rounded topBtn btn-success">Payment Plan</button>
             </div>
         </div>
         <div class="card p-4">

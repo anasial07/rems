@@ -18,19 +18,19 @@
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label>Customer CNIC</label>
-                                    <input id="custCNIC" name="custCNIC" type="text" placeholder="Enter CNIC without (-) dashes">
+                                    <input oninput="validateNmbr(event)" id="custCNIC" name="custCNIC" type="text" placeholder="Enter CNIC without (-) dashes">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label>Customer Name</label>
-                                    <input id="custName" name="custName" type="text" placeholder="Enter Customer full name">
+                                    <input oninput="validate(event)" id="custName" name="custName" type="text" placeholder="Enter Customer full name">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label>Father's Name</label>
-                                    <input id="custFather" name="custFather" type="text" placeholder="Enter Father's name">
+                                    <input oninput="validate(event)" id="custFather" name="custFather" type="text" placeholder="Enter Father's name">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-sm-12">
@@ -53,13 +53,13 @@
                             <div class="col-lg-3 col-sm-12">
                                 <div class="form-group">
                                     <label>Primary Phone</label>
-                                    <input id="custPrimary" name="custPrimary" type="text" placeholder="Primary Phone">
+                                    <input oninput="validateNmbr(event)" id="custPrimary" name="custPrimary" type="text" placeholder="Primary Phone">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-12">
                                 <div class="form-group">
                                     <label>Secondary Phone</label>
-                                    <input id="custSecondary" name="custSecondary" type="text" placeholder="Optional">
+                                    <input oninput="validateNmbr(event)" id="custSecondary" name="custSecondary" type="text" placeholder="Optional">
                                 </div>
                             </div>
                             <div class="col-sm-12 col-lg-6">
@@ -102,19 +102,19 @@
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label>Next of Kin Name</label>
-                                    <input id="NOKname" name="NOKname" type="text" placeholder="Next of Kin Name">
+                                    <input oninput="validate(event)" id="NOKname" name="NOKname" type="text" placeholder="Next of Kin Name">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label>Next of Kin CNIC</label>
-                                    <input id="NOKcnic" name="NOKcnic" type="text" placeholder="Next of Kin CNIC">
+                                    <input oninput="validateNmbr(event)" id="NOKcnic" name="NOKcnic" type="text" placeholder="Next of Kin CNIC">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label>Next of Kin Contact</label>
-                                    <input id="NOKcontact" name="NOKcontact" type="text" placeholder="Next of Kin Contact">
+                                    <input oninput="validateNmbr(event)" id="NOKcontact" name="NOKcontact" type="text" placeholder="Next of Kin Contact">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-sm-12">
@@ -126,7 +126,7 @@
                             <div class="col-lg-12 col-sm-12">
                                 <div class="form-group">
                                     <label>Relation with NOK</label>
-                                    <input id="NOKrelation" name="NOKrelation" type="text" placeholder="Relation with NOK">
+                                    <input oninput="validate(event)" id="NOKrelation" name="NOKrelation" type="text" placeholder="Relation with NOK">
                                 </div>
                             </div>
                             <div class="col-lg-12 col-sm-12">

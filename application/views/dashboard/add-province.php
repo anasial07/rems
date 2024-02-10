@@ -59,7 +59,7 @@
                             <div class="form-group">
                                 <label>Province Code</label>
                                 <div class="input-groupicon">
-                                    <input class="provinceData" type="text" placeholder="Enter Province Code" id="provCode" required>
+                                    <input oninput="validate(event)" class="provinceData" type="text" placeholder="Enter Province Code" id="provCode" required>
                                 </div>
                             </div>
                         </div>
@@ -67,7 +67,7 @@
                             <div class="form-group">
                                 <label>Province Name</label>
                                 <div class="input-groupicon">
-                                    <input class="provinceData" type="text" placeholder="Enter Province Name" id="provName" required>
+                                    <input oninput="validate(event)" class="provinceData" type="text" placeholder="Enter Province Name" id="provName" required>
                                 </div>
                             </div>
                         </div>
