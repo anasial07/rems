@@ -2,6 +2,7 @@
     .product-details{ height:90px!important; cursor: pointer; }
     .product-details img{ width:38px!important; }
 </style>
+<?php $role=$this->session->userdata('role'); ?>
 <div class="page-wrapper px-4 mt-4">
     <div class="page-header">
         <div class="page-title">
@@ -9,7 +10,7 @@
             <h6>Add & Manage your Bookings</h6>
         </div>
         <div class="page-btn">
-            <a href="<?= base_url('booking/addBooking'); ?>" class="btn btn-added"><img src="assets/img/icons/plus.svg" alt="img">Add New Booking</a>
+            <a href="<?= base_url('booking/addBooking'); ?>" class="btn btn-added"><img src="<?= base_url('assets/img/icons/plus.svg'); ?>" alt="img">Add New Booking</a>
         </div>
     </div>
     <div class="row px-3">
@@ -40,11 +41,11 @@
                     <thead>
                         <tr>
                             <th>Sr</th>
-                            <th>Membership</th>
+                            <th>Membership#</th>
+                            <th>Customer</th>
                             <th>Agent</th>
-                            <th>Plan</th>
-                            <th>Price</th>
-                            <th>Amount</th>
+                            <th>Category</th>
+                            <th>Sub-Category</th>
                             <th>Mode</th>
                             <th>Purchased</th>
                             <th class="text-center">Status</th>
@@ -52,26 +53,41 @@
                         </tr>
                     </thead>
                     <tbody>
+                    <?php
+                        $sr=1;
+                        foreach($bookings as $booking):
+                        $status=$booking->bookingStatus;
+                    ?>
                     <tr>
-                        <td>01</td>
-                        <td>AHC/V/0005/2023</td>
-                        <td>Micah Lott</td>
-                        <td>5 Marla</td>
-                        <td>0.0</td>
-                        <td>400,000</td>
-                        <td>Cash</td>
-                        <td>Jan 03, 1972</td>
-                        <td class="text-center"><span class="badges bg-lightgreen">Active</span></td>
+                        <td><?= sprintf("%02d", $sr++); ?></td>
+                        <td><?= $booking->membershipNo; ?></td>
+                        <td><?= $booking->custmName; ?></td>
+                        <td><?= $booking->agentName; ?></td>
+                        <td><?= $booking->catName; ?></td>
+                        <td><?= $booking->subCatName; ?></td>
+                        <td><?= $booking->paymentMode; ?></td>
+                        <td><?= date('d M, Y',strtotime($booking->purchaseDate)); ?></td>
+                        <td class="text-center">
+                            <?php if($status==1){ ?>
+                                <span class="badges bg-lightgreen">Active</span>
+                            <?php }else{ ?>
+                                <span class="badges bg-lightred">Inactive</span>
+                            <?php } ?>
+                        </td>
                         <td class="text-center">
                             <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
                                 <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a href="<?= base_url('booking/bookingDetail'); ?>" class="dropdown-item"><img src="<?= base_url('assets/img/icons/eye1.svg'); ?>" class="me-2" alt="img">View Booking</a></li>
-                                <li><a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Booking</a></li>
-                                <li><a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img">Delete Booking</a></li>
+                                <?php if($role=='admin'): ?>
+                                    <li><a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Booking</a></li>
+                                    <li><a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img">Delete Booking</a></li>
+                                <?php endif; ?>
                             </ul>
                         </td>
+                    </tr>
+                    <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>

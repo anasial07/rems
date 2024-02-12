@@ -169,6 +169,12 @@ class dashboard_model extends CI_Model{
 		$this->db->where(array('projectId' => $id, 'planStatus' => 1));
 		return $this->db->get()->result();
 	}
+	public function getPayPlan($id){
+		$this->db->select('*');
+		$this->db->from('payment_plans');
+		$this->db->where(array('payPlanId' => $id));
+		return $this->db->get()->row();
+	}
 	public function activeCategories($id){
 		$this->db->select('*');
 		$this->db->from('categories');
@@ -220,11 +226,12 @@ class dashboard_model extends CI_Model{
 		$this->db->order_by('sub_categories.subCatId', 'DESC');
 		return $this->db->get()->result();
 	}
-	public function getTypes(){
+	public function getTypes($id = null){
 		$this->db->select('*');
 		$this->db->from('types');
 		$this->db->join('projects', 'types.projectId = projects.projectId', 'left');
 		$this->db->order_by('types.typeId', 'DESC');
+		$id && $this->db->where('types.typeId', $id);
 		return $this->db->get()->result();
 	}
 	public function getPaymentPlans($id = null){

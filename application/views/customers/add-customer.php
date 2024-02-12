@@ -36,7 +36,7 @@
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label>Customer Email</label>
-                                    <input id="custEmail" name="custEmail" type="text" placeholder="Enter Email i.e: abc@gmail.com">
+                                    <input oninput="validateEmail(event)" id="custEmail" name="custEmail" type="text" placeholder="Enter Email i.e: abc@gmail.com">
                                 </div>
                             </div>
                             <div class="col-sm-12 col-lg-6">
@@ -120,7 +120,7 @@
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label>Next of Kin Email</label>
-                                    <input id="NOKemail" name="NOKemail" type="text" placeholder="Next of Kin Email">
+                                    <input oninput="validateEmail(event)" id="NOKemail" name="NOKemail" type="text" placeholder="Next of Kin Email">
                                 </div>
                             </div>
                             <div class="col-lg-12 col-sm-12">

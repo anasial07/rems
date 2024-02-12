@@ -2,7 +2,7 @@
        <script>
             function validate(event){
                 var input = event.target;
-                input.value = input.value.replace(/[^a-zA-Z ]/g, '');
+                input.value = input.value.replace(/[^a-zA-Z ]+/g, '').replace(/\s{2,}/g, ' ');
             }
             function validateSpecial(event){
                 var input = event.target;
@@ -18,12 +18,33 @@
             }
             function validateDecimal(event){
                 var input = event.target;
-                input.value = input.value.replace(/[^0-9.]/g, '');
+                input.value = input.value.replace(/[^0-9.]|(\..*\.)/g, (_, match) => match ? '' : '.');
             }
             function validateX(event){
                 var input = event.target;
                 input.value = input.value.replace(/[^0-9 X]/g, '');
             }
+            function validateDate(event){
+                var input = event.target;
+                input.value = input.value.replace(/[^0-9-]/g, '');
+            }
+            function validateEmail(event){
+                var input = event.target;
+                input.value = input.value.replace(/[^a-z0-9@.]/g, '');
+                let atCount = (input.value.match(/@/g) || []).length;
+                let dotCount = (input.value.match(/\./g) || []).length;
+                if(atCount > 1){ input.value = input.value.replace(/@/, ''); }
+                if(dotCount > 1){ input.value = input.value.replace(/\./, ''); }
+            }
+            
+            $('#paymentMode').change(function(){
+                var mode = $(this).val();
+                if(mode == 'Cash'){
+                    $('#refBank').slideUp();
+                }else{
+                    $('#refBank').slideDown();
+                }
+            });
         </script>
         <div class="modal fade" id="addNewBank" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-md" role="document">
@@ -131,9 +152,6 @@
                         $.each(res, function(index, data) {
                             $('#bank_name').append('<option value="' + data.bankId + '">' + data.bankName + '</option>');
                         });
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.error("Error fetching data:", textStatus, errorThrown);
                     }
                 });
             }

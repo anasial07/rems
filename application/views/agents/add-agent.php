@@ -42,7 +42,7 @@
                             <div class="form-group">
                                 <label>Employee Email</label>
                                 <div class="input-groupicon">
-                                    <input id="empEmail" name="empEmail" type="text" placeholder="Enter Employee Email">
+                                    <input oninput="validateEmail(event)" id="empEmail" name="empEmail" type="text" placeholder="Enter Employee Email">
                                 </div>
                             </div>
                         </div>
@@ -124,7 +124,7 @@
                             <div class="form-group">
                                 <label>Date of Joining</label>
                                 <div class="input-groupicon">
-                                    <input id="empDOJ" name="empDOJ" type="text" placeholder="DD-MM-YYYY" class="datetimepicker">
+                                    <input oninput="validateDate(event)" id="empDOJ" name="empDOJ" type="text" placeholder="DD-MM-YYYY" class="datetimepicker">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/calendar.png'); ?>" alt="img" width="20">
                                     </div>

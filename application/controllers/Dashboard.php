@@ -136,8 +136,16 @@ class Dashboard extends CI_Controller {
 		$data= $this->dashboard_model->cityAgents($id);
 		echo json_encode($data);
 	}
-	public function getPayPlans($id){	// Get Paymentplans Against Project
+	public function getPayPlans($id){	// Get Payment Plans Against Project
 		$data= $this->dashboard_model->getPayPlans($id);
+		echo json_encode($data);
+	}
+	public function getPayPlan($id){	// Get Paymentplan Against Payment Plan ID
+		$data= $this->dashboard_model->getPayPlan($id);
+		echo json_encode($data);
+	}
+	public function getTypeInfo(){	// Get Banks
+		$data = $this->dashboard_model->getTypes();
 		echo json_encode($data);
 	}
 
@@ -291,7 +299,7 @@ class Dashboard extends CI_Controller {
 		$projID = $this->input->post('projectId');
 		$catId = $this->input->post('catId');
 		$subCatId = $this->input->post('subCatId');
-		$typeName = ucwordds($this->input->post('typeName'));
+		$typeName = ucfirst($this->input->post('typeName'));
 		$marlaSize = $this->input->post('marlaSize');
 		$dimenssion = $this->input->post('dimenssion');
 		$base_price = $this->input->post('base_price');

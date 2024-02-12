@@ -17,6 +17,7 @@
                         <div class="col-sm-12 col-lg-3">
                             <div class="form-group">
                                 <label>Select Project</label>
+                                <input type="hidden" id="projectCode">
                                 <select id="projID" class="form-control">
                                     <option selected disabled>Select Project</option>
                                     <?php foreach($projects as $project): ?>
@@ -43,6 +44,7 @@
                         </div>
                         <div class="col-sm-12 col-lg-3">
                             <div class="form-group">
+                                <input type="hidden" id="typeSize" class="typeSize">
                                 <label>Select Type</label>
                                 <select id="typeID" class="form-control">
                                     <option selected disabled>Select Type</option>
@@ -51,12 +53,12 @@
                         </div>
                         <div class="col-sm-12 col-lg-3">
                             <div class="form-group">
+                                <input type="hidden" id="customerID">
                                 <label>Customer CNIC</label>
                                 <div class="input-groupicon">
-                                    <input id="custCNIC" type="text" placeholder="without (-) dashes">
+                                    <input oninput="validateNmbr(event)" id="custCNIC" type="text" placeholder="without (-) dashes">
                                 </div>
                             </div>
-                            <input type="hidden" id="custmID">
                         </div>
                         <div class="col-sm-12 col-lg-3">
                             <div class="form-group">
@@ -81,7 +83,7 @@
                             <div class="form-group">
                                 <label>Special Discount</label>
                                 <div class="input-groupicon">
-                                    <input id="sepDiscount" type="text" placeholder="0.0">
+                                    <input oninput="validateDecimal(event)" id="sepDiscount" type="text" placeholder="0.0">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/percent.png'); ?>" alt="img" width="18">
                                     </div>
@@ -92,7 +94,7 @@
                             <div class="form-group">
                                 <label>Amount Paid/Down Payment</label>
                                 <div class="input-groupicon">
-                                    <input id="paidAmount" type="text" placeholder="0.0">
+                                    <input oninput="validateNmbr(event)" id="paidAmount" type="text" placeholder="0.0">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/rs.png'); ?>" alt="img" width="22">
                                     </div>
@@ -117,7 +119,7 @@
                             <div class="form-group">
                                 <label>Reference no</label>
                                 <div class="input-groupicon">
-                                    <input id="referenceNo" type="text" placeholder="Reference no">
+                                    <input oninput="validateNmbr(event)" id="referenceNo" type="text" placeholder="Reference no">
                                 </div>
                             </div>
                         </div>
@@ -163,7 +165,10 @@
                             <div class="form-group">
                                 <label>Extra Land Charges</label>
                                 <div class="input-groupicon">
-                                    <input id="exCharges" type="text" placeholder="0.0">
+                                    <input oninput="validateNmbr(event)" id="exCharges" type="text" placeholder="0.0">
+                                    <div class="addonset">
+                                        <img src="<?= base_url('assets/img/icon/rs.png'); ?>" alt="img" width="22">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -171,7 +176,7 @@
                             <div class="form-group">
                                 <label>Purchase Date</label>
                                 <div class="input-groupicon">
-                                    <input id="purchaseDate" type="text" placeholder="DD-MM-YYYY" class="datetimepicker">
+                                    <input oninput="validateDate(event)" id="purchaseDate" type="text" placeholder="DD-MM-YYYY" class="datetimepicker">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/calendar.png'); ?>" alt="img" width="20">
                                     </div>
@@ -191,7 +196,10 @@
                             <div class="form-group">
                                 <label>Tax Percentage</label>
                                 <div class="input-groupicon">
-                                    <input id="filerPercent" type="text" placeholder="0.0">
+                                    <input oninput="validateDecimal(event)" id="filerPercent" type="text" placeholder="0.0">
+                                    <div class="addonset">
+                                        <img src="<?= base_url('assets/img/icon/percent.png'); ?>" alt="img" width="18">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -199,16 +207,22 @@
                             <label>Features</label>
                             <div class="row mt-3">
                                 <div class="col-4">
-                                    <input value="Corner" name="feature-charges[]" type="checkbox">
-                                    <span class="checkmarks"></span>Corner
+                                    <input id="cornerFeature" value="Corner" name="feature-charges[]" type="checkbox">
+                                    <label for="cornerFeature">
+                                        <span class="checkmarks"></span>Corner
+                                    </label>
                                 </div>
                                 <div class="col-4">
-                                    <input value="Boulevard" name="feature-charges[]" type="checkbox">
-                                    <span class="checkmarks"></span>Boulevard
+                                    <input id="boulevardFeature" value="Boulevard" name="feature-charges[]" type="checkbox">
+                                    <label for="boulevardFeature">
+                                        <span class="checkmarks"></span>Boulevard
+                                    </label>
                                 </div>
                                 <div class="col">
-                                    <input value="Park Facing" name="feature-charges[]" type="checkbox">
-                                    <span class="checkmarks"></span>Park Facing
+                                    <input id="parkFacingFeature" value="Park Facing" name="feature-charges[]" type="checkbox">
+                                    <label for="parkFacingFeature">
+                                        <span class="checkmarks"></span>Park Facing
+                                    </label>
                                 </div>
                             </div>    
                         </div>
@@ -248,42 +262,41 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="total-order" style="margin:0%!important;">
+                                <h6 class="text-muted fw-bold text-center mb-2 showPlaName"></h6>
                                 <ul>
                                     <li>
-                                        <h4>Type</h4>
-                                        <h5>-</h5>
-                                    </li>
-                                    <li>
-                                        <h4>Sub Total</h4>
-                                        <h5>0</h5>
-                                    </li>
-                                    <li>
-                                        <h4>Discount</h4>
-                                        <h5>0</h5>
-                                    </li>
-                                    <li>
                                         <h4>Payment Plan</h4>
-                                        <h5>0 Yr(s)</h5>
+                                        <h5><span class="showPayPlan">0</span> Yr(s)</h5>
                                     </li>
                                     <li>
                                         <h4>Down Payment</h4>
-                                        <h5>% &middot; 0</h5>
+                                        <h5><span class="showDownPay">0</span> &middot; %</h5>
                                     </li>
                                     <li>
                                         <h4>Confirmation</h4>
-                                        <h5>% &middot; 0</h5>
+                                        <h5><span class="showConfirm">0</span> &middot; %</h5>
                                     </li>
                                     <li>
                                         <h4>Semi Annual</h4>
-                                        <h5>% &middot; 0</h5>
+                                        <h5><span class="showSemiAn">0</span> &middot; %</h5>
                                     </li>
                                     <li>
                                         <h4>Possession</h4>
-                                        <h5>% &middot; 0</h5>
+                                        <h5><span class="showPossession">0</span> &middot; %</h5>
                                     </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="total-order" style="margin:0%!important;">
+                                <ul>
                                     <li>
-                                        <h4>Grand Total</h4>
-                                        <h5>0</h5>
+                                        <h4>Features</h4>
+                                        <h5><span class="showFeatures">0</span> &middot; %</h5>
                                     </li>
                                 </ul>
                             </div>
@@ -302,7 +315,6 @@
         var catID = $('#catID').val();
         var subCatID = $('#subCatID').val();
         var typeID = $('#typeID').val();
-        var custmID = $('#custmID').val();
         var cityID = $('#cityID').val();
         var agentID = $('#agentID').val();
         var sepDiscount = $('#sepDiscount').val();
@@ -316,17 +328,15 @@
         var purchaseDate = $('#purchaseDate').val();
         var filerStatus = $('#filerStatus').val();
         var filerPercent = $('#filerPercent').val();
-        if(referenceNo==""){ referenceNo=0 }
-        if(bank_name==null){ bank_name='' }
+        var projectCode = $('#projectCode').val();
+        var typeSize = $('#typeSize').val();
+        var custmID = $('#customerID').val();
 
         var features = [];
         $('input[name="feature-charges[]"]:checked').each(function() {
             features.push($(this).val());
         });
-        if(projID!=="Select Project" && catID!=="Select Category" && subCatID!=="Select Sub-Category"
-         && typeID!=="Select Type" && custmID!=="" && cityID!=="Select City" && agentID!=="Select Agent"
-          && paidAmount!=="" && paymentMode!=="Payment Mode" && receivedIn!=="Select Location"
-         && payPlanID!="Select Payment Plan" && purchaseDate!=""){
+        if(paidAmount!="" && purchaseDate!="" && custmID!="" && filerPercent!=""){
             swal({
                 title: "Are you sure?",
                 text: "You want to add the booking!",
@@ -342,14 +352,13 @@
             function(isConfirm){
                 if(isConfirm){
                     $.ajax({
-                        url: "<?php echo base_url("dashboard/saveBooking"); ?>",
+                        url: "<?php echo base_url("booking/saveBooking"); ?>",
                         type: "POST",
                         data: {
                             projID: projID,
                             catID: catID,
                             subCatID: subCatID,
                             typeID: typeID,
-                            customerID: custmID,
                             cityID: cityID,
                             agentID: agentID,
                             sepDiscount: sepDiscount,
@@ -363,21 +372,24 @@
                             purchaseDate: purchaseDate,
                             filerStatus: filerStatus,
                             filerPercent: filerPercent,
+                            projectCode: projectCode,
+                            typeSize: typeSize,
+                            customerID: custmID,
                             features: features
                         },
                         cache: false,
                         success: function(dataResult){
-                            if(dataResult==true){
+                            if(dataResult.indexOf('/') !== -1){
                                 swal({
                                     title: "Congratulation!", 
-                                    text: "Booking has been added successfully.", 
+                                    text: "Booking has been successfully added for Membership# "+dataResult, 
                                     type: "success"
                                     },function(){ 
                                         location.reload();
                                     }
                                 );
                             }else{
-                                swal("Ops!", "Something went wrong.", "error");
+                                swal("Ops!","Something went wrong.","error");
                             }
                         }
                     });
@@ -389,14 +401,6 @@
             swal("Sorry!", "Please fill all the field.", "info");
         }
 	});
-    $('#paymentMode').change(function(){
-        var mode = $(this).val();
-        if(mode == 'Cash'){
-            $('#refBank').slideUp();
-        }else{
-            $('#refBank').slideDown();
-        }
-    });
     $('#projID').change(function(){
         var projID = $(this).val();
         $.ajax({
@@ -410,6 +414,7 @@
                     $('#catID').append('<option value="' + data.catId + '">' + data.catName + '</option>');
                 });
                 getPaymentPlans(projID);
+                projectInfo(projID);
             }
         });
     });
@@ -467,8 +472,19 @@
             success: function(res){
                 $('#payPlanID').find('option').not(':first').remove();
                 $.each(res, function(index, data){
-                    $('#payPlanID').append('<option value="' + data.payPlanId + '">' + data.planName + '&emsp;(' + data.downPayment + '% - ' + data.confirmPay + '% -  ' + data.semiAnnual + '% - ' + data.possession + '% )</option>');
+                    $('#payPlanID').append('<option value="' + data.payPlanId + '">' + data.planYears + ' Year &emsp;(' + data.downPayment + '% - ' + data.confirmPay + '% -  ' + data.semiAnnual + '% - ' + data.possession + '% )</option>');
                 });
+            }
+        });
+    }
+    function projectInfo(projID){
+        $.ajax({
+            url: "<?php echo base_url('dashboard/projectDetail/'); ?>" + projID,
+            method: 'POST',
+            dataType: 'json',
+            data: { projID: projID },
+            success: function(res){
+                $('#projectCode').val(res[0].projCode);
             }
         });
     }
@@ -480,7 +496,7 @@
             dataType: 'JSON',
             success: function(data){
                 if(data){
-                    $('#custmID').val(data.customerId);
+                    $('#customerID').val(data.customerId);
                     $('#custmName').text(data.custmName);
                     if(data.isEmployee == 1){
                         $('#custmEmp').html('Employee').addClass('text-success');
@@ -488,10 +504,49 @@
                         $('#custmEmp').html('Customer').addClass('text-danger');
                     }
                 }else{
+                    $('#custmName').text('-');
+                    $('#custmEmp').html('-');
                     $('input, select').prop('disabled', true);
-                    swal("Sorry!","Please add the customer.","info");
+                    swal("Sorry!","There is no customer associated with the provided CNIC ("+cnic+")","info");
                 }
             }
         });
+    });
+    $('#payPlanID').change(function(){
+        var planId = $(this).val();
+        $.ajax({
+            url: '<?= base_url('dashboard/getPayPlan/'); ?>' + planId,
+            method: 'POST',
+            dataType: 'JSON',
+            success: function(data){
+                if(data){
+                    $('.showPlaName').html(data.planName);
+                    $('.showPayPlan').html(data.planYears);
+                    $('.showDownPay').html(data.downPayment);
+                    $('.showConfirm').html(data.confirmPay);
+                    $('.showSemiAn').html(data.semiAnnual);
+                    $('.showPossession').html(data.possession);
+                }
+            }
+        });
+    });
+    $('#typeID').change(function(){
+        var typeID = $(this).val();
+        $.ajax({
+            url: '<?= base_url('dashboard/getTypeInfo/'); ?>' + typeID,
+            method: 'POST',
+            dataType: 'JSON',
+            success: function(data){
+                if(data){
+                    $('.typeSize').val(data[0].marlaSize);
+                }
+            }
+        });
+    });
+    $('input[name="feature-charges[]"]').change(function () {
+        var checkedCheckboxes = $('input[name="feature-charges[]"]:checked');
+        var featurePercent = checkedCheckboxes.length === 3 ? 25 : checkedCheckboxes.length * 10;
+
+        $('.showFeatures').text(featurePercent);
     });
 </script>
