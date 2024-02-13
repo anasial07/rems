@@ -329,7 +329,7 @@
                                     location.reload();
                                 });
                             } else {
-                                swal("Ops!", "Something went wrong", "error");
+                                swal("Ops!", dataResult, "error");
                             }
                         }
                     });

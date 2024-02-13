@@ -20,7 +20,7 @@ class booking_model extends CI_Model{
 		$this->db->join('customers', 'bookings.customerID = customers.customerId', 'left');
 		$this->db->join('locations', 'bookings.cityID = locations.locationId', 'left');
 		$this->db->join('agents', 'bookings.agentID = agents.agentId', 'left');
-		$this->db->join('banks', 'bookings.bankId = banks.bankId', 'left');
+		$this->db->join('banks', 'bookings.bookBankId = banks.bankId', 'left');
 		$this->db->join('payment_plans', 'bookings.payPlanID = payment_plans.payPlanId', 'left');
 		$this->db->order_by('bookings.bookingId', 'DESC');
 		$id && $this->db->where('bookings.bookingId', $id);
@@ -50,10 +50,19 @@ class booking_model extends CI_Model{
 		$this->db->join('customers', 'bookings.customerID = customers.customerId', 'left');
 		$this->db->join('locations', 'bookings.cityID = locations.locationId', 'left');
 		$this->db->join('agents', 'bookings.agentID = agents.agentId', 'left');
-		$this->db->join('banks', 'bookings.bankId = banks.bankId', 'left');
+		$this->db->join('banks', 'bookings.bookBankId = banks.bankId', 'left');
 		$this->db->join('payment_plans', 'bookings.payPlanID = payment_plans.payPlanId', 'left');
 		$this->db->order_by('bookings.bookingId', 'DESC');
 		$id && $this->db->where('customers.custmCNIC', $id);
+		return $this->db->get()->result();
+	}
+	public function getInstallments($id = null){
+		$this->db->select('*');
+		$this->db->from('intallments');
+		$this->db->join('bookings', 'intallments.bookingId = bookings.bookingId', 'left');
+		$this->db->join('locations', 'intallments.installReceivedIn = locations.locationId', 'left');
+		$this->db->join('banks', 'intallments.installBankId = banks.bankId', 'left');
+		$id && $this->db->where('intallments.bookingId', $id);
 		return $this->db->get()->result();
 	}
 

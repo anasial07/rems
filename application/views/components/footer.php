@@ -28,6 +28,10 @@
                 var input = event.target;
                 input.value = input.value.replace(/[^0-9-]/g, '');
             }
+            function validateProject(event){
+                var input = event.target;
+                input.value = input.value.replace(/[^a-zA-Z (,.) ]+/g, '').replace(/\s{2,}/g, ' ');
+            }
             function validateEmail(event){
                 var input = event.target;
                 input.value = input.value.replace(/[^a-z0-9@.]/g, '');

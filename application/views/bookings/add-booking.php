@@ -253,6 +253,10 @@
                                         <h4>Employee</h4>
                                         <h5 id="custmEmp">-</h5>
                                     </li>
+                                    <li>
+                                        <h4>Status</h4>
+                                        <h5 id="custmStatus">-</h5>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -297,6 +301,7 @@
                                     <li>
                                         <h4>Features</h4>
                                         <h5><span class="showFeatures">0</span> &middot; %</h5>
+                                        <input type="hidden" id="featuresPercent">
                                     </li>
                                 </ul>
                             </div>
@@ -331,6 +336,7 @@
         var projectCode = $('#projectCode').val();
         var typeSize = $('#typeSize').val();
         var custmID = $('#customerID').val();
+        var featuresPercent = $('#featuresPercent').val();
 
         var features = [];
         $('input[name="feature-charges[]"]:checked').each(function() {
@@ -375,6 +381,7 @@
                             projectCode: projectCode,
                             typeSize: typeSize,
                             customerID: custmID,
+                            featuresPercent: featuresPercent,
                             features: features
                         },
                         cache: false,
@@ -499,9 +506,16 @@
                     $('#customerID').val(data.customerId);
                     $('#custmName').text(data.custmName);
                     if(data.isEmployee == 1){
-                        $('#custmEmp').html('Employee').addClass('text-success');
+                        $('#custmEmp').html('Employee');
                     }else{
-                        $('#custmEmp').html('Customer').addClass('text-danger');
+                        $('#custmEmp').html('Customer');
+                    }
+                    if(data.custmStatus == 1){
+                        $('#custmStatus').html('Active').addClass('text-success');
+                    }else{
+                        $('#custmStatus').html('Inactive').addClass('text-danger');
+                        $('input, select').prop('disabled', true);
+                        swal("Sorry!","This customer's status is inactive.","info");
                     }
                 }else{
                     $('#custmName').text('-');
@@ -548,5 +562,6 @@
         var featurePercent = checkedCheckboxes.length === 3 ? 25 : checkedCheckboxes.length * 10;
 
         $('.showFeatures').text(featurePercent);
-    });
+        $('#featuresPercent').val(featurePercent);
+    })
 </script>

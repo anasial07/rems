@@ -3,20 +3,21 @@
     .bookingTable tr td{ border:none!important; line-height:0.3; }
     .topBtn{ border-radius:0px; }
 </style>
+<?php $role=$this->session->userdata('role'); ?>
 <div class="page-wrapper">
     <div class="content">
         <div class="page-header">
             <div class="page-title">
-                <h4>AHC/V/0005/2023</h4>
+                <h4><?= $info[0]->membershipNo; ?></h4>
                 <h6>Membership#</h6>
             </div>
             <div class="page-btn">
-            <button type="button" class="btn btn-rounded topBtn btn-danger">Cancellation Request</button>
-            <button type="button" class="btn btn-rounded topBtn btn-primary">Booking Memo</button>
-            <button type="button" class="btn btn-rounded topBtn btn-secondary">Welcome Letter</button>
-            <button type="button" class="btn btn-rounded topBtn btn-info text-white">Confirmation Latter</button>
-            <button type="button" class="btn btn-rounded topBtn btn-dark">Booking Form</button>
-            <button type="button" class="btn btn-rounded topBtn btn-success">Payment Plan</button>
+                <button type="button" class="btn btn-rounded topBtn btn-danger">Cancellation Request</button>
+                <a href="<?= base_url('booking/generateBookingMemo'); ?>"><button type="button" class="btn btn-rounded topBtn btn-primary">Booking Memo</button></a>
+                <a href="<?= base_url('booking/generateWelcomeLetter'); ?>"><button type="button" class="btn btn-rounded topBtn btn-secondary">Welcome Letter</button></a>
+                <a href="<?= base_url(''); ?>"><button type="button" class="btn btn-rounded topBtn btn-info text-white">Confirmation Letter</button></a>
+                <a href="<?= base_url(''); ?>"><button type="button" class="btn btn-rounded topBtn btn-dark">Booking Form</button></a>
+                <a href="<?= base_url(''); ?>"><button type="button" class="btn btn-rounded topBtn btn-success">Payment Plan</button></a>
             </div>
         </div>
         <div class="card p-4">
@@ -26,19 +27,23 @@
                     <table class="table bookingTable">
                         <tr>
                             <td>Customer</td>
-                            <td>Muhammad Anas</td>
+                            <td><?= $info[0]->custmName; ?></td>
                         </tr>
                         <tr>
                             <td>CNIC</td>
-                            <td>3810173371555</td>
+                            <td><?= $info[0]->custmCNIC; ?></td>
                         </tr>
                         <tr>
                             <td>Phone</td>
-                            <td>03344903350</td>
+                            <td><?= $info[0]->primaryPhone; ?></td>
                         </tr>
                         <tr>
                             <td>Employee</td>
-                            <td class="text-success">Yes</td>
+                            <?php
+                                $emp = ($info[0]->isEmployee == 0) ? "No" : "Yes";
+                                $empClass = ($emp == 'No') ? "text-danger" : "text-success";
+                            ?>
+                            <td class="<?= $empClass; ?>"><?= $emp; ?></td>
                         </tr>
                     </table>
                 </div>
@@ -47,19 +52,19 @@
                     <table class="table bookingTable">
                         <tr>
                             <td>Category</td>
-                            <td>Residencial</td>
+                            <td><?= $info[0]->catName; ?></td>
                         </tr>
                         <tr>
                             <td>Sub-Category</td>
-                            <td>Plot</td>
+                            <td><?= $info[0]->subCatName; ?></td>
                         </tr>
                         <tr>
                             <td>Type</td>
-                            <td>5 Marla</td>
+                            <td><?= $info[0]->typeName; ?></td>
                         </tr>
                         <tr>
                             <td>Payment Plan</td>
-                            <td>4 Year(s)</td>
+                            <td><?= $info[0]->planYears; ?> Year(s)</td>
                         </tr>
                     </table>
                 </div>
@@ -80,7 +85,7 @@
                         </tr>
                         <tr>
                             <td>Purchase Date</td>
-                            <td>Aug 08, 2023</td>
+                            <td><?= date('M d, Y',strtotime($info[0]->purchaseDate)); ?></td>
                         </tr>
                     </table>
                 </div>
@@ -116,34 +121,68 @@
                                 <th>Location</th>
                                 <th>Receving Date</th>
                                 <th>Filer Status</th>
-                                <th>Tax %</th>
+                                <th>Tax</th>
                                 <th class="text-center">Status</th>
-                                <th class="text-center">Action</th>
+                                <?php if($role=='admin'): ?>
+                                    <th class="text-center">Action</th>
+                                <?php endif; ?>
                             </tr>
                         </thead>
                         <tbody>
-                        <?php for($i=1; $i<=20; $i++): ?>
                             <tr>
-                                <td>500,000</td>
-                                <td>N/A</td>
-                                <td>N/A</td>
-                                <td>Cash</td>
-                                <td>Islamabad</td>
-                                <td>Jan 03, 2024</td>
-                                <td class="text-success">Filer</td>
-                                <td>5%</td>
-                                <td class="text-center"><span class="badges bg-lightgreen">Paid</span></td>
-                                <td class="text-center">
-                                    <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
-                                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Installment</a></li>
-                                        <li><a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img">Delete Installment</a></li>
-                                    </ul>
+                                <td><?= number_format($info[0]->bookingAmount); ?></td>
+                                <td><?php echo ($info[0]->bookingReferenceNo == 0) ? "N/A" : $info[0]->bookingReferenceNo; ?></td>
+                                <td><?php echo ($info[0]->bookBankId == 0) ? "N/A" : $info[0]->bankName; ?></td>
+                                <td><?= $info[0]->bookingMode; ?></td>
+                                <td><?= $info[0]->locName; ?></td>
+                                <td><?= date('M d, Y',strtotime($info[0]->purchaseDate)); ?></td>
+                                <td>
+                                    <span class="<?= ($info[0]->bookFilerStatus == 'Active') ? 'text-success' : 'text-danger'; ?>">
+                                        <?= $info[0]->bookFilerStatus; ?>
+                                    </span>
                                 </td>
+                                <td><?= $info[0]->bookFilerPercent; ?>%</td>
+                                <td class="text-center"><span class="badges bg-lightgreen">Paid</span></td>
+                                <?php if($role=='admin'): ?>
+                                    <td class="text-center">
+                                        <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
+                                            <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Installment</a></li>
+                                            <li><a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img">Delete Installment</a></li>
+                                        </ul>
+                                    </td>
+                                <?php endif; ?>
                             </tr>
-                            <?php endfor; ?>
+                            <?php foreach($installments as $install): ?>
+                            <tr>
+                                <td><?= number_format($install->installAmount); ?></td>
+                                <td><?php echo ($install->installReferenceNo == 0) ? "N/A" : $install->installReferenceNo; ?></td>
+                                <td><?php echo ($install->installBankId == 0) ? "N/A" : $install->bankName; ?></td>
+                                <td><?= $install->installPayMode; ?></td>
+                                <td><?= $install->locName; ?></td>
+                                <td><?= date('M d, Y',strtotime($install->installReceivedDate)); ?></td>
+                                <td>
+                                    <span class="<?= ($install->installFilerStatus == 'Active') ? 'text-success' : 'text-danger'; ?>">
+                                        <?= $install->installFilerStatus; ?>
+                                    </span>
+                                </td>
+                                <td><?= $install->installFilerPercent; ?>%</td>
+                                <td class="text-center"><span class="badges bg-lightgreen">Paid</span></td>
+                                <?php if($role=='admin'): ?>
+                                    <td class="text-center">
+                                        <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
+                                            <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Installment</a></li>
+                                            <li><a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img">Delete Installment</a></li>
+                                        </ul>
+                                    </td>
+                                <?php endif; ?>
+                            </tr>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>

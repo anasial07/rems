@@ -21,7 +21,7 @@ class customer_model extends CI_Model{
 	public function getCustmInfo($CNIC){
 		$this->db->select('*');
 		$this->db->from('customers');
-		$this->db->where(array('custmCNIC' => $CNIC, 'custmStatus' => 1));
+		$this->db->where(array('custmCNIC' => $CNIC));
 		return $this->db->get()->row();
 	}
 

@@ -188,7 +188,7 @@ class Dashboard extends CI_Controller {
 	public function addOffice(){	// Add Office
 		$data = array(
 			'locationId' => $this->input->post('locationId'),
-			'officeName' => strtoupper($this->input->post('officeName')),
+			'officeName' => ucwords($this->input->post('officeName')),
 			'addedBy' => $this->session->userdata('userId')
 		);
 		$this->form_validation->set_rules('locationId', 'Select City', 'required');
@@ -248,7 +248,6 @@ class Dashboard extends CI_Controller {
 		$this->form_validation->set_rules('projName', 'Project Name', 'required');
 		$this->form_validation->set_rules('projLocation', 'Project City', 'required');
 		$this->form_validation->set_rules('projArea', 'Project Area', 'required');
-		$this->form_validation->set_rules('projMarlaSize', 'Project Marla Price', 'required');
 		$this->form_validation->set_rules('projBasePrice', 'Project Base Price', 'required');
 		$this->form_validation->set_rules('webAddress', 'Project Web Address', 'required');
 		$this->form_validation->set_rules('mailAddress', 'Project Mail Address', 'required');
@@ -259,6 +258,8 @@ class Dashboard extends CI_Controller {
 			}else{
 				echo false;
 			}
+		}else{
+			echo validation_errors();
 		}
 	}
 	public function addCategory(){	// Add Category
@@ -304,6 +305,7 @@ class Dashboard extends CI_Controller {
 		$dimenssion = $this->input->post('dimenssion');
 		$base_price = $this->input->post('base_price');
 		$typeDiscount = $this->input->post('discount');
+		$typeDiscount = ($typeDiscount == "") ? 0 : $typeDiscount;
 	
 		$this->form_validation->set_rules('projectId', 'Select Project', 'required');
 		$this->form_validation->set_rules('catId', 'Select Category', 'required');

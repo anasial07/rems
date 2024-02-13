@@ -67,7 +67,7 @@
                             <div class="form-group">
                                 <label>Project Name</label>
                                 <div class="input-groupicon">
-                                    <input oninput="validateSpecial(event)" class="projectData" name="projName" id="projectName" type="text" placeholder="Enter Project Name">
+                                    <input oninput="validateProject(event)" class="projectData" name="projName" id="projectName" type="text" placeholder="Enter Project Name">
                                 </div>
                             </div>
                         </div>

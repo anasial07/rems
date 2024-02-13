@@ -47,13 +47,6 @@ class Login extends CI_Controller {
 	public function welcome(){
 		$this->load->view('login/welcome');
 	}
-
-
-
-
-
-
-
 	public function signout(){
 		$this->session->sess_destroy();
 		redirect('');
