@@ -13,11 +13,11 @@
             </div>
             <div class="page-btn">
                 <button type="button" class="btn btn-rounded topBtn btn-danger">Cancellation Request</button>
-                <a href="<?= base_url('booking/generateBookingMemo'); ?>"><button type="button" class="btn btn-rounded topBtn btn-primary">Booking Memo</button></a>
-                <a href="<?= base_url('booking/generateWelcomeLetter'); ?>"><button type="button" class="btn btn-rounded topBtn btn-secondary">Welcome Letter</button></a>
-                <a href="<?= base_url(''); ?>"><button type="button" class="btn btn-rounded topBtn btn-info text-white">Confirmation Letter</button></a>
-                <a href="<?= base_url(''); ?>"><button type="button" class="btn btn-rounded topBtn btn-dark">Booking Form</button></a>
-                <a href="<?= base_url(''); ?>"><button type="button" class="btn btn-rounded topBtn btn-success">Payment Plan</button></a>
+                <a href="<?= base_url('booking/generateBookingMemo/').base_convert($info[0]->bookingId, 10, 36); ?>"><button type="button" class="btn btn-rounded topBtn btn-primary">Booking Memo</button></a>
+                <a href="<?= base_url('booking/generateWelcomeLetter/').base_convert($info[0]->bookingId, 10, 36); ?>"><button type="button" class="btn btn-rounded topBtn btn-secondary">Welcome Letter</button></a>
+                <a href="<?= base_url('booking/generateConfirmationLetter/').base_convert($info[0]->bookingId, 10, 36); ?>"><button type="button" class="btn btn-rounded topBtn btn-info text-white">Confirmation Letter</button></a>
+                <a href="<?= base_url('booking/generateBookingForm/').base_convert($info[0]->bookingId, 10, 36); ?>"><button type="button" class="btn btn-rounded topBtn btn-dark">Booking Form</button></a>
+                <a href="<?= base_url('booking/generatePaymentPlan/').base_convert($info[0]->bookingId, 10, 36); ?>"><button type="button" class="btn btn-rounded topBtn btn-success">Payment Plan</button></a>
             </div>
         </div>
         <div class="card p-4">
@@ -81,7 +81,7 @@
                         </tr>
                         <tr>
                             <td>Features</td>
-                            <td>N/A</td>
+                            <td><?= $info[0]->features; ?></td>
                         </tr>
                         <tr>
                             <td>Purchase Date</td>
@@ -122,7 +122,7 @@
                                 <th>Receving Date</th>
                                 <th>Filer Status</th>
                                 <th>Tax</th>
-                                <th class="text-center">Status</th>
+                                <th class="text-center">Print</th>
                                 <?php if($role=='admin'): ?>
                                     <th class="text-center">Action</th>
                                 <?php endif; ?>
@@ -142,7 +142,9 @@
                                     </span>
                                 </td>
                                 <td><?= $info[0]->bookFilerPercent; ?>%</td>
-                                <td class="text-center"><span class="badges bg-lightgreen">Paid</span></td>
+                                <td class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Print Booking Receipt">
+                                    <a href="<?= base_url('booking/generateBookingReceipt/').base_convert($info[0]->bookingId, 10, 36); ?>"><img src="<?= base_url('assets/img/icons/printer.svg') ?>" alt="img"></a>
+                                </td>
                                 <?php if($role=='admin'): ?>
                                     <td class="text-center">
                                         <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">

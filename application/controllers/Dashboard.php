@@ -15,6 +15,12 @@ class Dashboard extends CI_Controller {
 	public function index(){
 		$data['title'] = 'Dashboard | REMS';
 		$data['body'] = 'dashboard/dashboard';
+		$data['totalCustomers'] = $this->dashboard_model->totalCustomers();
+		$data['totalAgents'] = $this->dashboard_model->totalAgents();
+		$data['totalBookings'] = $this->dashboard_model->totalBookings();
+		$data['totalTeams'] = $this->dashboard_model->totalTeams();
+		$data['bookingAmount'] = $this->dashboard_model->totalBookingAmount();
+		$data['installAmount'] = $this->dashboard_model->totalInstallmentAmount();
 		$this->load->view('components/template', $data);
 	}
 	public function provinces(){

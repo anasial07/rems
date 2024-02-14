@@ -58,11 +58,11 @@ class booking_model extends CI_Model{
 	}
 	public function getInstallments($id = null){
 		$this->db->select('*');
-		$this->db->from('intallments');
-		$this->db->join('bookings', 'intallments.bookingId = bookings.bookingId', 'left');
-		$this->db->join('locations', 'intallments.installReceivedIn = locations.locationId', 'left');
-		$this->db->join('banks', 'intallments.installBankId = banks.bankId', 'left');
-		$id && $this->db->where('intallments.bookingId', $id);
+		$this->db->from('installments');
+		$this->db->join('bookings', 'installments.bookingId = bookings.bookingId', 'left');
+		$this->db->join('locations', 'installments.installReceivedIn = locations.locationId', 'left');
+		$this->db->join('banks', 'installments.installBankId = banks.bankId', 'left');
+		$id && $this->db->where('installments.bookingId', $id);
 		return $this->db->get()->result();
 	}
 
@@ -77,7 +77,7 @@ class booking_model extends CI_Model{
 		}
 	}
 	public function submitInstallment($data){
-		$this->db->insert('intallments', $data);
+		$this->db->insert('installments', $data);
 		if($this->db->affected_rows() > 0){
 			return true;
 		}else{

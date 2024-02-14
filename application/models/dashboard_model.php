@@ -136,6 +136,28 @@ class dashboard_model extends CI_Model{
 		$this->db->from('designations')->order_by('desigId', 'DESC');
 		return $this->db->get()->result();
 	}
+	public function totalCustomers(){
+		return $this->db->from('customers')->count_all_results();
+	}
+	public function totalAgents(){
+		return $this->db->from('agents')->count_all_results();
+	}
+	public function totalBookings(){
+		return $this->db->from('bookings')->count_all_results();
+	}
+	public function totalTeams(){
+		return $this->db->from('teams')->count_all_results();
+	}
+	public function totalBookingAmount(){
+		$query = $this->db->select_sum('bookingAmount')->get('bookings');
+		$result = $query->row();
+		return $result->bookingAmount;
+	}
+	public function totalInstallmentAmount(){
+		$query = $this->db->select_sum('installAmount')->get('installments');
+		$result = $query->row();
+		return $result->installAmount;
+	}
 	public function activeProvinces(){
 		return $this->db->select('*')->from('provinces')->where('provStatus', 1)->order_by('provinceId', 'DESC')->get()->result();
 	}
