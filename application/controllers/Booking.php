@@ -194,6 +194,7 @@ class Booking extends CI_Controller {
 		$pdf->SetMargins(7, 7, 7, 7);
         $pdf->AddPage('A4');
         $pdf->SetFont('', 'B', 14);
+		$pdf->SetTitle('File Issuance Memo - AHC/V/00083/2022');
         $logo = base_url('uploads/letterHead/ahcity.png');
 
 		$pdf->writeHTMLCell(40, 5, 5, 5, '<img src="' . $logo . '">', 0, 0, false, false, '');
@@ -292,6 +293,7 @@ class Booking extends CI_Controller {
 		$pdf->SetMargins(7, 7, 7, 7);
         $pdf->AddPage('A4');
         $pdf->SetFont('', 'B', 14);
+		$pdf->SetTitle('Welcome Letter - AHC/V/00083/2022');
         $logo = base_url('uploads/letterHead/ahcity.png');
 
 		$pdf->writeHTMLCell(40, 5, 5, 5, '<img src="' . $logo . '">', 0, 0, false, false, '');
@@ -367,6 +369,7 @@ class Booking extends CI_Controller {
 		$pdf->SetMargins(7, 7, 7, 7);
         $pdf->AddPage('A4');
         $pdf->SetFont('', 'B', 14);
+		$pdf->SetTitle('Confirmation Letter - AHC/V/00083/2022');
         $logo = base_url('uploads/letterHead/ahcity.png');
 
 		$pdf->writeHTMLCell(40, 5, 5, 5, '<img src="' . $logo . '">', 0, 0, false, false, '');
@@ -432,6 +435,7 @@ class Booking extends CI_Controller {
 		$pdf->SetMargins(7, 7, 7, 7);
         $pdf->AddPage('A4');
         $pdf->SetFont('', 'B', 14);
+		$pdf->SetTitle('Booking Receipt - AHC/V/00083/2022');
         $logo = base_url('uploads/letterHead/ahcity.png');
 
 		$pdf->writeHTMLCell(40, 5, 5, 5, '<img src="' . $logo . '">', 0, 0, false, false, '');
@@ -554,6 +558,7 @@ class Booking extends CI_Controller {
 		$pdf->SetAutoPageBreak(true, $bottom = 0);
         $pdf->AddPage('A4');
         $pdf->SetFont('', 'B', 14);
+		$pdf->SetTitle('Booing Form - AHC/V/00083/2022');
         $logo = base_url('uploads/letterHead/ahcity.png');
 
 		$pdf->writeHTMLCell(40, 5, 5, 5, '<img src="' . $logo . '">', 0, 0, false, false, '');
@@ -739,6 +744,7 @@ class Booking extends CI_Controller {
 		$pdf->SetMargins(10, 10, 10);
 		$pdf->SetAutoPageBreak(true, 10);
         $pdf->SetFont('', 'B', 14);
+		$pdf->SetTitle('Payment Plan - AHC/V/00083/2022');
         $logo = base_url('uploads/letterHead/ahcity.png');
 
 		$pdf->writeHTMLCell(40, 5, 10, 5, '<img src="' . $logo . '">', 0, 0, false, false, '');
@@ -750,17 +756,81 @@ class Booking extends CI_Controller {
 		$pdf->Cell(40, 5, '');
 		$pdf->Cell(258, 10, '(A Project of AH Group)', 0, 0, 'C');
 		$pdf->Cell(40, 3, 'www.ahgroup-pk.com', 0, 1, 'R');
-		$pdf->Ln(20);
+		$pdf->Ln(16);
 		
-        $pdf->SetFont('', 'B', 13);
+        $pdf->SetFont('', 'B', 18);
 		$pdf->Cell(338, 6, 'Payment Plan', 0, 1, 'C');
-		$pdf->Ln(5);
+        $pdf->SetFont('', 'I', 12);
+		$pdf->Cell(338, 6, 'AHC/V/0001/2023', 0, 1, 'C');
+		$pdf->Ln(12);
+		
+        $pdf->SetFont('', 'B', 12);
+		$pdf->Cell(260, 6, 'Member Information');
+		$pdf->Cell(78, 6, 'Other Information', 0, 1);
+
+        $pdf->SetFont('', '', 12);
+		$pdf->Cell(40, 6, 'Reg No');
+		$pdf->Cell(220, 6, 'AHC/V/0001/2023');
+		$pdf->Cell(35, 6, 'Category');
+		$pdf->Cell(43, 6, 'Residential', 0, 1);
+		$pdf->Cell(40, 6, 'Member Name');
+		$pdf->Cell(220, 6, 'Ali Khan Khattak');
+		$pdf->Cell(35, 6, 'Sub-Category');
+		$pdf->Cell(43, 6, 'Plot', 0, 1);
+		$pdf->Cell(40, 6, 'CNIC');
+		$pdf->Cell(220, 6, '1730170772745');
+		$pdf->Cell(35, 6, 'Type');
+		$pdf->Cell(43, 6, '5 Marla', 0, 1);
+		$pdf->Cell(40, 6, "Phone");
+		$pdf->Cell(220, 6, '03106777773');
+		$pdf->Cell(35, 6, 'Plan Name');
+		$pdf->Cell(35, 6, '5 Marla For Employee', 0, 1);
+		$pdf->Cell(40, 6, "Father's Name");
+		$pdf->Cell(220, 6, 'Mehmood Aslam Khan Khattak');
+		$pdf->Cell(35, 6, 'Payment Plan');
+		$pdf->Cell(35, 6, '4 Years (48 mo*)', 0, 1);
+		$pdf->Cell(40, 6, 'Address');
+		$pdf->Cell(220, 6, 'PN Dockyard West, MOH PNS Iqbal Wharf, Karachi Gharbi');
+		$pdf->Cell(35, 6, 'City');
+		$pdf->Cell(43, 6, 'Islamabad', 0, 1);
+		$pdf->Ln(6);
+
+		$pdf->SetFillColor(193, 193, 193);
+		$pdf->Cell(338, 1, '', 0, 1, '', true);
+		$pdf->Cell(40, 6, 'Project Name', 0, 0, '', true);
+		$pdf->Cell(220, 6, 'AH City (Pvt), Ltd.', 0, 0, '', true);
+		$pdf->Cell(35, 6, 'Size in Marla', 0, 0, '', true);
+		$pdf->Cell(43, 6, '5 (25 X 50)', 0, 1, '', true);
+		$pdf->Cell(40, 6, 'Per Marla Price', 0, 0, '', true);
+		$pdf->Cell(220, 6, number_format(500000), 0, 0, '', true);
+		$pdf->Cell(35, 6, 'Payment Mode', 0, 0, '', true);
+		$pdf->Cell(43, 6, 'Cash', 0, 1, '', true);
+        $pdf->SetFont('', '', 12);
+		$pdf->Cell(40, 6, 'Special Discount', 0, 0, '', true);
+		$pdf->Cell(220, 6, '0%', 0, 0, '', true);
+		$pdf->Cell(35, 6, 'Filer Status', 0, 0, '', true);
+		$pdf->Cell(43, 6, 'Inactive (10.5%)', 0, 1, '', true);
+		$pdf->Cell(40, 6, 'Extra Land Charges', 0, 0, '', true);
+		$pdf->Cell(220, 6, number_format(50000), 0, 0, '', true);
+		$pdf->Cell(35, 6, 'Recevied In', 0, 0, '', true);
+		$pdf->Cell(43, 6, 'Islamabad', 0, 1, '', true);
+		$pdf->Cell(40, 6, 'Sale Price', 0, 0, '', true);
+		$pdf->Cell(220, 6, number_format(2500000), 0, 0, '', true);
+		$pdf->Cell(35, 6, 'Booking Date', 0, 0, '', true);
+		$pdf->Cell(43, 6, date('F d, Y'), 0, 1, '', true);
+		$pdf->Cell(40, 6, 'Features', 0, 0, '', true);
+		$pdf->Cell(220, 6, 'Corner,Boulevard,Park Facing  (25%)', 0, 0, '', true);
+		$pdf->Cell(35, 6, '', 0, 0, '', true);
+		$pdf->Cell(43, 6, '', 0, 1, '', true);
+		$pdf->Cell(338, 1, '', 0, 1, '', true);
+		$pdf->SetFillColor(0, 0, 0);
+		$pdf->Ln(6);
 
         $pdf->SetFont('', '', 11);
 		$pdf->SetTextColor(255, 255, 255);
 		$pdf->Cell(8, 6, 'Sr', 1, 0, 'C', true);
 		$pdf->Cell(40, 6, 'Narration', 1, 0, 'C', true);
-		$pdf->Cell(35, 6, 'Installment Type', 0, 0, 'C', true);
+		$pdf->Cell(35, 6, 'Installment Type', 1, 0, 'C', true);
 		$pdf->Cell(30, 6, 'Due Date', 1, 0, 'C', true);
 		$pdf->Cell(30, 6, 'Amount', 1, 0, 'C', true);
 		$pdf->Cell(30, 6, 'Received', 1, 0, 'C', true);

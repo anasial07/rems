@@ -66,7 +66,6 @@
                             <div class="profilename">
                                 <hr class="m-0">
                                 <a class="dropdown-item" href="<?= base_url('dashboard/myProfile'); ?>"> <i class="me-2" data-feather="user"></i> My Profile</a>
-                                <!-- <a class="dropdown-item" href=""><i class="me-2" data-feather="settings"></i>Settings</a> -->
                                 <hr class="m-0">
                                 <a class="dropdown-item logout pb-0" href="<?= base_url('login/signout'); ?>"><img src="<?= base_url('assets/img/icons/log-out.svg'); ?>" class="me-2" alt="img">Logout</a>
                             </div>
@@ -77,7 +76,6 @@
                     <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                     <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item" href="<?= base_url('dashboard/myProfile'); ?>">My Profile</a>
-                        <!-- <a class="dropdown-item" href="">Settings</a> -->
                         <a class="dropdown-item" href="<?= base_url('login/signout'); ?>">Logout</a>
                     </div>
                 </div>
@@ -104,6 +102,7 @@
                             <li><a href="<?= base_url('customers'); ?>"><img src="<?= base_url('assets/img/icons/users1.svg'); ?>" alt="img"><span>Customers</span></a></li>
                             <li><a href="<?= base_url('booking'); ?>"><img src="<?= base_url('assets/img/icons/places.svg'); ?>" alt="img"><span>Bookings</span></a></li>
                             <li><a href="<?= base_url('booking/addInstallment'); ?>"><img src="<?= base_url('assets/img/icons/expense1.svg'); ?>" alt="img"><span>Insallments</span></a></li>
+                            <li><a href="<?= base_url('dashboard/viewUsers'); ?>"><img src="<?= base_url('assets/img/icons/users1.svg'); ?>" alt="img"><span>Users Management</span></a></li>
                         </ul>
                     </div>
                 </div>

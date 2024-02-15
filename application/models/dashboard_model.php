@@ -106,6 +106,14 @@ class dashboard_model extends CI_Model{
 			return false;
 		}
 	}
+	public function add_user($data){
+		$this->db->insert('users', $data);
+		if($this->db->affected_rows() > 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
 
 	// ---------------------------- Select Queries ------------------------------------
 
@@ -129,6 +137,14 @@ class dashboard_model extends CI_Model{
 		$this->db->from('projects');
 		$this->db->join('locations', 'projects.projLocation = locations.locationId', 'left');
 		$id && $this->db->where('projects.projectId', $id);
+		return $this->db->get()->result();
+	}
+	public function getUser($id = null){
+		$this->db->select('*');
+		$this->db->from('users');
+		$this->db->join('locations', 'users.locationId = locations.locationId', 'left');
+		$this->db->join('departments', 'users.departmentId = departments.departId', 'left');
+		$id && $this->db->where(array('users.userId' => $id, 'users.role !=' => 'admin'));
 		return $this->db->get()->result();
 	}
 	public function getDesignations(){
@@ -159,25 +175,25 @@ class dashboard_model extends CI_Model{
 		return $result->installAmount;
 	}
 	public function activeProvinces(){
-		return $this->db->select('*')->from('provinces')->where('provStatus', 1)->order_by('provinceId', 'DESC')->get()->result();
+		return $this->db->select('*')->from('provinces')->where('provStatus', 1)->order_by('provName', 'ASC')->get()->result();
 	}
 	public function activeCities(){
-		return $this->db->select('*')->from('locations')->where('locStatus', 1)->order_by('locationId', 'DESC')->get()->result();
+		return $this->db->select('*')->from('locations')->where('locStatus', 1)->order_by('locName', 'ASC')->get()->result();
 	}
 	public function activeProjects(){
-		return $this->db->select('*')->from('projects')->where('projStatus', 1)->order_by('projectId', 'DESC')->get()->result();
+		return $this->db->select('*')->from('projects')->where('projStatus', 1)->order_by('projName', 'ASC')->get()->result();
 	}
 	public function activeDepart(){
-		return $this->db->select('*')->from('departments')->where('departStatus', 1)->order_by('departId', 'DESC')->get()->result();
+		return $this->db->select('*')->from('departments')->where('departStatus', 1)->order_by('departName', 'ASC')->get()->result();
 	}
 	public function activeOffices(){
-		return $this->db->select('*')->from('offices')->where('officeStatus', 1)->order_by('officeId', 'DESC')->get()->result();
+		return $this->db->select('*')->from('offices')->where('officeStatus', 1)->order_by('officeName', 'ASC')->get()->result();
 	}
 	public function activeDesignations(){
-		return $this->db->select('*')->from('designations')->where('desigStatus', 1)->order_by('desigId', 'DESC')->get()->result();
+		return $this->db->select('*')->from('designations')->where('desigStatus', 1)->order_by('desigName', 'ASC')->get()->result();
 	}
 	public function activeBanks(){
-		return $this->db->select('*')->from('banks')->where('bankStatus', 1)->order_by('bankId', 'DESC')->get()->result();
+		return $this->db->select('*')->from('banks')->where('bankStatus', 1)->order_by('bankName', 'ASC')->get()->result();
 	}
 	public function cityAgents($id){
 		$this->db->select('*');
@@ -230,7 +246,7 @@ class dashboard_model extends CI_Model{
 		$this->db->from('users');
 		$this->db->join('locations', 'users.locationId = locations.locationId', 'left');
 		$this->db->join('departments', 'users.departmentId = departments.departId', 'left');
-		$id && $this->db->where('users.id', $id);
+		$id && $this->db->where('users.userId', $id);
 		return $this->db->get()->result();
 	}
 	public function getCategories(){
@@ -285,5 +301,16 @@ class dashboard_model extends CI_Model{
 		$this->db->order_by('teams.teamId', 'DESC');
 		$id && $this->db->where('teams.teamId', $id); // single team
 		return $this->db->get()->result();
+	}
+	public function old_password($password){
+		$userID = $this->session->userdata('userId');
+		$this->db->select('password')->from('users')->where(array('password' => $password, 'userId' => $userID));
+		return $this->db->get()->row();
+	}
+	public function update_password($data){
+		$userID = $this->session->userdata('userId');
+		$this->db->where('userId', $userID);
+		$this->db->update('users', $data);
+		return true;
 	}
 }

@@ -80,7 +80,8 @@ class Dashboard extends CI_Controller {
 	public function myProfile(){
 		$data['title'] = 'Dashboard | REMS';
 		$data['body'] = 'dashboard/my-profile';
-		$data['info'] = $this->dashboard_model->getProfile();
+		$userID = $this->session->userdata('userId');
+		$data['info'] = $this->dashboard_model->getProfile($userID);
 		$this->load->view('components/template', $data);
 	}
 	public function paymentPlan(){
@@ -108,6 +109,14 @@ class Dashboard extends CI_Controller {
 		$data['title'] = 'Dashboard | REMS';
 		$data['body'] = 'dashboard/add-designation';
 		$data['designations'] = $this->dashboard_model->getDesignations();
+		$this->load->view('components/template', $data);
+	}
+	public function viewUsers(){
+		$data['title'] = 'Dashboard | REMS';
+		$data['body'] = 'dashboard/view-users';
+		$data['users'] = $this->dashboard_model->getUser();
+		$data['cities'] = $this->dashboard_model->activeCities();
+		$data['departments'] = $this->dashboard_model->activeDepart();
 		$this->load->view('components/template', $data);
 	}
 	public function projectDetail($progId){	// Get Project Full Details (View in Model)
@@ -428,6 +437,52 @@ class Dashboard extends CI_Controller {
 			}else{
 				echo false;
 			}
+		}
+	}
+	public function addUser(){	// Add New User
+		$data = array(
+			'empName' => ucfirst(strtolower($this->input->post('userFullName'))),
+			'userName' => $this->input->post('userName'),
+			'userEmail' => $this->input->post('userEmailAddr'),
+			'password' => sha1($this->input->post('userPassword')),
+			'locationId' => $this->input->post('userCity'),
+			'departmentId' => $this->input->post('userDepart'),
+			'role' => $this->input->post('userRole')
+		);
+		$this->form_validation->set_rules('userFullName', 'Enter Full Name', 'required');
+		$this->form_validation->set_rules('userName', 'Enter Username', 'required');
+		$this->form_validation->set_rules('userEmailAddr', 'User Email Address', 'required');
+		$this->form_validation->set_rules('userPassword', 'Set Password', 'required');
+		$this->form_validation->set_rules('userCity', 'Select City', 'required');
+		$this->form_validation->set_rules('userDepart', 'Select Department', 'required');
+		$this->form_validation->set_rules('userRole', 'Select Role', 'required');
+		if($this->form_validation->run() == TRUE){
+			if($this->dashboard_model->add_user($data)){
+				echo true;
+			}else{
+				echo false;
+			}
+		}
+	}
+	public function updateProfile(){	// Update Profile
+		$oldPassword = sha1($this->input->post('oldPass'));
+		$this->form_validation->set_rules('oldPass', 'Enter Old Password', 'required');
+		$this->form_validation->set_rules('newPass', 'Enter New Password', 'required');
+		if($this->form_validation->run() == TRUE){
+			if($this->dashboard_model->old_password($oldPassword)){
+				$data = array(
+					'password' => sha1($this->input->post('newPass'))
+				);
+				if($this->dashboard_model->update_password($data)){
+					echo true;
+				}else{
+					echo false;
+				}
+			}else{
+				echo false;
+			}
+		}else{
+			echo false;
 		}
 	}
 }

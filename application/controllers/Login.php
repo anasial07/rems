@@ -27,6 +27,9 @@ class Login extends CI_Controller {
 				// $otp = rand(100000, 999999);
 				// $this->db->query("UPDATE users SET otp = $otp WHERE email='$email'");
 
+				$data = array('lastLogin' => date('Y-m-d H:i:s'));
+				$this->login_model->update_last_login($data);
+
 				redirect('dashboard');
 
 				// $this->load->library('email'); // Loading the email library.
@@ -44,8 +47,15 @@ class Login extends CI_Controller {
 			return redirect('login', 'refresh');
 		}
 	}
-	public function welcome(){
-		$this->load->view('login/welcome');
+	public function deactivate_account(){
+		if($return = $this->login_model->delete_user()){
+			if($return == true){
+				$this->session->sess_destroy();
+				echo true;
+			}
+		}else{
+			echo false;
+		}
 	}
 	public function signout(){
 		$this->session->sess_destroy();

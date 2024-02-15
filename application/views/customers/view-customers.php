@@ -11,7 +11,7 @@
             <h6>Add & Manage your Customers</h6>
         </div>
         <div class="page-btn">
-            <a href="<?= base_url('customers/addCustomer'); ?>" class="btn btn-added"><img src="assets/img/icons/plus.svg" alt="img">Add New Customer</a>
+            <a href="<?= base_url('customers/addCustomer'); ?>" class="btn btn-added"><img src="<?= base_url('assets/img/icons/plus.svg') ?>" alt="img">Add New Customer</a>
         </div>
     </div>
     <div class="row px-3">

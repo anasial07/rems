@@ -60,7 +60,7 @@
                                     Active 
                                     <i class="fa fa-circle text-green pulse" style="font-size:13px;"></i>
                                 </p>
-                                <p class="height"><?= date('d M, Y', strtotime($info[0]->createdAt)); ?></p>
+                                <p class="height"><?= date('d M, Y', strtotime($info[0]->userCreatedAt)); ?></p>
                                 <p class="height"><?= date('d M, Y g:i:s A', strtotime($info[0]->lastLogin)); ?></p>
                             </div>
                         </div>
@@ -73,7 +73,7 @@
                                 <div class="form-group">
                                     <label>Current Password</label>
                                     <div class="pass-group">
-                                        <input type="password" class="pass-input" placeholder="Current password">
+                                        <input type="password" id="oldPass" class="pass-input" placeholder="Current password">
                                         <span class="fas toggle-password fa-eye-slash"></span>
                                     </div>
                                 </div>
@@ -83,14 +83,14 @@
                                 <div class="form-group">
                                     <label>New Password</label>
                                     <div class="pass-group">
-                                        <input type="password" class="pass-inputs" placeholder="Set new password">
+                                        <input type="password" id="newPass" class="pass-inputs" placeholder="Set new password">
                                         <span class="fas toggle-passworda fa-eye-slash"></span>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-12 col-lg-6"></div>
                             <div class="col-sm-12 col-lg-6">
-                                <a href="javascript:void(0);" class="btn btn-submit form-control me-2">Save Changes</a>
+                                <a href="javascript:void(0);" class="btn btn-submit form-control me-2 updateProfile">Save Changes</a>
                             </div>
                             <!-- <div class="col"></div>
                             <div class="col-7">
@@ -101,18 +101,111 @@
                 </div>
             </div>
         </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-sm-12 col-lg-9">
-                        <h3 class="text-danger"><span style="font-weight:600;">Danger zone</span> &middot; Delete account</h3>
-                        <span>Once you delete your account, there is no going back. Please be certain. You'll be logged out right away.</span>
-                    </div>
-                    <div class="col">
-                        <a href="javascript:void(0);" class="btn form-control btn-submit mt-1" style="background:red!important;">Deactivate my account</a>
+        <?php if($role!='admin'): ?>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-9">
+                            <h3 class="text-danger"><span style="font-weight:600;">Danger zone</span> &middot; Delete account</h3>
+                            <span>Once you delete your account, there is no going back. Please be certain. You'll be logged out right away.</span>
+                        </div>
+                        <div class="col">
+                            <a href="javascript:void(0);" class="btn form-control btn-submit mt-1 deactivateAccount" style="background:red!important;">Deactivate my account</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        <?php endif; ?>
     </div>
 </div>
+<script>
+	$('.updateProfile').on('click', function(){
+        var oldPass = $('#oldPass').val();
+        var newPass = $('#newPass').val();
+        if(oldPass!="" && newPass!=""){
+            swal({
+                title: "Are you sure?",
+                text: "You want to change the password!",
+                type: "info",
+                showCancelButton: true,
+                confirmButtonClass: "btn-success",
+                confirmButtonText: "Yes, change it!",
+                cancelButtonClass: "btn-primary",
+                cancelButtonText: "No, cancel!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+            function(isConfirm){
+                if(isConfirm){
+                    $.ajax({
+                        url: "<?php echo base_url("dashboard/updateProfile"); ?>",
+                        type: "POST",
+                        data: {
+                            oldPass: oldPass,
+                            newPass: newPass
+                        },
+                        cache: false,
+                        success: function(dataResult){
+                            if(dataResult==true){
+                                swal({
+                                    title: "Congratulation!", 
+                                    text: "Password has been changed successfully.", 
+                                    type: "success"
+                                    },function(){ 
+                                        location.reload();
+                                    }
+                                );
+                            }else{
+                                swal("Ops!", "Something went wrong.", "error");
+                            }
+                        }
+                    });
+                }else{
+                    swal.close()
+                }
+            });
+        }else{
+            swal("Sorry!", "Please fill all the field.", "info");
+        }
+	});
+    $('.deactivateAccount').on('click', function(){
+        swal({
+            title: "Are you sure?",
+            text: "You want to deactivate your account!",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Yes, deactivate it!",
+            cancelButtonClass: "btn-success",
+            cancelButtonText: "No, cancel!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+        function(isConfirm){
+            if(isConfirm){
+                $.ajax({
+                    url: "<?php echo base_url('login/deactivate_account'); ?>",
+                    type: "POST",
+                    data: {}, 
+                    dataType: "json",
+                    cache: false,
+                    success: function(dataResult){
+                        if (dataResult == true) {
+                            swal({
+                                title: "Deactivated!",
+                                text: "After processing your request, it has been confirmed that your account has been successfully deactivated.",
+                                type: "success"
+                            }, function() {
+                                location.reload();
+                            });
+                        } else {
+                            swal("Oops!", dataResult, "error");
+                        }
+                    }
+                });
+            }else{
+                swal.close()
+            }
+        });
+	});
+</script>
