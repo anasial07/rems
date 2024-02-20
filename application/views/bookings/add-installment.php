@@ -320,7 +320,7 @@
             success: function(res){
                 $('#getCustomers').find('option').not(':first').remove();
                 $.each(res, function(index, data){
-                    $('#getCustomers').append('<option value="' + data['customerId'] + '">' + data['custmName'] + '</option>');
+                    $('#getCustomers').append('<option value="' + data['customerId'] + '">' + data['custmName'] + ' - ' + data['custmCNIC'] + '</option>');
                 });
             }
         });

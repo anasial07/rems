@@ -45,6 +45,7 @@
                         <div class="col-sm-12 col-lg-3">
                             <div class="form-group">
                                 <input type="hidden" id="typeSize" class="typeSize">
+                                <input type="hidden" id="typeAmount">
                                 <label>Select Type</label>
                                 <select id="typeID" class="form-control">
                                     <option selected disabled>Select Type</option>
@@ -307,8 +308,10 @@
                             </div>
                         </div>
                     </div>
-                    <h6>Information</h6>
-                    <span class="text-muted">Feature Charges are 10% of the total amount for each feature.</span>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        Feature Charges are <strong>10%</strong> of the total amount for each feature.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -337,6 +340,7 @@
         var typeSize = $('#typeSize').val();
         var custmID = $('#customerID').val();
         var featuresPercent = $('#featuresPercent').val();
+        var typeAmount = $('#typeAmount').val();
 
         var features = [];
         $('input[name="feature-charges[]"]:checked').each(function() {
@@ -382,6 +386,7 @@
                             typeSize: typeSize,
                             customerID: custmID,
                             featuresPercent: featuresPercent,
+                            typeAmount: typeAmount,
                             features: features
                         },
                         cache: false,
@@ -452,6 +457,18 @@
                 $.each(res, function(index, data){
                     $('#typeID').append('<option value="' + data['typeId'] + '">' + data['typeName'] + '</option>');
                 });
+            }
+        });
+    });
+    $('#typeID').change(function(){
+        var typeID = $(this).val();
+        $.ajax({
+            url: "<?php echo base_url('dashboard/typeInfo/'); ?>" + typeID,
+            method: 'POST',
+            dataType: 'json',
+            data: {typeID: typeID},
+            success: function(res){
+                $('#typeAmount').val(res[0].totalPrice);
             }
         });
     });

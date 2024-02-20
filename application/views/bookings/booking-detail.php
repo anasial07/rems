@@ -73,11 +73,11 @@
                     <table class="table bookingTable">
                         <tr>
                             <td>Sale Price</td>
-                            <td>2,000,000</td>
+                            <td><?= number_format($info[0]->salePrice); ?></td>
                         </tr>
                         <tr>
                             <td>Discount</td>
-                            <td>200,000</td>
+                            <td><?= number_format($info[0]->sepDiscount); ?>%</td>
                         </tr>
                         <tr>
                             <td>Features</td>

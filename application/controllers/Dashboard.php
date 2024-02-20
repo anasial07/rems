@@ -131,8 +131,12 @@ class Dashboard extends CI_Controller {
 		$data = $this->dashboard_model->activeSubCats($catId);
 		echo json_encode($data);
 	}
-	public function getTypes($subCatId){	// Filter Types
-		$data = $this->dashboard_model->activeTypes($subCatId);
+	public function getTypes($id){	// Filter Types
+		$data = $this->dashboard_model->activeTypes($id);
+		echo json_encode($data);
+	}
+	public function typeInfo($id){	// Filter Types
+		$data = $this->dashboard_model->getTypes($id);
 		echo json_encode($data);
 	}
 	public function getPlanDetail($planID){	// Get Payment Plan Details
@@ -330,8 +334,7 @@ class Dashboard extends CI_Controller {
 		$this->form_validation->set_rules('dimenssion', 'Dimensions', 'required');
 	
 		if ($this->form_validation->run() == TRUE) {
-			$percent = $typeDiscount / 100;
-			$perMarla = $base_price - ($percent * $base_price);
+			$perMarla = $base_price - ($base_price * ($typeDiscount / 100));
 			$totalPrice = $perMarla * $marlaSize;
 			$data = array(
 				'projectId' => $projID,

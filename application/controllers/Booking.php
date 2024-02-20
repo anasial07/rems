@@ -61,7 +61,15 @@ class Booking extends CI_Controller {
 		$typeSize=$this->input->post('typeSize');
 		$custmID=$this->input->post('customerID');
 		$purchaseDate = $this->input->post('purchaseDate');
+		$typeAmount = $this->input->post('typeAmount');
+		$sepDiscount = $this->input->post('sepDiscount');
+		$exCharges = $this->input->post('exCharges');
+		$featuresPercent = $this->input->post('featuresPercent');
 		$year=date('Y', strtotime($purchaseDate));
+
+		$subtotal=$typeAmount - ($typeAmount * ($sepDiscount / 100));
+		$total=$subtotal - $exCharges;
+		$salePrice=$total - ($total * ($featuresPercent / 100));
 
 		$total_bookings=0;
 		$this->db->select('COUNT(bookingId) as total_bookings');
@@ -94,7 +102,7 @@ class Booking extends CI_Controller {
 			$refrence=$this->input->post('referenceNo');
 			$bankName=$this->input->post('bank_name');
 		}
-		$features = !empty($this->input->post('features')) ? implode(',', $this->input->post('features')) : '';
+		$features = !empty($this->input->post('features')) ? implode(',', $this->input->post('features')) : 0;
 		$data = array(
 			'projID' => $this->input->post('projID'),
 			'catID' => $this->input->post('catID'),
@@ -103,18 +111,19 @@ class Booking extends CI_Controller {
 			'customerID' => $this->input->post('customerID'),
 			'cityID' => $this->input->post('cityID'),
 			'agentID' => $this->input->post('agentID'),
-			'sepDiscount' => $this->input->post('sepDiscount'),
+			'sepDiscount' => $sepDiscount,
 			'bookingAmount' => $this->input->post('paidAmount'),
 			'bookingMode' => $payMode,
 			'bookingReferenceNo' => $refrence,
 			'bookBankId' => $bankName,
 			'bookReceivedIn' => $this->input->post('receivedIn'),
 			'payPlanID' => $this->input->post('payPlanID'),
-			'exCharges' => $this->input->post('exCharges'),
+			'exCharges' => $exCharges,
+			'salePrice' => $salePrice,
 			'purchaseDate' => $this->input->post('purchaseDate'),
 			'bookFilerStatus' => $this->input->post('filerStatus'),
 			'bookFilerPercent' => $this->input->post('filerPercent'),
-			'featuresPercent' => $this->input->post('featuresPercent'),
+			'featuresPercent' => $featuresPercent,
 			'features' => $features,
 			'membershipNo' => $memberShip,
 			'bookAddedBy' => $this->session->userdata('userId')
@@ -190,22 +199,23 @@ class Booking extends CI_Controller {
 	// ------------------------------- Generate PDF Files -------------------------------
 	public function generateBookingMemo($id){
 		$bookingID=base_convert($id, 36, 10);
+		$info = $this->booking_model->getBookings($bookingID);
         $pdf = new Pdf();
 		$pdf->SetMargins(7, 7, 7, 7);
         $pdf->AddPage('A4');
         $pdf->SetFont('', 'B', 14);
-		$pdf->SetTitle('File Issuance Memo - AHC/V/00083/2022');
-        $logo = base_url('uploads/letterHead/ahcity.png');
+		$pdf->SetTitle('File Issuance Memo - '.$info[0]->membershipNo);
+        $logo = base_url('uploads/letterHead/'.$info[0]->projLogo);
 
 		$pdf->writeHTMLCell(40, 5, 5, 5, '<img src="' . $logo . '">', 0, 0, false, false, '');
-		$pdf->cell(120, 6, 'AH City Pvt, Ltd', 0, 0, 'C');
+		$pdf->cell(120, 6, $info[0]->projName, 0, 0, 'C');
 
         $pdf->SetFont('', '', 10);
-		$pdf->cell(40, 3, 'info@ahgroup-pk.com', 0, 1, 'R');
+		$pdf->cell(40, 3, $info[0]->mailAddress, 0, 1, 'R');
 
 		$pdf->cell(38, 5, '', 0, 0, '');
 		$pdf->cell(120, 10, '(A Project of AH Group)', 0, 0, 'C');
-		$pdf->cell(40, 3, 'www.ahgroup-pk.com', 0, 1, 'R');
+		$pdf->cell(40, 3, $info[0]->webAddress, 0, 1, 'R');
 		$pdf->Ln(20);
 		
         $pdf->SetFont('', 'B', 13);
@@ -227,47 +237,47 @@ class Booking extends CI_Controller {
 		$pdf->Ln(5);
 		
 		$pdf->cell(38, 6, 'Customer Name:', 0, 0, '');
-		$pdf->cell(160, 6, 'Saima', 0, 1, '');
+		$pdf->cell(160, 6, $info[0]->custmName, 0, 1, '');
 		$pdf->cell(38, 6, 'File No:', 0, 0, '');
-		$pdf->cell(160, 6, 'AHC/V/00083/2022', 0, 1, '');
+		$pdf->cell(160, 6, $info[0]->membershipNo, 0, 1, '');
 		$pdf->cell(38, 6, 'Booking Date:', 0, 0, '');
-		$pdf->cell(160, 6, date('F d, Y'), 0, 1, '');
+		$pdf->cell(160, 6, date('F d, Y',strtotime($info[0]->purchaseDate)), 0, 1, '');
 		$pdf->cell(38, 6, 'Property Size:', 0, 0, '');
-		$pdf->cell(160, 6, '5 Marla', 0, 1, '');
+		$pdf->cell(160, 6, $info[0]->typeName, 0, 1, '');
 		$pdf->cell(38, 6, 'Property Type:', 0, 0, '');
-		$pdf->cell(160, 6, 'Residential', 0, 1, '');
+		$pdf->cell(160, 6, $info[0]->catName, 0, 1, '');
 		$pdf->cell(38, 6, 'Net Price:', 0, 0, '');
-		$pdf->cell(160, 6, '2,000,000', 0, 1, '');
+		$pdf->cell(160, 6, '------------', 0, 1, '');
 		$pdf->cell(38, 6, 'Discounted Price:', 0, 0, '');
-		$pdf->cell(160, 6, '1,000,000', 0, 1, '');
+		$pdf->cell(160, 6, '------------', 0, 1, '');
 		$pdf->cell(38, 6, 'Sale Price:', 0, 0, '');
-		$pdf->cell(160, 6, '1,000,000', 0, 1, '');
+		$pdf->cell(160, 6, '------------', 0, 1, '');
 		$pdf->cell(38, 6, 'Per Marla Price:', 0, 0, '');
-		$pdf->cell(160, 6, '2,000,000', 0, 1, '');
+		$pdf->cell(160, 6, number_format($info[0]->perMarla), 0, 1, '');
 		$pdf->cell(38, 6, 'Amount Received:', 0, 0, '');
-		$pdf->cell(40, 6, '250,0000', 0, 0, '');
+		$pdf->cell(40, 6, '------------', 0, 0, '');
         $pdf->SetFont('', 'I', 10);
-		$pdf->cell(20, 6, '25%', 0, 0, 'C');
-		$pdf->cell(100, 6, '(Booking and Confirmation)', 0, 1, '');
+		$pdf->cell(20, 6, '25%', 1, 0, 'C');
+		$pdf->cell(100, 6, '(Booking and Confirmation)', 1, 1, '');
         $pdf->SetFont('', '', 10);
 		
 		$pdf->cell(38, 6, 'Inword:', 0, 0, '');
-		$pdf->cell(160, 6, 'Two Hundred Fifty Thousand Rupee Only', 0, 1, '');
+		$pdf->cell(160, 6, 'Two Hundred Fifty Thousand Rupee Only', 1, 1, '');
 		
 		$pdf->cell(38, 6, 'Payment Mode:', 0, 0, '');
-		$pdf->cell(160, 6, 'Cash', 0, 1, '');
+		$pdf->cell(160, 6, $info[0]->bookingMode, 0, 1, '');
 		$pdf->cell(38, 6, 'Receivable:', 0, 0, '');
-		$pdf->cell(160, 6, '750,000', 0, 1, '');
+		$pdf->cell(160, 6, '------------', 0, 1, '');
 		$pdf->cell(38, 6, 'Agent:', 0, 0, '');
-		$pdf->cell(160, 6, 'Muhammad Imad', 0, 1, '');
+		$pdf->cell(160, 6, $info[0]->agentName, 0, 1, '');
 		$pdf->cell(38, 6, 'Region:', 0, 0, '');
-		$pdf->cell(160, 6, 'Peshawar', 0, 1, '');
+		$pdf->cell(160, 6, $info[0]->locName, 0, 1, '');
 		$pdf->Ln(30);
 		
 		$pdf->cell(40, 6, 'Prepared by:', 0, 0, '');
 		$pdf->cell(40, 6, '______________________');
 		$pdf->cell(30, 6, '', '');
-		$pdf->cell(40, 6, 'Checked by:', 0, 0, '');
+		$pdf->cell(40, 6, 'Verified by:', 0, 0, '');
 		$pdf->cell(40, 6, '______________________',0, 1);
 		$pdf->Ln(10);
 		
@@ -289,22 +299,23 @@ class Booking extends CI_Controller {
 
 	public function generateWelcomeLetter($id){
 		$bookingID=base_convert($id, 36, 10);
-		$pdf = new Pdf();
+		$info = $this->booking_model->getBookings($bookingID);
+        $pdf = new Pdf();
 		$pdf->SetMargins(7, 7, 7, 7);
         $pdf->AddPage('A4');
         $pdf->SetFont('', 'B', 14);
-		$pdf->SetTitle('Welcome Letter - AHC/V/00083/2022');
-        $logo = base_url('uploads/letterHead/ahcity.png');
+		$pdf->SetTitle('Welcome Letter - '.$info[0]->membershipNo);
+        $logo = base_url('uploads/letterHead/'.$info[0]->projLogo);
 
 		$pdf->writeHTMLCell(40, 5, 5, 5, '<img src="' . $logo . '">', 0, 0, false, false, '');
-		$pdf->cell(120, 6, 'AH City Pvt, Ltd', 0, 0, 'C');
+		$pdf->cell(120, 6, $info[0]->projName, 0, 0, 'C');
 
         $pdf->SetFont('', '', 10);
-		$pdf->cell(40, 3, 'info@ahgroup-pk.com', 0, 1, 'R');
+		$pdf->cell(40, 3, $info[0]->mailAddress, 0, 1, 'R');
 
-		$pdf->cell(38, 5, '');
+		$pdf->cell(38, 5, '', 0, 0, '');
 		$pdf->cell(120, 10, '(A Project of AH Group)', 0, 0, 'C');
-		$pdf->cell(40, 3, 'www.ahgroup-pk.com', 0, 1, 'R');
+		$pdf->cell(40, 3, $info[0]->webAddress, 0, 1, 'R');
 		$pdf->Ln(20);
 		
         $pdf->SetFont('', 'B', 15);
@@ -312,38 +323,38 @@ class Booking extends CI_Controller {
         $pdf->SetFont('', '', 8);
 		$pdf->cell(197, 6, 'TO', 0, 1, 'C');
         $pdf->SetFont('', 'B', 15);
-		$pdf->cell(197, 6, 'AH City', 0, 1, 'C');
+		$pdf->cell(197, 6, $info[0]->projName, 0, 1, 'C');
         $pdf->SetFont('', 'U', 10);
-		$pdf->cell(197, 6, 'A prestigious project by AH City (Pvt.) Ltd, a member Company of AH Group', 0, 1, 'C');
+		$pdf->cell(197, 6, 'A prestigious project by '.$info[0]->projName.', a member Company of AH Group', 0, 1, 'C');
 		$pdf->Ln(13);
 		
         $pdf->SetFont('', '', 12);
-		$pdf->cell(99, 5, 'Ref: AHC/V/00082/2022');
+		$pdf->cell(99, 5, 'Ref: '.$info[0]->membershipNo);
 		$pdf->cell(99, 5, date('F d, Y'), 0, 1, 'R');
 		$pdf->Ln(5);
 		
 		$pdf->cell(99, 5, 'Customer Name', 1);
-		$pdf->cell(99, 5, 'Fayaz Ahmad', 1, 1);
+		$pdf->cell(99, 5, $info[0]->custmName, 1, 1);
 		$pdf->cell(99, 5, "Father's/Spouse Name", 1);
-		$pdf->cell(99, 5, 'Abdul Razaq', 1, 1);
+		$pdf->cell(99, 5, $info[0]->fatherName, 1, 1);
 		$pdf->cell(99, 5, "CNIC/NICOP", 1);
-		$pdf->cell(99, 5, '4250194117239', 1, 1);
+		$pdf->cell(99, 5, $info[0]->custmCNIC, 1, 1);
 		$pdf->cell(99, 5, "Membership No", 1);
-		$pdf->cell(99, 5, 'AHC/V/00082/2022', 1, 1);
+		$pdf->cell(99, 5, $info[0]->membershipNo, 1, 1);
 		$pdf->cell(99, 5, "Plot Type", 1);
-		$pdf->cell(99, 5, 'Residential', 1, 1);
+		$pdf->cell(99, 5, $info[0]->catName, 1, 1);
 		$pdf->cell(99, 5, "Plot Size", 1);
-		$pdf->cell(99, 5, '5 Marla', 1, 1);
+		$pdf->cell(99, 5, $info[0]->typeName, 1, 1);
 		$pdf->cell(99, 5, "Dimenssion", 1);
-		$pdf->cell(99, 5, '25 X 50', 1, 1);
+		$pdf->cell(99, 5, $info[0]->dimenssion, 1, 1);
 		$pdf->Ln(5);
 
-		$pdf->cell(198, 5, 'Respected: Fayaz Ahmad,', 0, 1);
+		$pdf->cell(198, 5, 'Respected: '.$info[0]->custmName.',', 0, 1);
 		$pdf->Ln(5);
 		
-		$pdf->MultiCell(197, 5, 'The Management of AH City (Pvt) Ltd welcomes you in its prestigious housing project. Your Booking Application Form has been accepted and a  plot of the above-mentioned category in AH City (Pvt) Ltd, has been booked in your name under the above Membership Number subject to the terms & conditions overleaf at Booking Application Form. The above Membership Number will only be used as a reference, however, the exact location of Plot and Street number etc will be provided after the ballot.', 0, 'J', false);
+		$pdf->MultiCell(197, 5, 'The Management of '.$info[0]->projName.' welcomes you in its prestigious housing project. Your Booking Application Form has been accepted and a plot of the above-mentioned category in '.$info[0]->projName.', has been booked in your name under the above Membership Number subject to the terms & conditions overleaf at Booking Application Form. The above Membership Number will only be used as a reference, however, the exact location of Plot and Street number etc will be provided after the ballot.', 0, 'J', false);
 		$pdf->Ln(3);
-		$pdf->MultiCell(197, 5, 'You are requested to make the remaining payments through Cash/PO/Bank Draft in favor of AH City (Pvt) Ltd within the prescribed dates according to the decide schedule attached to avoid any surcharges at a later stage. This booking is not transferable unless/until authorized by the AH Management.', 0, 'J', false);
+		$pdf->MultiCell(197, 5, 'You are requested to make the remaining payments through Cash/PO/Bank Draft in favor of '.$info[0]->projName.' within the prescribed dates according to the decide schedule attached to avoid any surcharges at a later stage. This booking is not transferable unless/until authorized by the AH Management.', 0, 'J', false);
 		$pdf->Ln(3);
 		$pdf->MultiCell(197, 5, 'We are committed to deliver the project in time, maintain Gold Standards all through the infrastructure developments and project management.', 0, 1);
         $pdf->Ln(3);
@@ -358,29 +369,30 @@ class Booking extends CI_Controller {
 		$pdf->cell(60, 5, 'For & on behalf of', 0, 0, 'C');
 		$pdf->cell(78, 5, '');
 		$pdf->cell(60, 5, 'Stamp', 0, 1, 'C');
-		$pdf->cell(60, 5, 'AH City (Private) Limited', 0, 0, 'C');
+		$pdf->cell(60, 5, $info[0]->projName, 0, 0, 'C');
 
 		$pdf->Output();
 	}
 
 	public function generateConfirmationLetter($id){
 		$bookingID=base_convert($id, 36, 10);
-		$pdf = new Pdf();
+		$info = $this->booking_model->getBookings($bookingID);
+        $pdf = new Pdf();
 		$pdf->SetMargins(7, 7, 7, 7);
         $pdf->AddPage('A4');
         $pdf->SetFont('', 'B', 14);
-		$pdf->SetTitle('Confirmation Letter - AHC/V/00083/2022');
-        $logo = base_url('uploads/letterHead/ahcity.png');
+		$pdf->SetTitle('Confirmation Letter - '.$info[0]->membershipNo);
+        $logo = base_url('uploads/letterHead/'.$info[0]->projLogo);
 
 		$pdf->writeHTMLCell(40, 5, 5, 5, '<img src="' . $logo . '">', 0, 0, false, false, '');
-		$pdf->cell(120, 6, 'AH City Pvt, Ltd', 0, 0, 'C');
+		$pdf->cell(120, 6, $info[0]->projName, 0, 0, 'C');
 
         $pdf->SetFont('', '', 10);
-		$pdf->cell(40, 3, 'info@ahgroup-pk.com', 0, 1, 'R');
+		$pdf->cell(40, 3, $info[0]->mailAddress, 0, 1, 'R');
 
-		$pdf->cell(38, 5, '');
+		$pdf->cell(38, 5, '', 0, 0, '');
 		$pdf->cell(120, 10, '(A Project of AH Group)', 0, 0, 'C');
-		$pdf->cell(40, 3, 'www.ahgroup-pk.com', 0, 1, 'R');
+		$pdf->cell(40, 3, $info[0]->webAddress, 0, 1, 'R');
 		$pdf->Ln(20);
 		
         $pdf->SetFont('', 'B', 15);
@@ -388,33 +400,33 @@ class Booking extends CI_Controller {
 		$pdf->Ln(20);
 		
         $pdf->SetFont('', '', 12);
-		$pdf->cell(99, 5, 'Ref: AHC/V/00082/2022');
+		$pdf->cell(99, 5, 'Ref: '.$info[0]->membershipNo);
 		$pdf->cell(99, 5, date('F d, Y'), 0, 1, 'R');
 		$pdf->Ln(5);
 		
 		$pdf->cell(99, 5, 'Customer Name', 1);
-		$pdf->cell(99, 5, 'Fayaz Ahmad', 1, 1);
+		$pdf->cell(99, 5, $info[0]->custmName, 1, 1);
 		$pdf->cell(99, 5, "Father's/Spouse Name", 1);
-		$pdf->cell(99, 5, 'Abdul Razaq', 1, 1);
+		$pdf->cell(99, 5, $info[0]->fatherName, 1, 1);
 		$pdf->cell(99, 5, "CNIC/NICOP", 1);
-		$pdf->cell(99, 5, '4250194117239', 1, 1);
+		$pdf->cell(99, 5, $info[0]->custmCNIC, 1, 1);
 		$pdf->cell(99, 5, "Membership No", 1);
-		$pdf->cell(99, 5, 'AHC/V/00082/2022', 1, 1);
+		$pdf->cell(99, 5, $info[0]->membershipNo, 1, 1);
 		$pdf->cell(99, 5, "Plot Type", 1);
-		$pdf->cell(99, 5, 'Residential', 1, 1);
+		$pdf->cell(99, 5, $info[0]->catName, 1, 1);
 		$pdf->cell(99, 5, "Plot Size", 1);
-		$pdf->cell(99, 5, '5 Marla', 1, 1);
+		$pdf->cell(99, 5, $info[0]->typeName, 1, 1);
 		$pdf->cell(99, 5, "Dimenssion", 1);
-		$pdf->cell(99, 5, '25 X 50', 1, 1);
+		$pdf->cell(99, 5, $info[0]->dimenssion, 1, 1);
 		$pdf->Ln(6);
 		
 		$pdf->cell(197, 5, 'Respected Sir/Madam', 0, 1);
 		$pdf->Ln(3);
 
-		$pdf->MultiCell(197, 5, 'The management of AH City (Pvt) Ltd. is pleased to inform you that your membership is CONFIRMED with the company and you will be issued an allocation letter after ballot of your plot.', 0, 'J', false);
-		$pdf->MultiCell(197, 5, 'The  payment plan of  the plot file you  have got confirmed is pertains to the  cost of land only which you have to  follow for a period of 4 years, however, schedule  of development charges  shall be shared with you  after the ballot and  development work starts.', 0, 1);
+		$pdf->MultiCell(197, 5, 'The management of '.$info[0]->projName.' is pleased to inform you that your membership is CONFIRMED with the company and you will be issued an allocation letter after ballot of your plot.', 0, 'J', false);
+		$pdf->MultiCell(197, 5, 'The  payment plan of  the plot file you  have got confirmed is pertains to the cost of land only which you have to follow for a period of '.$info[0]->planYears.' years, however, schedule of development charges shall be shared with you after the ballot and development work starts.', 0, 1);
 		$pdf->MultiCell(197, 5, 'We wish you all the very best and expect a prosper, peaceful journey with our company.', 0, 1);
-		$pdf->Ln(3);
+		$pdf->Ln(2);
 		$pdf->MultiCell(197, 5, 'With Profound Regards!', 0, 1);
 		$pdf->Ln(40);
 
@@ -424,7 +436,7 @@ class Booking extends CI_Controller {
 		$pdf->cell(60, 5, 'For & on behalf of', 0, 0, 'C');
 		$pdf->cell(78, 5, '');
 		$pdf->cell(60, 5, 'Stamp', 0, 1, 'C');
-		$pdf->cell(60, 5, 'AH City (Private) Limited', 0, 0, 'C');
+		$pdf->cell(60, 5, $info[0]->projName, 0, 0, 'C');
 
 		$pdf->Output();
 	}

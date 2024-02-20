@@ -43,6 +43,17 @@
             grid-template-columns: 1fr;
             z-index: 5;
         }
+        .sign-up-form {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0rem 5rem;
+            transition: all 0.2s 0.7s;
+            overflow: hidden;
+            grid-column: 1 / 2;
+            grid-row: 1 / 2;
+        }
         form {
             display: flex;
             align-items: center;
@@ -54,7 +65,7 @@
             grid-column: 1 / 2;
             grid-row: 1 / 2;
         }
-        form.sign-up-form {
+        .sign-up-form {
             opacity: 0;
             z-index: 1;
         }
@@ -137,6 +148,25 @@
             margin: 10px 0;
             cursor: pointer;
             transition: 0.5s;
+        }
+        .btnSignin, .forgotBtn {
+            text-transform: uppercase;
+            font-weight: 600;
+            color: #fff;
+            transition: 0.5s;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            background-color: #F86F03;
+            max-width: 380px;
+            width: 100%;
+            margin: 10px 0;
+            height: 55px;
+            border-radius: 5px;
+            display: grid;
+            grid-template-columns: 15% 85%;
+            padding: 0 0.4rem;
+            position: relative;
         }
         .btn:hover {
             background-color: #f98c39;
@@ -224,7 +254,7 @@
         .container.sign-up-mode .signin-signup {
             left: 25%;
         }
-        .container.sign-up-mode form.sign-up-form {
+        .container.sign-up-mode .sign-up-form {
             opacity: 1;
             z-index: 2;
         }
@@ -369,13 +399,13 @@
                     <?php endif; ?>
 					<div class="input-field">
 						<i class="fas fa-envelope"></i>
-						<input name="useremail" type="text" placeholder="Official email" required>
+						<input autocomplete="off" name="useremail" type="text" placeholder="Official email" required>
 					</div>
 					<div class="input-field">
 						<i class="fas fa-lock"></i>
-						<input name="userPass" type="password" placeholder="Password" required>
+						<input autocomplete="off" name="userPass" type="password" placeholder="Password" required>
 					</div>
-					<input type="submit" value="Sign in" style="width:62%!important;" class="btn solid">
+					<input type="submit" value="Sign in" class="btnSignin solid">
 					<p class="social-text">Or Sign in with social platforms</p>
 					<div class="social-media">
 						<a href="#" class="social-icon">
@@ -392,15 +422,16 @@
 						</a>
 					</div>
 				</form>
-				<form action="#" class="sign-up-form">
+				<div class="sign-up-form">
+                    <span id="mailImg"></span>
 					<h2 class="title">Forgot Password</h2>
-					<div class="input-field">
+					<div class="input-field" id="mailInput">
 						<i class="fas fa-envelope"></i>
-						<input type="email" placeholder="Official email">
+						<input autocomplete="off" type="email" id="forgotEmail" placeholder="Official email">
 					</div>
-					<input type="submit" style="width:62%!important;" class="btn" value="Submit Request"/>
-					<p class="social-text">Or Sign up with social platforms</p>
-					<div class="social-media">
+					<input onclick="forgot()" type="submit" id="forgotBtn" class="forgotBtn" value="Submit Request"/>
+					<p class="social-text" id="responseMsg">Enter your email and we will send you a new<br>password on your email</p>
+					<br><div class="social-media">
 						<a href="#" class="social-icon">
 							<i class="fab fa-facebook-f"></i>
 						</a>
@@ -414,7 +445,7 @@
 							<i class="fab fa-linkedin-in"></i>
 						</a>
 					</div>
-				</form>
+				</div>
 			</div>
 		</div>
 		<div class="panels-container">
@@ -431,10 +462,7 @@
 			<div class="panel right-panel">
 				<div class="content">
 					<h3>One of Our Valued Members</h3>
-					<p>
-						Thank you for being part of our community. Your presence enriches our
-          shared experiences. Let's continue this journey together!
-					</p>
+					<p>Thank you for being part of our community. Your presence enriches our shared experiences. Let's continue this journey together!</p>
 					<button class="btn transparent" id="sign-in-btn">
 						Sign in
 					</button>
@@ -453,6 +481,27 @@
         sign_in_btn.addEventListener("click", () => {
             container.classList.remove("sign-up-mode");
         });
+        function forgot(){
+            var forgotEmail = document.getElementById("forgotEmail").value;
+            $.ajax({
+                url: "<?php echo base_url('login/reset_password'); ?>",
+                type: "POST",
+                data: { email: forgotEmail },
+                cache: false,
+                success: function(dataResult){
+                    if(dataResult == true){
+                        document.getElementById("mailInput").style.display="none";
+                        document.getElementById("forgotBtn").style.display="none";
+                        document.getElementById("mailImg").innerHTML='<img src="<?= base_url("assets/img/icon/mail.gif"); ?>" width="200">';
+                        document.getElementById("responseMsg").innerHTML="<span style='color:green;'>We have sent you a new password, check your email.</span>";
+                    }else{
+                        document.getElementById("responseMsg").innerHTML="<span style='color:red;'>The email you entered does not exist on our database.<br>Try using another one.</span>";
+                    }
+                }
+            });
+        }
     </script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 </body>
 </html>
