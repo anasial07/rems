@@ -55,7 +55,8 @@ class Login extends CI_Controller {
 		if($auth > '0'){
 			$id = $auth->userId;
 			$role = $auth->role;
-			$view=$this->session->set_userdata(array('userId' => $id, 'role' => $role));
+			$empName = $auth->empName;
+			$view=$this->session->set_userdata(array('userId' => $id, 'role' => $role, 'username' => $empName));
 			$data = array('lastLogin' => date('Y-m-d H:i:s'));
 			$this->login_model->update_last_login($id, $data);
 			redirect('dashboard');

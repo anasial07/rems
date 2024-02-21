@@ -163,8 +163,8 @@ class Dashboard extends CI_Controller {
 		$data= $this->dashboard_model->getPayPlan($id);
 		echo json_encode($data);
 	}
-	public function getTypeInfo(){	// Get Banks
-		$data = $this->dashboard_model->getTypes();
+	public function getTypeInfo($id){	// Get Type
+		$data = $this->dashboard_model->getTypes($id);
 		echo json_encode($data);
 	}
 

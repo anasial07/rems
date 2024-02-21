@@ -44,7 +44,7 @@
                         </div>
                         <div class="col-sm-12 col-lg-3">
                             <div class="form-group">
-                                <input type="hidden" id="typeSize" class="typeSize">
+                                <input type="hidden" id="typeSize">
                                 <input type="hidden" id="typeAmount">
                                 <label>Select Type</label>
                                 <select id="typeID" class="form-control">
@@ -146,8 +146,8 @@
                         <div class="col-sm-12 col-lg-6">
                             <div class="form-group">
                                 <label>Received In</label>
-                                <select class="form-control">
-                                    <option id="receivedIn" selected disabled>Select Location</option>
+                                <select id="receivedIn" class="form-control">
+                                    <option selected disabled>Select Location</option>
                                     <?php foreach($cities as $city): ?>
                                         <option value="<?= $city->locationId; ?>"><?= $city->locName; ?></option>
                                     <?php endforeach; ?>
@@ -341,7 +341,6 @@
         var custmID = $('#customerID').val();
         var featuresPercent = $('#featuresPercent').val();
         var typeAmount = $('#typeAmount').val();
-
         var features = [];
         $('input[name="feature-charges[]"]:checked').each(function() {
             features.push($(this).val());
@@ -569,7 +568,7 @@
             dataType: 'JSON',
             success: function(data){
                 if(data){
-                    $('.typeSize').val(data[0].marlaSize);
+                    $('#typeSize').val(data[0].marlaSize);
                 }
             }
         });

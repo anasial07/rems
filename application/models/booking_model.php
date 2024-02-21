@@ -3,7 +3,7 @@
 /**
  * undocumented class
  */
-class booking_model extends CI_Model{
+class Booking_model extends CI_Model{
 	function __construct(){
 		parent::__construct();
 	}
@@ -82,6 +82,18 @@ class booking_model extends CI_Model{
 			return true;
 		}else{
 			return false;
+		}
+	}
+	public function totalInstallmentAmount($id){
+		$this->db->select_sum('installAmount', 'totalInstallAmount');
+		$this->db->where('bookingId', $id);
+		$query = $this->db->get('installments');
+		if ($query->num_rows() > 0) {
+			$row = $query->row();
+			$totalInstallAmount = $row->totalInstallAmount;
+			return $totalInstallAmount;
+		} else {
+			return 0;
 		}
 	}
 }

@@ -94,7 +94,7 @@
                             <div class="form-group">
                                 <label>Number of Marlas</label>
                                 <div class="input-groupicon">
-                                    <input oninput="validateNmbr(event)" id="typeSize" name="marlaSize" class="typeSize" type="text" placeholder="5, 8, 11 etc...">
+                                    <input oninput="validateWithPoint(event)" id="typeSize" name="marlaSize" class="typeSize" type="text" placeholder="5, 8, 11 etc...">
                                 </div>
                             </div>
                         </div>

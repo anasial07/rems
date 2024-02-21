@@ -2,11 +2,9 @@
 
 require_once APPPATH . '/libraries/tcpdf/tcpdf.php';
 
-class pdf extends TCPDF {
+class Pdf extends TCPDF {
     public function __construct() {
         parent::__construct();
-
         $this->setPrintHeader(false);
-
     }
 }

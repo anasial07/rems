@@ -60,7 +60,7 @@
                         </tr>
                         <tr>
                             <td>Type</td>
-                            <td><?= $info[0]->typeName; ?></td>
+                            <td><?= $info[0]->typeName.' ('.$info[0]->dimenssion.')'; ?></td>
                         </tr>
                         <tr>
                             <td>Payment Plan</td>
@@ -80,7 +80,7 @@
                             <td><?= number_format($info[0]->sepDiscount); ?>%</td>
                         </tr>
                         <tr>
-                            <td>Features</td>
+                            <td>Features (<?= $info[0]->featuresPercent.'%'; ?>)</td>
                             <td><?= $info[0]->features; ?></td>
                         </tr>
                         <tr>
@@ -143,7 +143,7 @@
                                 </td>
                                 <td><?= $info[0]->bookFilerPercent; ?>%</td>
                                 <td class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Print Booking Receipt">
-                                    <a href="<?= base_url('booking/generateBookingReceipt/').base_convert($info[0]->bookingId, 10, 36); ?>"><img src="<?= base_url('assets/img/icons/printer.svg') ?>" alt="img"></a>
+                                    <a href="<?= base_url('booking/generateBookingReceipt/').base_convert($info[0]->bookingId, 10, 36).'?receipt=booking'; ?>"><img src="<?= base_url('assets/img/icons/printer.svg') ?>" alt="img"></a>
                                 </td>
                                 <?php if($role=='admin'): ?>
                                     <td class="text-center">

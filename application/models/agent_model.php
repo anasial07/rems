@@ -3,7 +3,7 @@
 /**
  * undocumented class
  */
-class agent_model extends CI_Model{
+class Agent_model extends CI_Model{
 	function __construct(){
 		parent::__construct();
 	}

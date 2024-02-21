@@ -12,9 +12,13 @@
                 var input = event.target;
                 input.value = input.value.replace(/[^0-9]/g, '');
             }
+            function validateWithPoint(event){
+                var input = event.target;
+                input.value = input.value.replace(/[^0-9.]/g, '');
+            }
             function validateMix(event){
                 var input = event.target;
-                input.value = input.value.replace(/[^0-9 a-zA-Z]/g, '');
+                input.value = input.value.replace(/[^0-9 . a-zA-Z]/g, '');
             }
             function validateDecimal(event){
                 var input = event.target;

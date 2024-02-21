@@ -65,7 +65,7 @@
                             <div class="form-group">
                                 <label>Plan Year</label>
                                 <div class="input-groupicon">
-                                    <input oninput="validateNmbr(event)" name="planYear" id="planYear" type="text" placeholder="Enter Plan Year">
+                                    <input oninput="validateDecimal(event)" name="planYear" id="planYear" type="text" placeholder="Enter Plan Year">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/calendar.png'); ?>" alt="img" width="20">
                                     </div>
