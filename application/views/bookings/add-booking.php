@@ -177,7 +177,7 @@
                             <div class="form-group">
                                 <label>Purchase Date</label>
                                 <div class="input-groupicon">
-                                    <input oninput="validateDate(event)" id="purchaseDate" type="text" placeholder="DD-MM-YYYY" class="datetimepicker">
+                                    <input oninput="validateDate(event)" id="purchaseDate" type="text" placeholder="<?= date('d-m-Y'); ?>" class="datetimepicker">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/calendar.png'); ?>" alt="img" width="20">
                                     </div>
@@ -531,13 +531,45 @@
                     }else{
                         $('#custmStatus').html('Inactive').addClass('text-danger');
                         $('input, select').prop('disabled', true);
-                        swal("Sorry!","This customer's status is inactive.","info");
+                        swal({
+                            title: "Sorry!",
+                            text: "This customer's status is inactive",
+                            type: "info",
+                            showCancelButton: true,
+                            confirmButtonClass: "btn-success",
+                            confirmButtonText: "Reset, form!",
+                            cancelButtonClass: "btn-primary",
+                            cancelButtonText: "No, cancel!",
+                            closeOnConfirm: false,
+                            closeOnCancel: true
+                        },
+                        function(isConfirm){
+                            if(isConfirm){
+                                window.location.reload();
+                            }
+                        });
                     }
                 }else{
                     $('#custmName').text('-');
                     $('#custmEmp').html('-');
                     $('input, select').prop('disabled', true);
-                    swal("Sorry!","There is no customer associated with the provided CNIC ("+cnic+")","info");
+                    swal({
+                        title: "Sorry!",
+                        text: "There is no customer associated with the provided CNIC ("+cnic+")",
+                        type: "info",
+                        showCancelButton: true,
+                        confirmButtonClass: "btn-success",
+                        confirmButtonText: "Reset, form!",
+                        cancelButtonClass: "btn-primary",
+                        cancelButtonText: "No, cancel!",
+                        closeOnConfirm: false,
+                        closeOnCancel: true
+                    },
+                    function(isConfirm){
+                        if(isConfirm){
+                            window.location.reload();
+                        }
+                    });
                 }
             }
         });

@@ -12,7 +12,7 @@
                 <h6>Membership#</h6>
             </div>
             <div class="page-btn">
-                <button type="button" class="btn btn-rounded topBtn btn-danger">Cancellation Request</button>
+                <!-- <button type="button" class="btn btn-rounded topBtn btn-danger">Cancellation Request</button> -->
                 <a href="<?= base_url('booking/generateBookingMemo/').base_convert($info[0]->bookingId, 10, 36); ?>"><button type="button" class="btn btn-rounded topBtn btn-primary">Booking Memo</button></a>
                 <a href="<?= base_url('booking/generateWelcomeLetter/').base_convert($info[0]->bookingId, 10, 36); ?>"><button type="button" class="btn btn-rounded topBtn btn-secondary">Welcome Letter</button></a>
                 <a href="<?= base_url('booking/generateConfirmationLetter/').base_convert($info[0]->bookingId, 10, 36); ?>"><button type="button" class="btn btn-rounded topBtn btn-info text-white">Confirmation Letter</button></a>
@@ -23,7 +23,10 @@
         <div class="card p-4">
             <div class="row bg-light py-3">
                 <div class="col">
-                    <span class="heading">Customer Information</span>
+                    <span class="heading">
+                        <i class="far fa-user-circle"></i>
+                        Customer Information
+                    </span>
                     <table class="table bookingTable">
                         <tr>
                             <td>Customer</td>
@@ -48,7 +51,10 @@
                     </table>
                 </div>
                 <div class="col" style="border-left:1px solid #C6C7C2;">
-                    <span class="heading">Booking Information</span>
+                    <span class="heading">
+                        <i class="far fa-address-book"></i>
+                        Booking Information
+                    </span>
                     <table class="table bookingTable">
                         <tr>
                             <td>Category</td>
@@ -69,7 +75,10 @@
                     </table>
                 </div>
                 <div class="col" style="border-left:1px solid #C6C7C2;">
-                    <span class="heading">Payment Information</span>
+                    <span class="heading">
+                        <i class="far fa-credit-card"></i>
+                        Payment Information
+                    </span>
                     <table class="table bookingTable">
                         <tr>
                             <td>Sale Price</td>

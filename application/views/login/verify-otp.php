@@ -391,7 +391,7 @@
 			<div class="signin-signup">
 				<form action="<?= base_url('login/loginMe'); ?>" method="post" class="sign-in-form">
                     <center>
-                        <img width="100" src="<?= base_url('assets/img/favicon.png'); ?>">
+                        <img width="180" src="<?= base_url('assets/img/otp.jpg'); ?>">
                     </center>
 					<h2 class="title">Verify your <span style="color:#F97908;">account</span></h2>
                     <?php if($failed = $this->session->flashdata('failed')): ?>

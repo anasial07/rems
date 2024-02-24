@@ -92,6 +92,9 @@
                             <div class="col-12">
                                 <a class="btn form-control btn-submit me-2 addBank">Add New Bank</a>
                             </div>
+                            <div class="col-12 mt-2">
+                                <strong>Instruction: </strong>Please fill in the following details accurately.
+                            </div>
                         </div>
                     </div>
                 </div>

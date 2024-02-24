@@ -116,7 +116,7 @@
                             <div class="form-group">
                                 <label>Receving Date</label>
                                 <div class="input-groupicon">
-                                    <input id="recvDate" oninput="validateDate(event)" type="text" placeholder="DD-MM-YYYY" class="datetimepicker">
+                                    <input id="recvDate" oninput="validateDate(event)" type="text" placeholder="<?= date('d-m-Y'); ?>" class="datetimepicker">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/calendar.png'); ?>" width="20" alt="img">
                                     </div>

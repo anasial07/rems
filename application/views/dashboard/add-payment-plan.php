@@ -217,10 +217,13 @@
     </div>
 </div>
 <div class="modal fade" id="payPlanDetail" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-md" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="planTitle"></h5>
+                <h5 class="modal-title">
+                    Plan Name:
+                    <span id="planTitle"></span>
+                </h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -242,6 +245,12 @@
             success: function(res){
                 $('#planDetail').html('');
                 $('#planTitle').html(res[0].planName);
+                var downPayment = parseInt(res[0].downPayment) || 0;
+                var confirmPay = parseInt(res[0].confirmPay) || 0;
+                var semiAnnual = parseInt(res[0].semiAnnual) || 0;
+                var possession = parseInt(res[0].possession) || 0;
+
+                var Installments = 100 - (downPayment + confirmPay + semiAnnual + possession);
                 $('#planDetail').html(`
                     <table class="table">
                         <tr>
@@ -272,6 +281,7 @@
                                 <th>Confirmation</th>
                                 <th>Semi Annual</th>
                                 <th>Possession</th>
+                                <th class='text-danger'>Installments</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -280,6 +290,7 @@
                                 <td>${res[0].confirmPay}%</td>
                                 <td>${res[0].semiAnnual}%</td>
                                 <td>${res[0].possession}%</td>
+                                <td class='text-danger'>${Installments}%</td>
                             </tr>
                         </tbody>
                     </table>

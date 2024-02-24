@@ -262,12 +262,12 @@ class Booking extends CI_Controller {
 		$pdf->cell(38, 6, 'Amount Received:', 0, 0, '');
 		$pdf->cell(40, 6, '------------', 0, 0, '');
         $pdf->SetFont('', 'I', 10);
-		$pdf->cell(20, 6, '25%', 0, 0, 'C');
-		$pdf->cell(100, 6, '(Booking and Confirmation)', 0, 1, '');
+		$pdf->cell(20, 6, '25%', 1, 0, 'C');
+		$pdf->cell(100, 6, '(Booking and Confirmation)', 1, 1, '');
         $pdf->SetFont('', '', 10);
 		
 		$pdf->cell(38, 6, 'Inword:', 0, 0, '');
-		$pdf->cell(160, 6, 'Two Hundred Fifty Thousand Rupee Only', 0, 1, '');
+		$pdf->cell(160, 6, 'Two Hundred Fifty Thousand Rupee Only', 1, 1, '');
 		
 		$pdf->cell(38, 6, 'Payment Mode:', 0, 0, '');
 		$pdf->cell(160, 6, $info[0]->bookingMode, 0, 1, '');
@@ -804,7 +804,51 @@ class Booking extends CI_Controller {
 		$pdf->SetTextColor(0, 0, 0);
         $pdf->SetFont('', '', 11);
 		$pdf->Ln(5);
+		$pdf->MultiCell(197, 5, '1. The applicant acknowledges and agrees that the booking will be considered confirmed upon the successful completion of the booking amount, equivalent to 20% of the total plot value, within the stipulated time frame. Failure to do so may regrettably lead to the cancellation of the booking. ', 0, 1);
+		$pdf->MultiCell(197, 5, '2. Once a plot has been booked, it is not permissible to transfer, assign, or sell it to any other individual without securing prior written consent from the Management of AH RESIDENCIA.', 0, 1);
+		$pdf->MultiCell(197, 5, '3. For prime locations, including corners, park-facing, or boulevard views, additional charges will be applicable.', 0, 1);
+		$pdf->MultiCell(197, 5, '4. In case of extra land, additional charges  will be applicable.', 0, 1);
+		$pdf->MultiCell(197, 5, '5. A plot allocated to an applicant by AH Residencia management must be utilized exclusively for the purpose applied for or intended by the applicant.', 0, 1);
+		$pdf->MultiCell(197, 5, '6. Payments received after the due date will be subject to a late payment surcharge.', 0, 1);
+		$pdf->MultiCell(197, 5, '7. Plot numbers will be assigned to clients after  balloting process, and possession will be granted after a period of four years, subject to the settlement of all outstanding dues. Please be advised that the possession and development timelines are subject to influence by various internal and external factors.', 0, 1);
+		$pdf->MultiCell(197, 5, '8. If any applicant fails to pay two consecutive installments within the prescribed period, the allotment/booking is liable to be canceled without notice.', 0, 1);
+		$pdf->MultiCell(197, 5, '9. A  10% discount will be given on full payment, and a 5% discount will be given for 50% payments of the total amount.', 0, 1);
+		$pdf->MultiCell(197, 5, '10. In case of a refund, the applicant shall be required to submit a written application with a clear reason. A deduction of 20% shall be made from the amount paid till the date. The refund amount shall be disbursed after a period of 180 working days, subsequent to the approval date.', 0, 1);
+		$pdf->MultiCell(197, 5, '11. The construction or modification of structures on the plot must adhere to the guidelines, regulations, and approval processes set forth by AH RESIDENCIA (PVT) LTD and government authorities.', 0, 1);
+		$pdf->MultiCell(197, 5, '12. AH RESIDENCIA retains the authority to allocate or sell a plot that has been canceled, whether due to non-payment of dues or for any other reason, to another applicant. The former applicant shall not retain any rights over the said plot, and the decision of AH RESIDENCIA in this matter will be considered final.', 0, 1);
+		$pdf->MultiCell(197, 5, '13. The management of AH Residencia reserves the right to relocate the allotted plot to a different location and modify the payment plan if deemed necessary, keeping in view the circumstances.', 0, 1);
+		$pdf->MultiCell(197, 5, '14. The transfer of the allocated plot is permissible solely after the reception of updated payments and charges. The applicant is obligated to surrender all original documents pertaining to the property to AH RESIDENCIA management before the transfer process commences. Additionally, both the transferor and transferee are required to provide written statements on affidavit affirming the details of the transfer.', 0, 1);
+		$pdf->MultiCell(197, 5, '15. It is obligatory for  the property owner to pay of all applicable taxes, dues, and fees to the Federal Board of Revenue, TMA, or any other government departments.', 0, 1);
+		$pdf->MultiCell(197, 5, '16. Development charges, utilities charges, maintenance charges, or any other relevant fees will be collected at a subsequent stage in accordance with the specified terms and conditions.', 0, 1);
+		$pdf->MultiCell(197, 5, '17. In the event of dispute between the applicant and AH RESIDENCIA or between two clients, the matter will be respectfully directed to the AH RESIDENCIA Management Board for resolution. The decision reached by the Board will be considered conclusive and binding on all parties involved.', 0, 1);
+		$pdf->Ln(3);
 
+        $pdf->SetFont('', 'B', 11);
+		$pdf->Cell(197, 5, 'Declaration:', 0, 1);
+        $pdf->SetFont('', '', 11);
+		$pdf->MultiCell(197, 5, 'I, hereby declare that I have carefully read and comprehended the above-mentioned terms and conditions. I unconditionally accept the terms set forth, and I commit to abide by the existing rules, regulations, or any terms & conditions that may be prescribed by AH RESIDENCIA from time to time.', 0, 1);
+		$pdf->MultiCell(197, 5, 'I affirm that the information provided by me is true and correct to the best of my knowledge. I acknowledge that I will be held responsible for any inaccuracies or errors in the data provided by me.', 0, 1);
+		$pdf->Ln(16);
+
+		$pdf->Cell(98, 1, '');
+		$pdf->Cell(98, 8, 'Applicant Signature & Thumb impression', 0, 1, 'R');
+		$pdf->Cell(197, 1, '', 'T', 1);
+
+        $pdf->SetFont('', 'B', 11);
+		$pdf->Cell(45, 5, 'FOR OFFICE USE ONLY', 'B', 1);
+        $pdf->SetFont('', '', 10);
+		$pdf->Ln(1);
+		$pdf->Cell(123, 4, 'Copy of CNIC/NICOP/Passport of applicant');
+        $pdf->SetFont('', 'B', 10);
+		$pdf->Cell(78, 4, 'Booking Executive ____________________', 0, 1);
+        $pdf->SetFont('', '', 10);
+		$pdf->Cell(123, 4, 'Copy of CNIC/NICOP/Passport of nominee', 0, 1);
+        $pdf->SetFont('', '', 10);
+		$pdf->Cell(123, 4, '2 passport size fresh photographs', 0, 1);
+		$pdf->Cell(123, 4, 'Original Payment Slip');
+        $pdf->SetFont('', 'B', 10);
+		$pdf->Cell(78, 4, 'Manager CCD         ____________________', 0, 1);
+		
 		$pdf->Output();
 	}
 	
@@ -815,26 +859,26 @@ class Booking extends CI_Controller {
 		$pdf->AddPage('L', array(210, 360));
 		$pdf->SetMargins(10, 10, 10);
 		$pdf->SetAutoPageBreak(true, 10);
-        $pdf->SetFont('', 'B', 14);
-		$pdf->SetTitle('Payment Plan - '.$info[0]->membershipNo);
-        $logo = base_url('uploads/letterHead/'.$info[0]->projLogo);
+        // $pdf->SetFont('', 'B', 14);
+		// $pdf->SetTitle('Payment Plan - '.$info[0]->membershipNo);
+        // $logo = base_url('uploads/letterHead/'.$info[0]->projLogo);
 
-		$pdf->writeHTMLCell(40, 5, 10, 5, '<img src="' . $logo . '">', 0, 0, false, false, '');
-		$pdf->Cell(258, 6, $info[0]->projName, 0, 0, 'C');
+		// $pdf->writeHTMLCell(40, 5, 10, 5, '<img src="' . $logo . '">', 0, 0, false, false, '');
+		// $pdf->Cell(258, 6, $info[0]->projName, 0, 0, 'C');
 
-        $pdf->SetFont('', '', 10);
-		$pdf->Cell(40, 3, $info[0]->mailAddress, 0, 1, 'R');
+        // $pdf->SetFont('', '', 10);
+		// $pdf->Cell(40, 3, $info[0]->mailAddress, 0, 1, 'R');
 
-		$pdf->Cell(40, 5, '');
-		$pdf->Cell(258, 10, '(A Project of AH Group)', 0, 0, 'C');
-		$pdf->Cell(40, 3, $info[0]->webAddress, 0, 1, 'R');
-		$pdf->Ln(16);
+		// $pdf->Cell(40, 5, '');
+		// $pdf->Cell(258, 10, '(A Project of AH Group)', 0, 0, 'C');
+		// $pdf->Cell(40, 3, $info[0]->webAddress, 0, 1, 'R');
+		// $pdf->Ln(16);
 		
-        $pdf->SetFont('', 'B', 18);
-		$pdf->Cell(338, 6, 'Payment Plan', 0, 1, 'C');
-        $pdf->SetFont('', 'I', 12);
-		$pdf->Cell(338, 6, $info[0]->membershipNo, 0, 1, 'C');
-		$pdf->Ln(12);
+        // $pdf->SetFont('', 'B', 18);
+		// $pdf->Cell(338, 6, 'Payment Plan', 0, 1, 'C');
+        // $pdf->SetFont('', 'I', 12);
+		// $pdf->Cell(338, 6, $info[0]->membershipNo, 0, 1, 'C');
+		// $pdf->Ln(12);
 		
 		// ------------------------------------------------------------------------------------------------------------
 		$planYears=$info[0]->planYears;	// Plan Years
@@ -858,66 +902,66 @@ class Booking extends CI_Controller {
 		$installments=$this->booking_model->getInstallments($bookingID);
 		// ------------------------------------------------------------------------------------------------------------
 
-        $pdf->SetFont('', 'B', 12);
-		$pdf->Cell(260, 6, 'Member Information');
-		$pdf->Cell(78, 6, 'Other Information', 0, 1);
+        // $pdf->SetFont('', 'B', 12);
+		// $pdf->Cell(260, 6, 'Member Information');
+		// $pdf->Cell(78, 6, 'Other Information', 0, 1);
 
-        $pdf->SetFont('', '', 12);
-		$pdf->Cell(40, 6, 'Reg No');
-		$pdf->Cell(220, 6, $info[0]->membershipNo);
-		$pdf->Cell(35, 6, 'Category');
-		$pdf->Cell(43, 6, $info[0]->catName, 0, 1);
-		$pdf->Cell(40, 6, 'Member Name');
-		$pdf->Cell(220, 6, $info[0]->custmName);
-		$pdf->Cell(35, 6, 'Sub-Category');
-		$pdf->Cell(43, 6, $info[0]->subCatName, 0, 1);
-		$pdf->Cell(40, 6, 'CNIC');
-		$pdf->Cell(220, 6, $info[0]->custmCNIC);
-		$pdf->Cell(35, 6, 'Type');
-		$pdf->Cell(43, 6, $info[0]->typeName.' ('.$info[0]->dimenssion.')', 0, 1);
-		$pdf->Cell(40, 6, "Phone");
-		$pdf->Cell(220, 6, $info[0]->primaryPhone);
-		$pdf->Cell(35, 6, 'Plan Name');
-		$pdf->Cell(35, 6, $info[0]->planName, 0, 1);
-		$pdf->Cell(40, 6, "Father's Name");
-		$pdf->Cell(220, 6, $info[0]->fatherName);
-		$pdf->Cell(35, 6, 'Payment Plan');
-		$pdf->Cell(35, 6, $planYears.' Years ('.$totalMonths.' mo*)', 0, 1);
-		$pdf->Cell(40, 6, 'Address');
-		$pdf->Cell(220, 6, $info[0]->presentAddress);
-		$pdf->Cell(35, 6, 'City');
-		$pdf->Cell(43, 6, $info[0]->locName, 0, 1);
-		$pdf->Ln(6);
+        // $pdf->SetFont('', '', 12);
+		// $pdf->Cell(40, 6, 'Reg No');
+		// $pdf->Cell(220, 6, $info[0]->membershipNo);
+		// $pdf->Cell(35, 6, 'Category');
+		// $pdf->Cell(43, 6, $info[0]->catName, 0, 1);
+		// $pdf->Cell(40, 6, 'Member Name');
+		// $pdf->Cell(220, 6, $info[0]->custmName);
+		// $pdf->Cell(35, 6, 'Sub-Category');
+		// $pdf->Cell(43, 6, $info[0]->subCatName, 0, 1);
+		// $pdf->Cell(40, 6, 'CNIC');
+		// $pdf->Cell(220, 6, $info[0]->custmCNIC);
+		// $pdf->Cell(35, 6, 'Type');
+		// $pdf->Cell(43, 6, $info[0]->typeName.' ('.$info[0]->dimenssion.')', 0, 1);
+		// $pdf->Cell(40, 6, "Phone");
+		// $pdf->Cell(220, 6, $info[0]->primaryPhone);
+		// $pdf->Cell(35, 6, 'Plan Name');
+		// $pdf->Cell(35, 6, $info[0]->planName, 0, 1);
+		// $pdf->Cell(40, 6, "Father's Name");
+		// $pdf->Cell(220, 6, $info[0]->fatherName);
+		// $pdf->Cell(35, 6, 'Payment Plan');
+		// $pdf->Cell(35, 6, $planYears.' Years ('.$totalMonths.' mo*)', 0, 1);
+		// $pdf->Cell(40, 6, 'Address');
+		// $pdf->Cell(220, 6, $info[0]->presentAddress);
+		// $pdf->Cell(35, 6, 'City');
+		// $pdf->Cell(43, 6, $info[0]->locName, 0, 1);
+		// $pdf->Ln(6);
 
-		$pdf->SetFillColor(193, 193, 193);
-		$pdf->Cell(338, 1, '', 0, 1, '', true);
-		$pdf->Cell(40, 6, 'Project Name', 0, 0, '', true);
-		$pdf->Cell(220, 6, $info[0]->projName, 0, 0, '', true);
-		$pdf->Cell(35, 6, 'Type Size', 0, 0, '', true);
-		$pdf->Cell(43, 6, $info[0]->typeName, 0, 1, '', true);
-		$pdf->Cell(40, 6, 'Per Marla Price', 0, 0, '', true);
-		$pdf->Cell(220, 6, number_format($info[0]->perMarla), 0, 0, '', true);
-		$pdf->Cell(35, 6, 'Payment Mode', 0, 0, '', true);
-		$pdf->Cell(43, 6, $info[0]->bookingMode, 0, 1, '', true);
-        $pdf->SetFont('', '', 12);
-		$pdf->Cell(40, 6, 'Special Discount', 0, 0, '', true);
-		$pdf->Cell(220, 6, $info[0]->sepDiscount.'%', 0, 0, '', true);
-		$pdf->Cell(35, 6, 'Filer Status', 0, 0, '', true);
-		$pdf->Cell(43, 6, $info[0]->bookFilerStatus.' ('.$info[0]->bookFilerPercent.'%)', 0, 1, '', true);
-		$pdf->Cell(40, 6, 'Extra Land Charges', 0, 0, '', true);
-		$pdf->Cell(220, 6, number_format($info[0]->exCharges), 0, 0, '', true);
-		$pdf->Cell(35, 6, 'Recevied In', 0, 0, '', true);
-		$pdf->Cell(43, 6, $info[0]->locName, 0, 1, '', true);
-		$pdf->Cell(40, 6, 'Sale Price', 0, 0, '', true);
-		$pdf->Cell(220, 6, number_format($salePrice), 0, 0, '', true);
-		$pdf->Cell(35, 6, 'Booking Date', 0, 0, '', true);
-		$pdf->Cell(43, 6, date('F d, Y',strtotime($info[0]->purchaseDate)), 0, 1, '', true);
-		$pdf->Cell(40, 6, 'Features', 0, 0, '', true);
-		$pdf->Cell(220, 6, $info[0]->features.'  ('.$info[0]->featuresPercent.'%)', 0, 0, '', true);
-		$pdf->Cell(35, 6, '', 0, 0, '', true);
-		$pdf->Cell(43, 6, '', 0, 1, '', true);
-		$pdf->Cell(338, 1, '', 0, 1, '', true);
-		$pdf->SetFillColor(0, 0, 0);
+		// $pdf->SetFillColor(193, 193, 193);
+		// $pdf->Cell(338, 1, '', 0, 1, '', true);
+		// $pdf->Cell(40, 6, 'Project Name', 0, 0, '', true);
+		// $pdf->Cell(220, 6, $info[0]->projName, 0, 0, '', true);
+		// $pdf->Cell(35, 6, 'Type Size', 0, 0, '', true);
+		// $pdf->Cell(43, 6, $info[0]->typeName, 0, 1, '', true);
+		// $pdf->Cell(40, 6, 'Per Marla Price', 0, 0, '', true);
+		// $pdf->Cell(220, 6, number_format($info[0]->perMarla), 0, 0, '', true);
+		// $pdf->Cell(35, 6, 'Payment Mode', 0, 0, '', true);
+		// $pdf->Cell(43, 6, $info[0]->bookingMode, 0, 1, '', true);
+        // $pdf->SetFont('', '', 12);
+		// $pdf->Cell(40, 6, 'Special Discount', 0, 0, '', true);
+		// $pdf->Cell(220, 6, $info[0]->sepDiscount.'%', 0, 0, '', true);
+		// $pdf->Cell(35, 6, 'Filer Status', 0, 0, '', true);
+		// $pdf->Cell(43, 6, $info[0]->bookFilerStatus.' ('.$info[0]->bookFilerPercent.'%)', 0, 1, '', true);
+		// $pdf->Cell(40, 6, 'Extra Land Charges', 0, 0, '', true);
+		// $pdf->Cell(220, 6, number_format($info[0]->exCharges), 0, 0, '', true);
+		// $pdf->Cell(35, 6, 'Recevied In', 0, 0, '', true);
+		// $pdf->Cell(43, 6, $info[0]->locName, 0, 1, '', true);
+		// $pdf->Cell(40, 6, 'Sale Price', 0, 0, '', true);
+		// $pdf->Cell(220, 6, number_format($salePrice), 0, 0, '', true);
+		// $pdf->Cell(35, 6, 'Booking Date', 0, 0, '', true);
+		// $pdf->Cell(43, 6, date('F d, Y',strtotime($info[0]->purchaseDate)), 0, 1, '', true);
+		// $pdf->Cell(40, 6, 'Features', 0, 0, '', true);
+		// $pdf->Cell(220, 6, $info[0]->features.'  ('.$info[0]->featuresPercent.'%)', 0, 0, '', true);
+		// $pdf->Cell(35, 6, '', 0, 0, '', true);
+		// $pdf->Cell(43, 6, '', 0, 1, '', true);
+		// $pdf->Cell(338, 1, '', 0, 1, '', true);
+		// $pdf->SetFillColor(0, 0, 0);
 		$pdf->Ln(6);
 
         $pdf->SetFont('', '', 11);
