@@ -177,7 +177,7 @@
                             <div class="form-group">
                                 <label>Purchase Date</label>
                                 <div class="input-groupicon">
-                                    <input oninput="validateDate(event)" id="purchaseDate" type="text" placeholder="<?= date('d-m-Y'); ?>" class="datetimepicker">
+                                    <input oninput="validateDate(event)" id="purchaseDate" type="text" placeholder="DD-MM-YYYY" class="datetimepicker">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/calendar.png'); ?>" alt="img" width="20">
                                     </div>

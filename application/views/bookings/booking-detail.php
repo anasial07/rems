@@ -90,7 +90,7 @@
                         </tr>
                         <tr>
                             <td>Features (<?= $info[0]->featuresPercent.'%'; ?>)</td>
-                            <td><?= $info[0]->features; ?></td>
+                            <td><?= ($info[0]->features==0) ? 'N/A' : $info[0]->features; ?></td>
                         </tr>
                         <tr>
                             <td>Purchase Date</td>
