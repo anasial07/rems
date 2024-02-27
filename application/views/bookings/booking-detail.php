@@ -180,7 +180,9 @@
                                     </span>
                                 </td>
                                 <td><?= $install->installFilerPercent; ?>%</td>
-                                <td class="text-center"><span class="badges bg-lightgreen">Paid</span></td>
+                                <td class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Print Installment Receipt">
+                                    <a href="<?= base_url('booking/generateBookingReceipt/').base_convert($install->installmentId, 10, 36).'?receipt=installment'; ?>"><img src="<?= base_url('assets/img/icons/printer.svg') ?>" alt="img"></a>
+                                </td>
                                 <?php if($role=='admin'): ?>
                                     <td class="text-center">
                                         <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">

@@ -65,6 +65,24 @@ class Booking_model extends CI_Model{
 		$id && $this->db->where('installments.bookingId', $id);
 		return $this->db->get()->result();
 	}
+	public function getInstallmentInfo($id){
+		$this->db->select('*');
+		$this->db->from('installments');
+		$this->db->join('bookings', 'installments.bookingId = bookings.bookingId', 'left');
+		$this->db->join('projects', 'bookings.projID = projects.projectId', 'left');
+		$this->db->join('customers', 'bookings.customerID = customers.customerId', 'left');
+		$this->db->join('agents', 'bookings.agentID = agents.agentId', 'left');
+		$this->db->join('types', 'bookings.typeID = types.typeId', 'left');
+		$this->db->join('locations', 'installments.installReceivedIn = locations.locationId', 'left');
+		$this->db->where('installments.installmentId', $id);
+		return $this->db->get()->result();
+	}
+	public function customerBookings($id){
+		$this->db->select('*');
+		$this->db->from('bookings');
+		$this->db->where('bookings.customerID', $id);
+		return $this->db->get()->result();
+	}
 
 	// ---------------------------- Insert Records ------------------------------------
 

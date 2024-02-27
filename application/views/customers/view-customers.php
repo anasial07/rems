@@ -145,6 +145,7 @@
                 }else{
                     custmStatus += '<span class="text-danger">In Active</span>';
                 }
+                allFiles(id);
                 $('#modalArea').html(`
                     <div class="row">
                         <div class="col">
@@ -214,6 +215,7 @@
                         <div class="col-3">
                             <img src="${imgUrl}uploads/customers/${res[0].custmPic}" style="height:160px!important; width:160px!important; border-radius:10px;">
                             <span>Customer Status: ${custmStatus}</span>
+                            <div class="row" id="custmAllFiles"></div>
                         </div>
                     </div>
                 `);
@@ -221,4 +223,27 @@
             }
         });
     });
+
+    function allFiles(id){
+        $.ajax({
+            url: "<?php echo base_url("booking/customerBookings/"); ?>" + id,
+            method: 'POST',
+            dataType: 'JSON',
+            data: {id: id},
+            success: function(res) {
+                $('#custmAllFiles').html('');
+                if (res && res.length > 0) {
+                    var content = '<div class="col-12 mt-4">Bookings<br>';
+                    $.each(res, function(index, data) {
+                        content += `<strong class="text-primary">${data.membershipNo}</strong><br>`;
+                    });
+                    content += '</div>';
+                    $('#custmAllFiles').append(content);
+                } else {
+                    var content = '<div class="col-12 text-danger mt-4">No Booking available</div>';
+                    $('#custmAllFiles').append(content);
+                }
+            }
+        });
+    }
 </script>
