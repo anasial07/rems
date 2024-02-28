@@ -61,6 +61,7 @@ class Booking extends CI_Controller {
 		$this->load->view('components/template', $data);
 	}
 	public function saveBooking(){	// Add New Booking
+		$projID=$this->input->post('projID');
 		$projCode=$this->input->post('projectCode');
 		$typeSize=$this->input->post('typeSize');
 		$typeSizeCheck=$typeSize;
@@ -78,7 +79,7 @@ class Booking extends CI_Controller {
 
 		$total_bookings=0;
 		$this->db->select('COUNT(bookingId) as total_bookings');
-		$query = $this->db->from('bookings')->get();
+		$query = $this->db->from('bookings')->where('projID', $projID)->get();
 		$result = $query->row();
 		$totalBookings = $result->total_bookings;
 		$total_bookings = $totalBookings++; 
@@ -113,7 +114,7 @@ class Booking extends CI_Controller {
 		}
 		$features = !empty($this->input->post('features')) ? implode(',', $this->input->post('features')) : 0;
 		$data = array(
-			'projID' => $this->input->post('projID'),
+			'projID' => $projID,
 			'catID' => $this->input->post('catID'),
 			'subCatID' => $this->input->post('subCatID'),
 			'typeID' => $this->input->post('typeID'),
@@ -292,7 +293,7 @@ class Booking extends CI_Controller {
 			}elseif($number < 100){
 				return $tensWords[($number / 10) - 2] . (($number % 10 !== 0) ? ' ' . numberToWords($number % 10) : '');
 			}elseif($number < 1000){
-				return $words[floor($number / 100)] . ' hundred' . (($number % 100 !== 0) ? ' and ' . numberToWords($number % 100) : '');
+				return $words[floor($number / 100)] . ' Hundred' . (($number % 100 !== 0) ? ' and ' . numberToWords($number % 100) : '');
 			}else{
 				while ($number >= 1000) {
 					$number /= 1000;
@@ -1234,4 +1235,39 @@ class Booking extends CI_Controller {
 
 		$pdf->Output($filename, 'I');
 	}
+	public function generateInstallmentHistory($id){
+		$bookingID=base_convert($id, 36, 10);
+		$info = $this->booking_model->getInstallments($bookingID);
+        $pdf = new Pdf();
+		$pdf->SetCreator(PDF_CREATOR);
+		$pdf->SetAuthor('Muhammad Anas');
+		$pdf->SetTitle('Account Statement - '.$info[0]->membershipNo);
+		$pdf->SetSubject('Account Statement of '.$info[0]->membershipNo);
+		$pdf->SetKeywords('Account Statement');
+		$filename='Account Statement'.'.pdf';
+		$pdf->SetMargins(7, 7, 7, 7);
+        $pdf->AddPage('A4');
+        $pdf->SetFont('', 'B', 14);
+		$pdf->SetTitle('Account Statement - '.$info[0]->membershipNo);
+        $logo = base_url('uploads/letterHead/'.$info[0]->projLogo);
+
+		$pdf->writeHTMLCell(40, 5, 5, 5, '<img src="' . $logo . '">', 0, 0, false, false, '');
+		$pdf->cell(120, 6, $info[0]->projName, 0, 0, 'C');
+
+        $pdf->SetFont('', '', 10);
+		$pdf->cell(40, 3, $info[0]->mailAddress, 0, 1, 'R');
+
+		$pdf->cell(38, 5, '', 0, 0, '');
+		$pdf->cell(120, 10, '(A Project of AH Group)', 0, 0, 'C');
+		$pdf->cell(40, 3, $info[0]->webAddress, 0, 1, 'R');
+		$pdf->Ln(20);
+		
+        $pdf->SetFont('', 'B', 13);
+		$pdf->cell(197, 6, 'Account Statement', 0, 1, 'C');
+        $pdf->SetFont('', '', 11);
+		$pdf->cell(197, 6, $info[0]->membershipNo, 0, 1, 'C');
+		$pdf->Ln(12);
+
+        $pdf->Output($filename, 'I');
+    }
 }

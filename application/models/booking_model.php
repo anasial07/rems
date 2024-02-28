@@ -31,12 +31,14 @@ class Booking_model extends CI_Model{
 		$this->db->from('customers');
 		$this->db->join('bookings', 'customers.customerId = bookings.customerID');
 		$this->db->where(array('bookings.projID' => $id, 'customers.custmStatus' => 1));
+		$this->db->group_by('customers.customerId');
 		return $this->db->get()->result();
 	}
 	public function filterBookings($id){
 		$this->db->select('*');
 		$this->db->from('bookings');
 		$this->db->join('customers', 'bookings.customerID = customers.customerId', 'left');
+		$this->db->join('types', 'bookings.typeID = types.typeId', 'left');
 		$this->db->where(array('bookings.customerID' => $id));
 		return $this->db->get()->result();
 	}
@@ -60,6 +62,7 @@ class Booking_model extends CI_Model{
 		$this->db->select('*');
 		$this->db->from('installments');
 		$this->db->join('bookings', 'installments.bookingId = bookings.bookingId', 'left');
+		$this->db->join('projects', 'bookings.projID = projects.projectId', 'left');
 		$this->db->join('locations', 'installments.installReceivedIn = locations.locationId', 'left');
 		$this->db->join('banks', 'installments.installBankId = banks.bankId', 'left');
 		$id && $this->db->where('installments.bookingId', $id);

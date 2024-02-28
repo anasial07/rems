@@ -335,10 +335,8 @@
             success: function(res){
                 $('#bookingID').find('option').not(':first').remove();
                 $.each(res, function(index, data){
-                    var status = data['bookingStatus'];
-                    if(status == 0){ status = 'Inactive'; }
-                    else{ status = ''; }
-                    $('#bookingID').append('<option value="' + data['bookingId'] + '">' + data['membershipNo'] + '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' + status + '</option>');
+                    var bookType = data['typeName'];
+                    $('#bookingID').append('<option value="' + data['bookingId'] + '">' + data['membershipNo'] + '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' + bookType + '</option>');
                 });
                 $(".custmName").html(res[0].custmName);
 

@@ -122,6 +122,7 @@
         </div>
     </div>
 </div>
+<input type="hidden" value="<?= base_url(); ?>" id="base_url">
 <script>
     $('.customerInfo').click(function(){
         var id = $(this).data('id');
@@ -133,6 +134,7 @@
             data: {id: id},
             success: function(res){
                 $('#modalArea').html('');
+                allFiles(id);
                 let empStatus = '';
                 var custmStatus = '';
                 if(res[0].isEmployee == "1"){
@@ -145,7 +147,6 @@
                 }else{
                     custmStatus += '<span class="text-danger">In Active</span>';
                 }
-                allFiles(id);
                 $('#modalArea').html(`
                     <div class="row">
                         <div class="col">
@@ -215,15 +216,22 @@
                         <div class="col-3">
                             <img src="${imgUrl}uploads/customers/${res[0].custmPic}" style="height:160px!important; width:160px!important; border-radius:10px;">
                             <span>Customer Status: ${custmStatus}</span>
-                            <div class="row" id="custmAllFiles"></div>
+                            <div class="row mb-4" id="custmAllFiles"></div>
                         </div>
                     </div>
+                    ${res[0].custmStatus == "0" ? 
+                        `<div class="row">
+                            <div class="col-12 text-center">
+                                <div class="alert alert-warning fade show mt-3" role="alert">
+                                    The status of this customer is currently <strong>inactive</strong>. If you wish to activate the status, please contact the admin.
+                                </div>
+                            </div>
+                        </div>` : '' }
                 `);
                 $('#customerDetail').modal('show');
             }
         });
     });
-
     function allFiles(id){
         $.ajax({
             url: "<?php echo base_url("booking/customerBookings/"); ?>" + id,
@@ -231,16 +239,18 @@
             dataType: 'JSON',
             data: {id: id},
             success: function(res) {
+                var base_url=$('#base_url').val();
                 $('#custmAllFiles').html('');
                 if (res && res.length > 0) {
-                    var content = '<div class="col-12 mt-4">Bookings<br>';
+                    var content = `<div class="col-12 mt-4">${res.length.toString().padStart(2, '0')} Booking(s) available<br>`;
                     $.each(res, function(index, data) {
-                        content += `<strong class="text-primary">${data.membershipNo}</strong><br>`;
+                        var bookingID = data.bookingId.toString(10, 36);
+                        content += `<a data-bs-toggle="tooltip" data-bs-placement="top" title="Click for More Details" href="${base_url}/booking/bookingDetail/${bookingID}">${data.membershipNo}</a><br>`;
                     });
                     content += '</div>';
                     $('#custmAllFiles').append(content);
                 } else {
-                    var content = '<div class="col-12 text-danger mt-4">No Booking available</div>';
+                    var content = '<div class="col-12 text-danger mt-4">No Booking available yet!</div>';
                     $('#custmAllFiles').append(content);
                 }
             }
