@@ -100,7 +100,20 @@
                             <li><a href="<?= base_url('agents'); ?>"><img src="<?= base_url('assets/img/icons/users1.svg'); ?>" alt="img"><span>Agents</span></a></li>
                             <li><a href="<?= base_url('dashboard/addTeam'); ?>"><img src="<?= base_url('assets/img/icons/users1.svg'); ?>" alt="img"><span>Teams</span></a></li>
                             <li><a href="<?= base_url('customers'); ?>"><img src="<?= base_url('assets/img/icons/users1.svg'); ?>" alt="img"><span>Customers</span></a></li>
-                            <li><a href="<?= base_url('booking'); ?>"><img src="<?= base_url('assets/img/icons/places.svg'); ?>" alt="img"><span>Bookings</span></a></li>
+                            <li>
+                                <a href="<?= base_url('booking'); ?>"><img src="<?= base_url('assets/img/icons/places.svg'); ?>" alt="img">
+                                    <span>Bookings</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                                    <span style="font-size:13px!important;">
+                                        <?php
+                                            $this->db->select('COUNT(*) as total_records')->from('bookings');
+                                            $result = $this->db->get()->row();
+                                            if($result->total_records>0){
+                                                echo sprintf('%02d', $result->total_records);
+                                            }
+                                        ?>
+                                    </span>
+                                </a>
+                            </li>
                             <li><a href="<?= base_url('booking/addInstallment'); ?>"><img src="<?= base_url('assets/img/icons/expense1.svg'); ?>" alt="img"><span>Insallments</span></a></li>
                             <li><a href="<?= base_url('dashboard/viewUsers'); ?>"><img src="<?= base_url('assets/img/icons/users1.svg'); ?>" alt="img"><span>Users Management</span></a></li>
                         </ul>

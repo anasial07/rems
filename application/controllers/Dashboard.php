@@ -21,6 +21,13 @@ class Dashboard extends CI_Controller {
 		$data['totalTeams'] = $this->dashboard_model->totalTeams();
 		$data['bookingAmount'] = $this->dashboard_model->totalBookingAmount();
 		$data['installAmount'] = $this->dashboard_model->totalInstallmentAmount();
+
+		// -----------------------------------------------------------------------------------
+        $data['chart1Months'] = $this->dashboard_model->chart1Months();
+        $data['chart1BookingAmt'] = $this->dashboard_model->chart1BookingAmt();
+        $data['chart1InstallAmt'] = $this->dashboard_model->chart1InstallAmt();
+		// -----------------------------------------------------------------------------------
+
 		$this->load->view('components/template', $data);
 	}
 	public function provinces(){

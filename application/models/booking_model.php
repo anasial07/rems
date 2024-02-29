@@ -63,6 +63,9 @@ class Booking_model extends CI_Model{
 		$this->db->from('installments');
 		$this->db->join('bookings', 'installments.bookingId = bookings.bookingId', 'left');
 		$this->db->join('projects', 'bookings.projID = projects.projectId', 'left');
+		$this->db->join('payment_plans', 'bookings.payPlanID = payment_plans.payPlanId', 'left');
+		$this->db->join('types', 'bookings.typeID = types.typeId', 'left');
+		$this->db->join('customers', 'bookings.customerID = customers.customerId', 'left');
 		$this->db->join('locations', 'installments.installReceivedIn = locations.locationId', 'left');
 		$this->db->join('banks', 'installments.installBankId = banks.bankId', 'left');
 		$id && $this->db->where('installments.bookingId', $id);

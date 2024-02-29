@@ -117,9 +117,9 @@
                         </div>
                         <div class="col text-center mt-2"><h6>Installment History</h6></div>
                         <div class="col text-end mt-2">
-                            <a target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Print Installment History" href="<?= base_url('booking/generateInstallmentHistory/').base_convert($info[0]->bookingId, 10, 36); ?>">
-                                <h6>Account Statement</h6>
-                            </a>
+                            <h6><a target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Print Account Statement" href="<?= base_url('booking/generateAccountStatement/').base_convert($info[0]->bookingId, 10, 36); ?>">
+                                Account Statement
+                            </a></h6>
                         </div>
                     </div>
                     <div class="table-responsive">

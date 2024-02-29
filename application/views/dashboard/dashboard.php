@@ -1,7 +1,3 @@
-<!-- Welcome --><style>
-    .product-details{ height:90px!important; cursor: pointer; }
-    .product-details img{ width:38px!important; }
-</style>
 <div class="page-wrapper">
     <div class="content">
         <div class="row">
@@ -94,5 +90,92 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Booking & Installment Analytics</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="s-line-area" class="chart-set"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+            $chart1Months = json_encode($chart1Months);
+            $chart1MonthsArray = json_decode($chart1Months, true);
+            if($chart1MonthsArray !== null){
+                $chart1Months="";
+                foreach($chart1MonthsArray as $data){
+                    if (isset($data['bookingDate'])){
+                        $chart1Months.=$data['bookingDate'].',';
+                    }
+                }
+            }
+            $chart1Months = rtrim($chart1Months, ',');
+            if($chart1Months==""){ $chart1Months=date('Y-m'); }
+            // -----------------------------------------------------------------
+            $chart1BookingAmt = json_encode($chart1BookingAmt);
+            $chart1BookingAmtArray = json_decode($chart1BookingAmt, true);
+            if($chart1BookingAmtArray !== null){
+                $chart1BokAmount="";
+                foreach($chart1BookingAmtArray as $data){
+                    if (isset($data['totalBookingAmount'])){
+                        $chart1BokAmount.=$data['totalBookingAmount'].',';
+                    }
+                }
+            }
+            $chart1BokAmount = rtrim($chart1BokAmount, ',');
+            if($chart1BokAmount==""){ $chart1BokAmount=0; }
+            // -----------------------------------------------------------------
+            $chart1InstallAmt = json_encode($chart1InstallAmt);
+            $chart1InstallAmtArray = json_decode($chart1InstallAmt, true);
+            if($chart1InstallAmtArray !== null){
+                $chart1InstAmt="";
+                foreach($chart1InstallAmtArray as $data){
+                    if (isset($data['totalInstallAmount'])){
+                        $chart1InstAmt.=$data['totalInstallAmount'].',';
+                    }
+                }
+            }
+            $chart1InstAmt = rtrim($chart1InstAmt, ',');
+            if($chart1InstAmt==""){ $chart1InstAmt=0; }
+        ?>
+        <input type="hidden" id="chart1Months" value="<?= $chart1Months; ?>">
+        <input type="hidden" id="chart1BokAmount" value="<?= $chart1BokAmount; ?>">
+        <input type="hidden" id="chart1InstAmt" value="<?= $chart1InstAmt; ?>">
     </div>
 </div>
+<script>
+    'use strict';
+    $(document).ready(function (){
+        var chart1Months = $('#chart1Months').val();
+        var chart1BokAmount = $('#chart1BokAmount').val();
+        var chart1InstAmt = $('#chart1InstAmt').val();
+        
+        var monthCatArray = chart1Months.split(',');
+        var bokAmtArray = chart1BokAmount.split(',');
+        var instAmtArray = chart1InstAmt.split(',');
+        if($('#s-line-area').length > 0){
+            var sLineArea = {
+                chart: { 
+                    height: 350, type: 'area',
+                    toolbar: { show: false, }
+                },
+                dataLabels: { enabled: false },
+                stroke: { curve: 'smooth' },
+                series: [
+                    { name: 'Bookings',  data: bokAmtArray },
+                    { name: 'Installments', data: instAmtArray }
+                ],
+                xaxis: {
+                    type: 'datetime',
+                    categories: monthCatArray
+                }
+            }
+            var chart = new ApexCharts(document.querySelector("#s-line-area"), sLineArea);
+            chart.render();
+        }
+    });
+</script>

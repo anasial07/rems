@@ -74,7 +74,7 @@ class Booking extends CI_Controller {
 		$year=date('Y', strtotime($purchaseDate));
 
 		$subtotal=$typeAmount - ($typeAmount * ($sepDiscount / 100));
-		$total=$subtotal - $exCharges;
+		$total=$subtotal + $exCharges;
 		$salePrice=$total - ($total * ($featuresPercent / 100));
 
 		$total_bookings=0;
@@ -1235,9 +1235,16 @@ class Booking extends CI_Controller {
 
 		$pdf->Output($filename, 'I');
 	}
-	public function generateInstallmentHistory($id){
+	
+	public function generateAccountStatement($id){
 		$bookingID=base_convert($id, 36, 10);
 		$info = $this->booking_model->getInstallments($bookingID);
+		$installSize = count($info);
+		if($installSize==0){
+			$info = $this->booking_model->getBookings($bookingID);
+		}
+		// var_dump($installSize); exit;
+
         $pdf = new Pdf();
 		$pdf->SetCreator(PDF_CREATOR);
 		$pdf->SetAuthor('Muhammad Anas');
@@ -1266,7 +1273,100 @@ class Booking extends CI_Controller {
 		$pdf->cell(197, 6, 'Account Statement', 0, 1, 'C');
         $pdf->SetFont('', '', 11);
 		$pdf->cell(197, 6, $info[0]->membershipNo, 0, 1, 'C');
-		$pdf->Ln(12);
+		$pdf->Ln(8);
+
+        $pdf->SetFont('', 'B', 11);
+		$pdf->Cell(140, 5, 'Member Information');
+		$pdf->Cell(57, 5, 'Payment Information', 0, 1);
+        $pdf->SetFont('', '', 11);
+		
+		$pdf->Cell(40, 5, 'Member Name:');
+		$pdf->Cell(100, 5, $info[0]->custmName);
+		$pdf->Cell(28, 5, 'Net Price:');
+		$pdf->Cell(28, 5, number_format($info[0]->totalPrice), 0, 1, 'R');
+		
+		$pdf->Cell(40, 5, "Father's Name:");
+		$pdf->Cell(100, 5, $info[0]->fatherName);
+		$pdf->Cell(28, 5, 'Extra Land Charges:');
+		$pdf->Cell(28, 5, number_format($info[0]->exCharges), 0, 1, 'R');
+
+		$pdf->Cell(40, 5, 'CNIC:');
+		$pdf->Cell(100, 5, $info[0]->custmCNIC);
+		$pdf->Cell(28, 5, 'Fetaure Charges:');
+		$pdf->Cell(28, 5, $info[0]->featuresPercent.'%', 0, 1, 'R');
+		
+		$pdf->Cell(40, 5, "Contact:");
+		$pdf->Cell(100, 5, $info[0]->primaryPhone);
+		$pdf->Cell(28, 5, 'Discount:');
+		$pdf->Cell(28, 5, number_format($info[0]->sepDiscount), 0, 1, 'R');
+		
+		$pdf->Cell(40, 5, "City:");
+		$pdf->Cell(100, 5, $info[0]->locName);
+		$pdf->Cell(28, 5, 'Sale Price:');
+		$pdf->Cell(28, 5, number_format($info[0]->salePrice), 0, 1, 'R');
+		$pdf->Ln(5);
+
+		$pdf->SetFont('', '', 11);
+		$pdf->SetTextColor(255, 255, 255);
+		$pdf->Cell(21, 6, 'Inst #', 1, 0, 'C', true);
+		$pdf->Cell(30, 6, 'Narration', 1, 0, 'C', true);
+		$pdf->Cell(25, 6, 'Received', 1, 0, 'C', true);
+		$pdf->Cell(25, 6, 'Remaining', 1, 0, 'C', true);
+		$pdf->Cell(26, 6, 'Receipt Date', 1, 0, 'C', true);
+		$pdf->Cell(30, 6, 'Payment Mode', 1, 0, 'C', true);
+		$pdf->Cell(25, 6, 'Filer Status', 1, 0, 'C', true);
+		$pdf->Cell(15, 6, 'Tax', 1, 1, 'C', true);
+		$pdf->SetTextColor(0, 0, 0);
+        $pdf->SetFont('', '', 11);
+
+		// Booking Detail
+		$totalSalePrice=$info[0]->salePrice;
+		$bookingAmount=$info[0]->bookingAmount;
+		$totalRemain=$totalSalePrice - $bookingAmount;
+
+		$pdf->Cell(21, 6, $info[0]->projCode.'-'.sprintf('%02d',$info[0]->bookingId), 1, 0, 'C');
+		$pdf->Cell(30, 6, 'Down Payment', 1);
+		$pdf->Cell(25, 6, number_format($bookingAmount), 1, 0, 'C');
+		$pdf->Cell(25, 6, number_format($totalRemain), 1, 0, 'C');
+		$pdf->Cell(26, 6, date('M d, Y',strtotime($info[0]->purchaseDate)), 1, 0, 'C');
+		$pdf->Cell(30, 6, $info[0]->bookingMode, 1, 0, 'C');
+		$pdf->Cell(25, 6, $info[0]->bookFilerStatus, 1, 0, 'C');
+		$pdf->Cell(15, 6, $info[0]->bookFilerPercent.'%', 1, 1, 'C');
+
+		$totalRemainaing=$totalRemain;
+		$totalRcv=0;
+		if($installSize>0){
+			foreach($info as $install):
+				// Installment Detail
+				$instRcv=$install->installAmount;
+				$totalRcv+=$instRcv;
+				$totalRemainaing=$totalRemain - $totalRcv;
+				$pdf->Cell(21, 6, $install->projCode.'-'.sprintf('%02d',$install->installmentId), 1, 0, 'C');
+				$pdf->Cell(30, 6, 'Installment', 1);
+				$pdf->Cell(25, 6, number_format($instRcv), 1, 0, 'C');
+				$pdf->Cell(25, 6, number_format($totalRemainaing), 1, 0, 'C');
+				$pdf->Cell(26, 6, date('M d, Y',strtotime($install->installReceivedDate)), 1, 0, 'C');
+				$pdf->Cell(30, 6, $install->installPayMode, 1, 0, 'C');
+				$pdf->Cell(25, 6, $install->installFilerStatus, 1, 0, 'C');
+				$pdf->Cell(15, 6, $install->installFilerPercent.'%', 1, 1, 'C');
+			endforeach;
+		}
+        $pdf->SetFont('', 'B', 11);
+		$pdf->SetTextColor(0, 0, 0);
+		$pdf->SetFillColor(193, 193, 193);
+		$pdf->Cell(51, 6, 'Payments Overview', 1, 0, 'C', true);
+		$pdf->Cell(25, 6, number_format($totalRcv+$bookingAmount), 1, 0, 'C', true);
+		$pdf->Cell(25, 6, number_format($totalRemainaing), 1, 0, 'C', true);
+        $pdf->SetFont('', '', 10);
+		$pdf->Cell(96, 6, 'Insights into recent transactions and financial status', 1, 1, 'C', true);
+		$pdf->SetTextColor(0, 0, 0);
+		$pdf->Ln(5);
+		
+		$pdf->SetFont('', 'B', 11);
+		$pdf->Cell(197, 6, 'NOTE: THIS IS COMPUTER GENERATED REPORT, NO SIGNATURE REQUIRED', 0, 1);
+		$pdf->SetFont('', '', 11);
+		$pdf->MultiCell(197, 6, "The current receiving report supersedes any previously issued receiving reports regarding customer payment. This report is being issued based on the cash and banking instruments submitted by the client. Any banking instrument, if returned or rejected for any reason by the customer's bank or banking channel involved, shall not", 0, 'J');
+		$pdf->Cell(197, 4, 'be deemed as payment of dues by the client.', 0, 1);
 
         $pdf->Output($filename, 'I');
     }
