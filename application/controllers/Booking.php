@@ -75,7 +75,7 @@ class Booking extends CI_Controller {
 
 		$subtotal=$typeAmount - ($typeAmount * ($sepDiscount / 100));
 		$total=$subtotal + $exCharges;
-		$salePrice=$total - ($total * ($featuresPercent / 100));
+		$salePrice=$total + ($total * ($featuresPercent / 100));
 
 		$total_bookings=0;
 		$this->db->select('COUNT(bookingId) as total_bookings');
@@ -276,7 +276,7 @@ class Booking extends CI_Controller {
 
 		$pdf->cell(40, 6, number_format($totalPaid), 0, 0, '');
         $pdf->SetFont('', 'I', 10);
-		$pdf->cell(20, 6, $paidPercent.'%', 0, 0, 'C');
+		$pdf->cell(20, 6, substr($paidPercent, 0, 4).'%', 0, 0, 'C');
 		$pdf->cell(100, 6, '('.$other.')', 0, 1, '');
         $pdf->SetFont('', '', 10);
 

@@ -173,7 +173,7 @@
         var doj = $('#empDOJ').val();
         var empTeam = $('#empTeam').val();
         var empManger = $('#empManger').val();
-        if(agentCode!=="" && agentName!=="" && agentPhone!="" && agentEmail!=="" && designationId!=="Select Designation" && departId!=="Select Department" && locationId!=="Select City" && officeId!=="Select Office" && doj!==""){
+        if(agentCode!=="" && agentName!=="" && agentPhone!="" && designationId!=="Select Designation" && departId!=="Select Department" && locationId!=="Select City" && officeId!=="Select Office" && doj!==""){
             swal({
                 title: "Are you sure?",
                 text: "You want to add the agent!",
@@ -206,7 +206,6 @@
                         },
                         cache: false,
                         success: function(dataResult){
-                            console.log(dataResult);
                             if(dataResult==true){
                                 swal({
                                     title: "Congratulation!", 
