@@ -4,7 +4,7 @@
 </style>
 <?php $role=$this->session->userdata('role'); ?>
 <div class="page-wrapper px-4 mt-4">
-    <div class="page-header">
+    <div class="page-header mx-1">
         <div class="page-title">
             <h4>Booking List</h4>
             <h6>Add & Manage your Bookings</h6>
@@ -45,8 +45,6 @@
                             <th>Customer</th>
                             <th>Agent</th>
                             <th>Category</th>
-                            <th>Sub-Category</th>
-                            <th>Mode</th>
                             <th>Purchased</th>
                             <th class="text-center">Status</th>
                             <th class="text-center">Action</th>
@@ -63,15 +61,30 @@
                         <td><?= $booking->membershipNo; ?></td>
                         <td><?= $booking->custmName; ?></td>
                         <td><?= $booking->agentName; ?></td>
-                        <td><?= $booking->catName; ?></td>
-                        <td><?= $booking->subCatName; ?></td>
-                        <td><?= $booking->bookingMode; ?></td>
+                        <td><?= $booking->typeName.' - '.$booking->subCatName; ?></td>
                         <td><?= date('d M, Y',strtotime($booking->purchaseDate)); ?></td>
                         <td class="text-center">
-                            <?php if($status==1){ ?>
+                            <?php
+                                $paidAmt=0;
+                                $this->db->select('SUM(installAmount) as totalInstallAmount');
+                                $this->db->from('installments');
+                                $this->db->where('installments.bookingId', $booking->bookingId);
+                                $query = $this->db->get();
+                                if($query->num_rows()>0){
+                                    $result = $query->row();
+                                    $totalInstallAmount = $result->totalInstallAmount;
+                                    $paidAmt=$booking->bookingAmount+$totalInstallAmount;
+                                }
+                            
+                            if($status==1){ ?>
                                 <span class="badges bg-lightgreen">Active</span>
                             <?php }else{ ?>
                                 <span class="badges bg-lightred">Inactive</span>
+                            <?php }
+                            if($paidAmt<$booking->salePrice){ ?>
+                                <span class="badges bg-lightyellow">Pending</span>
+                            <?php }else{ ?>
+                                <span class="badges bg-lightgreen">Paid</span>
                             <?php } ?>
                         </td>
                         <td class="text-center">

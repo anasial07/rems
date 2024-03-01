@@ -1132,7 +1132,6 @@ class Booking extends CI_Controller {
 		$semiAnnualAmount = $salePrice * $info[0]->semiAnnual / 100;
 		$mySemiAnnual=$semiAnnualAmount/$totalSemiAnnual;
 
-		$totalPay=0;
 		for($i=1; $i<=$totalMonths; $i++):
 			$date = DateTime::createFromFormat('M, Y', $confirmMonth);
 			$date->modify('+'.$i.' month');

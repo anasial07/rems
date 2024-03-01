@@ -7,7 +7,7 @@
                         <span><img src="<?= base_url('assets/img/icons/dash1.svg'); ?>" alt="img"></span>
                     </div>
                     <div class="dash-widgetcontent">
-                        <h5><span class="counters" data-count="<?= $bookingAmount + $installAmount; ?>"><?= number_format($bookingAmount + $installAmount); ?></span></h5>
+                        <h5><span class="counters" data-count="<?= $bookingAmount + $installAmount; ?>"><?= $bookingAmount + $installAmount; ?></span></h5>
                         <h6>Total Booking Amount</h6>
                     </div>
                 </div>
@@ -18,7 +18,7 @@
                         <span><img src="<?= base_url('assets/img/icons/dash2.svg'); ?>" alt="img"></span>
                     </div>
                     <div class="dash-widgetcontent">
-                        <h5><span class="counters" data-count="<?= $installAmount; ?>"><?= number_format($installAmount); ?></span></h5>
+                        <h5><span class="counters" data-count="<?= $installAmount; ?>"><?= $installAmount; ?></span></h5>
                         <h6>Total Installment Amount</h6>
                     </div>
                 </div>

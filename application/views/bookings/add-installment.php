@@ -187,10 +187,6 @@
                                         <h5 class="bokPayPlan">-</h5>
                                     </li>
                                     <li>
-                                        <h4>Features</h4>
-                                        <h5 class="bokFeature">-</h5>
-                                    </li>
-                                    <li>
                                         <h4>Purchase Date</h4>
                                         <h5 class="bokDate">-</h5>
                                     </li>
@@ -374,7 +370,6 @@
                 $(".bokType").html(res[0].typeName);
                 $(".bokPlanName").html(res[0].planName);
                 $(".bokPayPlan").html(res[0].planYears+" Year(s)");
-                $(".bokFeature").html(res[0].features);
                 $(".bokDate").html(res[0].purchaseDate);
                 if(res[0].bookingStatus==0){
                     $('input, select').prop('disabled', true);

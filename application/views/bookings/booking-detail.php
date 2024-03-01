@@ -1,23 +1,26 @@
 <style>
     .heading{ font-size:14px; color:#7367F0; font-weight:600; line-height: 35px; padding-left:2.5%!important; }
     .bookingTable tr td{ border:none!important; line-height:0.3; }
-    .topBtn{ border-radius:0px; }
 </style>
 <?php $role=$this->session->userdata('role'); ?>
 <div class="page-wrapper">
     <div class="content">
-        <div class="page-header">
-            <div class="page-title">
-                <h4><?= $info[0]->membershipNo; ?></h4>
-                <h6>Membership#</h6>
-            </div>
-            <div class="page-btn">
-                <!-- <button type="button" class="btn btn-rounded topBtn btn-danger">Cancellation Request</button> -->
-                <a target="_blank" href="<?= base_url('booking/generateBookingMemo/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded topBtn btn-primary">Booking Memo</button></a>
-                <a target="_blank" href="<?= base_url('booking/generateWelcomeLetter/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded topBtn btn-secondary">Welcome Letter</button></a>
-                <a target="_blank" href="<?= base_url('booking/generateConfirmationLetter/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded topBtn btn-info text-white">Confirmation Letter</button></a>
-                <a target="_blank" href="<?= base_url('booking/generateBookingForm/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded topBtn btn-dark">Booking Form</button></a>
-                <a target="_blank" href="<?= base_url('booking/generatePaymentPlan/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded topBtn btn-success">Payment Plan</button></a>
+        <div class="card px-3 py-1">
+            <div class="row">
+                <div class="page-header my-2">
+                    <div class="page-title">
+                        <h4 style="font-weight:900; color:#8967F0;"><?= $info[0]->membershipNo; ?></h4>
+                        <h6 style="margin-top:-6px!important;">Membership#</h6>
+                    </div>
+                    <div class="page-btn">
+                        <!-- <button type="button" class="btn btn-rounded btn-danger">Cancellation Request</button> -->
+                        <a target="_blank" href="<?= base_url('booking/generateBookingMemo/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded btn-primary">Booking Memo</button></a>
+                        <a target="_blank" href="<?= base_url('booking/generateWelcomeLetter/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded btn-secondary">Welcome Letter</button></a>
+                        <a target="_blank" href="<?= base_url('booking/generateConfirmationLetter/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded btn-info text-white">Confirmation Letter</button></a>
+                        <a target="_blank" href="<?= base_url('booking/generateBookingForm/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded btn-dark">Booking Form</button></a>
+                        <a target="_blank" href="<?= base_url('booking/generatePaymentPlan/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded btn-success">Payment Plan</button></a>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="card px-4 pt-3">
@@ -126,6 +129,7 @@
                         <table class="table datanew">
                             <thead>
                                 <tr>
+                                    <th>Receipt #</th>
                                     <th>Rec Amount</th>
                                     <th>Reference no</th>
                                     <th>Bank Name</th>
@@ -142,6 +146,10 @@
                             </thead>
                             <tbody>
                                 <tr>
+                                    <td>
+                                        <?= $info[0]->projCode.'-'.sprintf('%02d',$info[0]->bookingId); ?>
+                                        <p style="font-size:11px; margin-top:-4px!important;">Down Payment</p>
+                                    </td>
                                     <td><?= number_format($info[0]->bookingAmount); ?></td>
                                     <td><?php echo ($info[0]->bookingReferenceNo == 0) ? "N/A" : $info[0]->bookingReferenceNo; ?></td>
                                     <td><?php echo ($info[0]->bookBankId == 0) ? "N/A" : $info[0]->bankName; ?></td>
@@ -171,6 +179,7 @@
                                 </tr>
                                 <?php foreach($installments as $install): ?>
                                 <tr>
+                                    <td><?= $info[0]->projCode.'-'.sprintf('%02d',$install->installmentId); ?></td>
                                     <td><?= number_format($install->installAmount); ?></td>
                                     <td><?php echo ($install->installReferenceNo == 0) ? "N/A" : $install->installReferenceNo; ?></td>
                                     <td><?php echo ($install->installBankId == 0) ? "N/A" : $install->bankName; ?></td>
