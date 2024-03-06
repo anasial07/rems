@@ -147,6 +147,7 @@
                 }else{
                     custmStatus += '<span class="text-danger">In Active</span>';
                 }
+                var empGender = (res[0].custmGender==1) ? 'Male' : 'Female';
                 $('#modalArea').html(`
                     <div class="row">
                         <div class="col">
@@ -178,6 +179,10 @@
                                 <tr>
                                     <td>Customer DOB</td>
                                     <td>${res[0].custmDOB}</td>
+                                </tr>
+                                <tr>
+                                    <td>Customer Gender</td>
+                                    <td>${empGender}</td>
                                 </tr>
                                 <tr>
                                     <td>Customer City</td>
@@ -245,7 +250,7 @@
                     var content = `<div class="col-12 mt-4">${res.length.toString().padStart(2, '0')} Booking(s) available<br>`;
                     $.each(res, function(index, data) {
                         var bookingID = data.bookingId.toString(10, 36);
-                        content += `<a data-bs-toggle="tooltip" data-bs-placement="top" title="Click for More Details" href="${base_url}/booking/bookingDetail/${bookingID}">${data.membershipNo}</a><br>`;
+                        content += `<span class="text-muted">${data.membershipNo}</span><br>`;
                     });
                     content += '</div>';
                     $('#custmAllFiles').append(content);

@@ -40,11 +40,12 @@ class Customers extends CI_Controller {
 			'max_size' => 1024,
 			'file_name' => $this->input->post('custCNIC') . '_' . time(),
 		);
+		$custmGender=$this->input->post('gender');
 		$this->load->library('upload', $config);
 		if($this->upload->do_upload('custmPic')){
 			$image = $this->upload->data('file_name');
 		}else{
-			$image = 'default.jpg';
+			($custmGender==1) ? $image = 'male.jpg' : $image = 'female.jpg';
 		}
 		$data = array(
 			'custmCNIC' => $this->input->post('custCNIC'),
@@ -56,6 +57,7 @@ class Customers extends CI_Controller {
 			'secondaryPhone' => $this->input->post('custSecondary'),
 			'cityId' => $this->input->post('custCity'),
 			'isEmployee' => $this->input->post('isEmployee'),
+			'custmGender' => $custmGender,
 			'presentAddress' => ucwords($this->input->post('custPresent')),
 			'permanentAddress' => ucwords($this->input->post('custPermanent')),
 			'nokName' => ucwords($this->input->post('NOKname')),

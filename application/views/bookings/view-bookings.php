@@ -65,27 +65,11 @@
                         <td><?= date('d M, Y',strtotime($booking->purchaseDate)); ?></td>
                         <td class="text-center">
                             <?php
-                                $paidAmt=0;
-                                $this->db->select('SUM(installAmount) as totalInstallAmount');
-                                $this->db->from('installments');
-                                $this->db->where('installments.bookingId', $booking->bookingId);
-                                $query = $this->db->get();
-                                if($query->num_rows()>0){
-                                    $result = $query->row();
-                                    $totalInstallAmount = $result->totalInstallAmount;
-                                    $paidAmt=$booking->bookingAmount+$totalInstallAmount;
-                                }
-                            
                             if($status==1){ ?>
                                 <span class="badges bg-lightgreen">Active</span>
                             <?php }else{ ?>
                                 <span class="badges bg-lightred">Inactive</span>
-                            <?php }
-                            if($paidAmt<$booking->salePrice){ ?>
-                                <span class="badges bg-lightyellow">Pending</span>
-                            <?php }else{ ?>
-                                <span class="badges bg-lightgreen">Paid</span>
-                            <?php } ?>
+                            <?php }  ?>
                         </td>
                         <td class="text-center">
                             <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">

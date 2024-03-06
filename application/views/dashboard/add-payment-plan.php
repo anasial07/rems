@@ -184,9 +184,9 @@
                             <td class="text-danger"><?= $payPlan->semiAnnual; ?>%</td>
                             <td class="text-danger"><?= $payPlan->possession; ?>%</td> -->
                             <td class="text-center">
-                                <?php if($status==1){ ?>
+                                <?php if($status==1){ $val="Delete"; ?>
                                     <span class="badges bg-lightgreen">Active</span>
-                                <?php }else{ ?>
+                                <?php }else{ $val="Recover"; ?>
                                     <span class="badges bg-lightred">Inactive</span>
                                 <?php } ?>
                             </td>
@@ -196,14 +196,14 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a data-id="<?= $payPlan->payPlanId; ?>" data-bs-toggle="modal" data-bs-target="#payPlanDetail" class="dropdown-item payPlanDetail"><img src="<?= base_url('assets/img/icons/eye1.svg'); ?>" class="me-2" alt="img">View Detail</a>
+                                        <a data-id="<?= $payPlan->payPlanId; ?>" data-bs-toggle="offcanvas" href="#editCanvas" class="dropdown-item payPlanDetail"><img src="<?= base_url('assets/img/icons/eye1.svg'); ?>" class="me-2" alt="img">View Detail</a>
                                     </li>
                                     <?php if($role=='admin'): ?>
                                         <li>
                                             <a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Plan</a>
                                         </li>
-                                        <li>
-                                            <a href="" class="dropdown-item confirm-text"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img">Delete Plan</a>
+                                        <li class="delPayPlan" data-id="<?= $payPlan->payPlanId; ?>">
+                                            <a class="dropdown-item confirm-text"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img"><?= $val; ?> Plan</a>
                                         </li>
                                     <?php endif; ?>
                                 </ul>
@@ -212,24 +212,6 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="payPlanDetail" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    Plan Name:
-                    <span id="planTitle"></span>
-                </h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body" id="planDetail">
-
             </div>
         </div>
     </div>
@@ -243,15 +225,16 @@
             dataType: 'JSON',
             data: {planID: planID},
             success: function(res){
-                $('#planDetail').html('');
-                $('#planTitle').html(res[0].planName);
+                $('#canvasBody').html('');
+                $('#canvasTitle').text("Name: "+res[0].planName);
+                $('#notShow').text('');
                 var downPayment = parseInt(res[0].downPayment) || 0;
                 var confirmPay = parseInt(res[0].confirmPay) || 0;
                 var semiAnnual = parseInt(res[0].semiAnnual) || 0;
                 var possession = parseInt(res[0].possession) || 0;
 
                 var Installments = 100 - (downPayment + confirmPay + semiAnnual + possession);
-                $('#planDetail').html(`
+                $('#canvasBody').html(`
                     <table class="table">
                         <tr>
                             <td>Project Name</td>
@@ -273,29 +256,28 @@
                             <td>Plan Year(s)</td>
                             <td>${res[0].planYears}</td>
                         </tr>
-                    </table>
-                    <table class="table text-center mt-2">
-                        <thead>
-                            <tr>
-                                <th>Down Payment</th>
-                                <th>Confirmation</th>
-                                <th>Semi Annual</th>
-                                <th>Possession</th>
-                                <th class='text-danger'>Installments</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>${res[0].downPayment}%</td>
-                                <td>${res[0].confirmPay}%</td>
-                                <td>${res[0].semiAnnual}%</td>
-                                <td>${res[0].possession}%</td>
-                                <td class='text-danger'>${Installments}%</td>
-                            </tr>
-                        </tbody>
+                        <tr class="bg-light">
+                            <td class="fw-bold">Down Payment</td>
+                            <td>${res[0].downPayment}%</td>
+                        </tr>
+                        <tr class="bg-light">
+                            <td class="fw-bold">Confirmation</td>
+                            <td>${res[0].confirmPay}%</td>
+                        </tr>
+                        <tr class="bg-light">
+                            <td class="fw-bold">Semi Annual</td>
+                            <td>${res[0].semiAnnual}%</td>
+                        </tr>
+                        <tr class="bg-light">
+                            <td class="fw-bold">Possession</td>
+                            <td>${res[0].possession}%</td>
+                        </tr>
+                        <tr class="bg-light">
+                            <td class='text-danger fw-bold'>Installments</td>
+                            <td class='text-danger'>${Installments}%</td>
+                        </tr>
                     </table>
                 `);
-                $('#payPlanDetail').modal('show');
             }
         });
     });
@@ -407,6 +389,40 @@
                 $.each(res, function(index, data){
                     $('#typeID').append('<option value="' + data['typeId'] + '">' + data['typeName'] + '</option>');
                 });
+            }
+        });
+    });
+    $('.delPayPlan').click(function(){
+        var id = $(this).data('id');
+        swal({
+            title: "Are you sure?",
+            text: "You want to change the status!",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonClass: "btn-success",
+            confirmButtonText: "Yes, change",
+            cancelButtonClass: "btn-primary",
+            cancelButtonText: "No, cancel",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+        function(isConfirm){
+            if(isConfirm){
+                $.ajax({
+                    url: "<?php echo base_url("dashboard/deletePayPlan/"); ?>" + id,
+                    method: 'POST',
+                    dataType: 'JSON',
+                    data: {id: id},
+                    success: function(res){
+                        if(res==true){
+                            window.location.reload();
+                        }else{
+                            swal("Ops", "Something went wrong", "info");
+                        }
+                    }
+                });
+            }else{
+                swal.close()
             }
         });
     });

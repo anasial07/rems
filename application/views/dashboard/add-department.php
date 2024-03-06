@@ -141,8 +141,12 @@
                                     <a class="me-3" href="">
                                         <img src="<?= base_url('assets/img/icons/edit.svg'); ?>" alt="img">
                                     </a>
-                                    <a class="me-3 confirm-text" href="javascript:void(0);">
-                                        <img src="<?= base_url('assets/img/icons/delete.svg'); ?>" alt="img">
+                                    <a class="me-3 confirm-text delDepart" data-id="<?= $depart->departId; ?>">
+                                        <?php if($status==1){ ?>
+                                            <img src="<?= base_url('assets/img/icons/delete.svg'); ?>" alt="img">
+                                        <?php }else{ ?>
+                                            <img src="<?= base_url('assets/img/icon/recycle.png'); ?>" width="20">
+                                        <?php } ?>
                                     </a>
                                 </td>
                             <?php endif; ?>
@@ -204,4 +208,38 @@
             swal("Sorry!", "Please fill all the field.", "info");
         }
 	});
+    $('.delDepart').click(function(){
+        var id = $(this).data('id');
+        swal({
+            title: "Are you sure?",
+            text: "You want to change the status!",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonClass: "btn-success",
+            confirmButtonText: "Yes, change",
+            cancelButtonClass: "btn-primary",
+            cancelButtonText: "No, cancel",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+        function(isConfirm){
+            if(isConfirm){
+                $.ajax({
+                    url: "<?php echo base_url("dashboard/deleteDepart/"); ?>" + id,
+                    method: 'POST',
+                    dataType: 'JSON',
+                    data: {id: id},
+                    success: function(res){
+                        if(res==true){
+                            window.location.reload();
+                        }else{
+                            swal("Ops", "Something went wrong", "info");
+                        }
+                    }
+                });
+            }else{
+                swal.close()
+            }
+        });
+    });
 </script>

@@ -143,9 +143,9 @@
                                 <td><?= $subCat->catName; ?></td>
                                 <td><?= $subCat->subCatName; ?></td>
                                 <td class="text-center">
-                                    <?php if($status==1){ ?>
+                                    <?php if($status==1){ $val="Delete"; ?>
                                         <span class="badges bg-lightgreen">Active</span>
-                                    <?php }else{ ?>
+                                    <?php }else{ $val="Recover"; ?>
                                         <span class="badges bg-lightred">Inactive</span>
                                     <?php } ?>
                                 </td>
@@ -156,10 +156,10 @@
                                         </a>
                                         <ul class="dropdown-menu">
                                             <li>
-                                                <a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit</a>
+                                                <a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Sub-Category</a>
                                             </li>
-                                            <li>
-                                                <a href="" class="dropdown-item confirm-text"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img">Delete</a>
+                                            <li class="delSubCat" data-id="<?= $subCat->subCatId; ?>">
+                                                <a class="dropdown-item confirm-text"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img"><?=  $val; ?> Sub-Category</a>
                                             </li>
                                         </ul>
                                     </td>
@@ -237,6 +237,40 @@
                 $.each(res, function(index, data){
                     $('#catID').append('<option value="' + data['catId'] + '">' + data['catName'] + '</option>');
                 });
+            }
+        });
+    });
+    $('.delSubCat').click(function(){
+        var id = $(this).data('id');
+        swal({
+            title: "Are you sure?",
+            text: "You want to change the status!",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonClass: "btn-success",
+            confirmButtonText: "Yes, change",
+            cancelButtonClass: "btn-primary",
+            cancelButtonText: "No, cancel",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+        function(isConfirm){
+            if(isConfirm){
+                $.ajax({
+                    url: "<?php echo base_url("dashboard/deleteSubCategory/"); ?>" + id,
+                    method: 'POST',
+                    dataType: 'JSON',
+                    data: {id: id},
+                    success: function(res){
+                        if(res==true){
+                            window.location.reload();
+                        }else{
+                            swal("Ops", "Something went wrong", "info");
+                        }
+                    }
+                });
+            }else{
+                swal.close()
             }
         });
     });

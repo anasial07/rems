@@ -19,6 +19,9 @@
                         <a target="_blank" href="<?= base_url('booking/generateConfirmationLetter/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded btn-info text-white">Confirmation Letter</button></a>
                         <a target="_blank" href="<?= base_url('booking/generateBookingForm/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded btn-dark">Booking Form</button></a>
                         <a target="_blank" href="<?= base_url('booking/generatePaymentPlan/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded btn-success">Payment Plan</button></a>
+                        <?php if($info[0]->fileIssuanceDate==""){ ?>
+                            <a data-id="<?= $info[0]->bookingId; ?>" class="issueFile"><button class="btn btn-rounded btn-danger">Issue File</button></a>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
@@ -84,11 +87,7 @@
                     </span>
                     <table class="table bookingTable">
                         <tr>
-                            <td>Sale Price</td>
-                            <td><?= number_format($info[0]->salePrice); ?></td>
-                        </tr>
-                        <tr>
-                            <td>Discount</td>
+                            <td>Special Discount</td>
                             <td><?= number_format($info[0]->sepDiscount); ?>%</td>
                         </tr>
                         <tr>
@@ -96,8 +95,12 @@
                             <td><?= ($info[0]->featuresPercent==0) ? 'N/A' : $info[0]->features; ?></td>
                         </tr>
                         <tr>
+                            <td>Sale Price</td>
+                            <td><?= number_format($info[0]->salePrice); ?></td>
+                        </tr>
+                        <tr>
                             <td>Purchase Date</td>
-                            <td><?= date('M d, Y',strtotime($info[0]->purchaseDate)); ?></td>
+                            <td><?= date('d M, Y',strtotime($info[0]->purchaseDate)); ?></td>
                         </tr>
                     </table>
                 </div>
@@ -118,7 +121,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col text-center mt-2"><h6>Installment History</h6></div>
+                        <div class="col text-center mt-2">
+                            <h6 style="font-size:14px!important;"><?= ($info[0]->fileIssuanceDate=="") ? "The file has not been issued yet." : "The file was issued on <span class='text-danger'>".date('M d, Y',strtotime($info[0]->fileIssuanceDate))."</span> at <span class='text-danger'>".date('g:i:s A',strtotime($info[0]->fileIssuanceDate))."</span>"; ?></h6>
+                        </div>
                         <div class="col text-end mt-2">
                             <h6><a target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Print Account Statement" href="<?= base_url('booking/generateAccountStatement/').base_convert($info[0]->bookingId, 10, 36); ?>">
                                 Account Statement
@@ -157,9 +162,11 @@
                                     <td><?= $info[0]->locName; ?></td>
                                     <td><?= date('M d, Y',strtotime($info[0]->purchaseDate)); ?></td>
                                     <td>
-                                        <span class="<?= ($info[0]->bookFilerStatus == 'Active') ? 'text-success' : 'text-danger'; ?>">
-                                            <?= $info[0]->bookFilerStatus; ?>
-                                        </span>
+                                        <?php if($info[0]->bookFilerStatus == 'Active'){ ?>
+                                            <span class="badges bg-lightgreen">Active</span>
+                                        <?php }else{ ?>
+                                            <span class="badges bg-lightred">Inactive</span>
+                                        <?php } ?>
                                     </td>
                                     <td><?= $info[0]->bookFilerPercent; ?>%</td>
                                     <td class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Print Booking Receipt">
@@ -187,9 +194,11 @@
                                     <td><?= $install->locName; ?></td>
                                     <td><?= date('M d, Y',strtotime($install->installReceivedDate)); ?></td>
                                     <td>
-                                        <span class="<?= ($install->installFilerStatus == 'Active') ? 'text-success' : 'text-danger'; ?>">
-                                            <?= $install->installFilerStatus; ?>
-                                        </span>
+                                        <?php if($install->installFilerStatus == 'Active'){ ?>
+                                            <span class="badges bg-lightgreen">Active</span>
+                                        <?php }else{ ?>
+                                            <span class="badges bg-lightred">Inactive</span>
+                                        <?php } ?>
                                     </td>
                                     <td><?= $install->installFilerPercent; ?>%</td>
                                     <td class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Print Installment Receipt">
@@ -216,3 +225,46 @@
         </div>
     </div>
 </div>
+<script>
+    $('.issueFile').click(function(){
+        var id = $(this).data('id');
+        swal({
+            title: "Are you sure?",
+            text: "You want to issue the file!",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonClass: "btn-success",
+            confirmButtonText: "Yes, issue",
+            cancelButtonClass: "btn-primary",
+            cancelButtonText: "No, cancel",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+        function(isConfirm){
+            if(isConfirm){
+                $.ajax({
+                    url: "<?php echo base_url("booking/issueFile/"); ?>" + id,
+                    method: 'POST',
+                    dataType: 'JSON',
+                    data: {id: id},
+                    success: function(res){
+                        if(res==true){
+                            swal({
+                                title: "Congratulation!", 
+                                text: "File has been issued successfully.", 
+                                type: "success"
+                                },function(){ 
+                                    location.reload();
+                                }
+                            );
+                        }else{
+                            swal("Ops!", "Something went wrong.", "error");
+                        }
+                    }
+                });
+            }else{
+                swal.close();
+            }
+        });
+    });
+</script>

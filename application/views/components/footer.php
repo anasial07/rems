@@ -54,6 +54,17 @@
                 }
             });
         </script>
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="editCanvas" aria-labelledby="">
+            <div class="offcanvas-header" style="border-bottom:1px solid #EBEBEB;">
+                <div class="row">
+                    <div class="col-12">
+                        <h5 class="offcanvas-title" id="canvasTitle"></h5>
+                        <p id="notShow">Last Update: <span id="lastUpdate" class="text-danger"></span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="offcanvas-body" id="canvasBody"></div>
+        </div>
         <div class="modal fade" id="addNewBank" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-md" role="document">
                 <div class="modal-content">

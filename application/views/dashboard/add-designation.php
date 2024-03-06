@@ -34,10 +34,10 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-6 col-sm-6">
-                            <a class="btn form-control btn-submit me-2" id="addDesignation">Add Designation</a>
+                            <a href="javascript:history.go(-1);" class="btn form-control btn-cancel">Back</a>
                         </div>
                         <div class="col-lg-6 col-sm-6">
-                            <a href="javascript:history.go(-1);" class="btn form-control btn-cancel">Back</a>
+                            <a class="btn form-control btn-submit me-2" id="addDesignation">Add Designation</a>
                         </div>
                     </div>
                 </div>
@@ -98,11 +98,15 @@
                             </td>
                             <?php if($role=='admin'): ?>
                                 <td class="text-center">
-                                    <a class="me-3" href="">
+                                    <a class="me-3 editDes" data-id="<?= $designation->desigId; ?>" data-bs-toggle="offcanvas" href="#editCanvas">
                                         <img src="<?= base_url('assets/img/icons/edit.svg'); ?>" alt="img">
                                     </a>
-                                    <a class="me-3 confirm-text" href="javascript:void(0);">
-                                        <img src="<?= base_url('assets/img/icons/delete.svg'); ?>" alt="img">
+                                    <a class="me-3 confirm-text delDes" data-id="<?= $designation->desigId; ?>">
+                                        <?php if($status==1){ ?>
+                                            <img src="<?= base_url('assets/img/icons/delete.svg'); ?>" alt="img">
+                                        <?php }else{ ?>
+                                            <img src="<?= base_url('assets/img/icon/recycle.png'); ?>" width="20">
+                                        <?php } ?>
                                     </a>
                                 </td>
                             <?php endif; ?>
@@ -161,5 +165,84 @@
         } else {
             swal("Sorry!", "Please fill all the fields.", "info");
         }
+    });
+    $('.editDes').click(function(){
+        var id = $(this).data('id');
+        $.ajax({
+            url: "<?php echo base_url("dashboard/editDesignation/"); ?>" + id,
+            method: 'POST',
+            dataType: 'JSON',
+            data: {id: id},
+            success: function(res){
+                $('#canvasBody').html('');
+                $('#canvasTitle').text('Edit Designation Details');
+                if(res[0].updatedDesign==0){
+                    var lastUpdate="Not updated yet.";
+                }else{
+                    var lastUpdate=res[0].updatedDesign;
+                }
+                $('#lastUpdate').text(lastUpdate);
+                $('#canvasBody').html(`
+                    <div class='row'>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Designation Code</label>
+                                <div class="input-groupicon">
+                                    <input oninput='validate(event)' type='text' value='${res[0].desigCode}'>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Designation Name</label>
+                                <div class="input-groupicon">
+                                    <input oninput='validate(event)' type='text' value='${res[0].desigName}'>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <button type="button" class="btn-cancel form-control" data-bs-dismiss="offcanvas" aria-label="Close">Close</button>
+                        </div>
+                        <div class="col-6">
+                            <button class='btn btn-submit form-control'>Save Changes</button>
+                        </div>
+                    </div>
+                `);
+            }
+        });
+    });
+    $('.delDes').click(function(){
+        var id = $(this).data('id');
+        swal({
+            title: "Are you sure?",
+            text: "You want to change the status!",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonClass: "btn-success",
+            confirmButtonText: "Yes, change",
+            cancelButtonClass: "btn-primary",
+            cancelButtonText: "No, cancel",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+        function(isConfirm){
+            if(isConfirm){
+                $.ajax({
+                    url: "<?php echo base_url("dashboard/deleteDesignation/"); ?>" + id,
+                    method: 'POST',
+                    dataType: 'JSON',
+                    data: {id: id},
+                    success: function(res){
+                        if(res==true){
+                            window.location.reload();
+                        }else{
+                            swal("Ops", "Something went wrong", "info");
+                        }
+                    }
+                });
+            }else{
+                swal.close()
+            }
+        });
     });
 </script>

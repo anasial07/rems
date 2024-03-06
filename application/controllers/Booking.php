@@ -201,6 +201,10 @@ class Booking extends CI_Controller {
 			}
 		}
 	}
+	public function issueFile($id){
+		$data = $this->booking_model->issueFile($id);
+		echo json_encode($data);
+	}
 
 	// ------------------------------- Generate PDF Files -------------------------------
 	public function generateBookingMemo($id){
@@ -260,7 +264,7 @@ class Booking extends CI_Controller {
 		$pdf->cell(160, 6, $info[0]->catName, 0, 1, '');
 		$pdf->cell(38, 6, 'Net Price:', 0, 0, '');
 		$pdf->cell(160, 6, number_format($info[0]->totalPrice), 0, 1, '');
-		$pdf->cell(38, 6, 'Discount:', 0, 0, '');
+		$pdf->cell(38, 6, 'Special Discount:', 0, 0, '');
 		$pdf->cell(160, 6, $info[0]->sepDiscount.'%', 0, 1, '');
 		$pdf->cell(38, 6, 'Sale Price:', 0, 0, '');
 		$pdf->cell(160, 6, number_format($info[0]->salePrice), 0, 1, '');
@@ -765,8 +769,8 @@ class Booking extends CI_Controller {
 		$pdf->Cell(53, 7, $info[0]->custmCNIC, 'B');
 		$pdf->Cell(10, 7, '');
 		$pdf->Cell(40, 7, 'Date of Birth');
-		$dob = ($info[0]->custmDOB!="") ? $info[0]->custmDOB : "";
-		$pdf->Cell(53, 7, date('F d, Y',strtotime($dob)), 'B', 1);
+		$dob = ($info[0]->custmDOB!="") ? date('F d, Y',strtotime($info[0]->custmDOB)) : "";
+		$pdf->Cell(53, 7, $dob, 'B', 1);
 		
 		$pdf->Cell(40, 7, 'Phone');
 		$pdf->Cell(53, 7, $info[0]->primaryPhone, 'B');
@@ -821,7 +825,7 @@ class Booking extends CI_Controller {
 		$pdf->Cell(40, 7, 'Land Price');
 		$pdf->Cell(53, 7, number_format($info[0]->totalPrice), 'B');
 		$pdf->Cell(10, 7, '');
-		$pdf->Cell(40, 7, 'Discount');
+		$pdf->Cell(40, 7, 'Special Discount');
 		$pdf->Cell(53, 7, $info[0]->sepDiscount.'%', 'B', 1);
 
 		$features = ($info[0]->featuresPercent == 0) ? 'None' : $info[0]->features;
@@ -831,14 +835,14 @@ class Booking extends CI_Controller {
 		$pdf->Cell(40, 7, 'Extra Charges');
 		$pdf->Cell(53, 7, number_format($info[0]->exCharges), 'B', 1);
 		
-		$pdf->Cell(40, 7, 'Mode of Payment');
-		$pdf->Cell(53, 7, $info[0]->bookingMode, 'B');
+		$pdf->Cell(40, 7, 'Sale Price');
+		$pdf->Cell(53, 7, number_format($info[0]->salePrice), 'B');
 		$pdf->Cell(10, 7, '');
 		$pdf->Cell(40, 7, 'Amount Received');
 		$pdf->Cell(53, 7, number_format($receivedAmount), 'B', 1);
 		
-		$pdf->Cell(40, 7, 'Sale Price');
-		$pdf->Cell(53, 7, number_format($info[0]->salePrice), 'B');
+		$pdf->Cell(40, 7, 'Mode of Payment');
+		$pdf->Cell(53, 7, $info[0]->bookingMode, 'B');
 		$pdf->Cell(10, 7, '');
 		$pdf->Cell(40, 7, 'Receivable');
 		$pdf->Cell(53, 7, number_format($receivableAmount), 'B', 1);
@@ -976,7 +980,7 @@ class Booking extends CI_Controller {
 		$dcsp=$downPayment + $confirmation + $semiAnnual + $possession;
 
 		$currentRemianing=$downPayment - $bookingAmount;   // Remaining Amount 
-		$remaingAfterDownPay=$salePrice - $bookingAmount;	   // Total Remianing Amount (Balance)
+		$balance=$salePrice - $bookingAmount;	   // Total Remianing Amount (Balance)
 
 		$confirmMonth=date('M, Y', strtotime($info[0]->purchaseDate . ' +1 month'));    // Next Month After Booking
 
@@ -1077,7 +1081,7 @@ class Booking extends CI_Controller {
 		$pdf->Cell(30, 6, $info[0]->bookingMode, 1, 0, 'C');
 		$pdf->Cell(25, 6, $info[0]->bookFilerStatus, 1, 0, 'C');
 		$pdf->Cell(15, 6, $info[0]->bookFilerPercent.'%', 1, 0, 'C');
-		$pdf->Cell(35, 6, number_format($remaingAfterDownPay), 1, 1, 'C');
+		$pdf->Cell(35, 6, number_format($balance), 1, 1, 'C');
 		
 		$totalPay=$bookingAmount;
 		
@@ -1102,10 +1106,16 @@ class Booking extends CI_Controller {
 		endif;
 
 		$currentRemianing = $currentRemianing + $confirmation - $confirmAmount;
-		$remaingAfterConfirm = $remaingAfterDownPay - $confirmAmount;
-		$totalPay+=$confirmAmount;
+		
+		if($currentRemianing>$balance){
+			$currentRemianing=$balance;
+		}
+
+		$balance = $balance - $confirmAmount;
 		$showConfirmAmount=number_format($confirmAmount);
+
 		$showCurrentRemianing=number_format($currentRemianing);
+		
 
 		$pdf->Cell(8, 6, '02', 1, 0, 'C');
 		$pdf->Cell(75, 6, 'Confirmation ('.$info[0]->confirmPay.'%)', 1);
@@ -1117,7 +1127,7 @@ class Booking extends CI_Controller {
 		$pdf->Cell(30, 6, $confirmMode, 1, 0, 'C');
 		$pdf->Cell(25, 6, $confirmFiler, 1, 0, 'C');
 		$pdf->Cell(15, 6, $confirmTax, 1, 0, 'C');
-		$pdf->Cell(35, 6, number_format($remaingAfterConfirm), 1, 1, 'C');
+		$pdf->Cell(35, 6, number_format($balance), 1, 1, 'C');
 
 		$pdf->SetFillColor(193, 193, 193);
 		$pdf->Cell(338, 8, 'Installments - Starting a month after the booking', 1, 1, 'C', true);
@@ -1144,6 +1154,7 @@ class Booking extends CI_Controller {
 			$instalMode="";
 			$instalFiler="";
 			$instalTax="";
+			$totalPaid=0;
 			if(count($installments)>0):
 				foreach($installments as $instal):
 					$instalMonthMatch=date('M, Y',strtotime($instal->installReceivedDate));
@@ -1158,8 +1169,13 @@ class Booking extends CI_Controller {
 			endif;
 
 			$currentRemianing = $currentRemianing + $thisInstallment - $installAmount;
-			$totalPay+=$installAmount;
-			$balance = $remaingAfterConfirm - $totalPay;
+
+			$totalPaid+=$installAmount;
+			$balance = $balance - $confirmAmount - $totalPaid;
+			
+			if($currentRemianing>$balance){
+				$currentRemianing=$balance;
+			}
 
 			$showInstallAmount=number_format($installAmount);
 			$showCurrentRemianing=number_format($currentRemianing);
@@ -1206,8 +1222,13 @@ class Booking extends CI_Controller {
 		endif;
 
 		$currentRemianing = $currentRemianing + $possession - $possAmount;
+		
+		if($currentRemianing>$balance){
+			$currentRemianing=$balance;
+		}
+
 		$balance = $balance - $possAmount;
-		$totalPay+=$possAmount;
+		$totalPay=$totalPay + $possAmount + $totalPaid;
 
 		$showPossAmount=number_format($possAmount);
 		$showCurrentRemianing=number_format($currentRemianing);

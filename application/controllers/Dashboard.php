@@ -174,7 +174,61 @@ class Dashboard extends CI_Controller {
 		$data = $this->dashboard_model->getTypes($id);
 		echo json_encode($data);
 	}
+	public function editDesignation($id){	// Edit Designation Detail
+		$data = $this->dashboard_model->getDesignations($id);
+		echo json_encode($data);
+	}
+	public function editProvince($id){	// Edit Province Detail
+		$data = $this->dashboard_model->getProvinces($id);
+		echo json_encode($data);
+	}
+	public function editCity($id){	// Edit City Detail
+		$data = $this->dashboard_model->getCities($id);
+		echo json_encode($data);
+	}
 
+
+	
+	public function deleteDesignation($id){	// Delete Designation
+		$data = $this->dashboard_model->deleteDesignation($id);
+		echo json_encode($data);
+	}
+	public function deleteProvince($id){ // Delete Province
+		$data = $this->dashboard_model->deleteProvince($id);
+		echo json_encode($data);
+	}
+	public function deleteCity($id){ // Delete Province
+		$data = $this->dashboard_model->deleteCity($id);
+		echo json_encode($data);
+	}
+	public function deleteOffice($id){	// Delete Office
+		$data = $this->dashboard_model->getCities($id);
+		echo json_encode($data);
+	}
+	public function deleteDepart($id){	// Delete Department
+		$data = $this->dashboard_model->deleteDepart($id);
+		echo json_encode($data);
+	}
+	public function deleteProject($id){	// Delete Project
+		$data = $this->dashboard_model->deleteProject($id);
+		echo json_encode($data);
+	}
+	public function deleteCategory($id){ // Delete Category
+		$data = $this->dashboard_model->deleteCategory($id);
+		echo json_encode($data);
+	}
+	public function deleteSubCategory($id){ // Delete Sub-Category
+		$data = $this->dashboard_model->deleteSubCategory($id);
+		echo json_encode($data);
+	}
+	public function deleteType($id){ // Delete Type
+		$data = $this->dashboard_model->deleteType($id);
+		echo json_encode($data);
+	}
+	public function deletePayPlan($id){ // Delete Payment Plan
+		$data = $this->dashboard_model->deletePayPlan($id);
+		echo json_encode($data);
+	}
 	// ------------------------ Insert Records ------------------------
 
 	public function addProvince(){	// Add Province

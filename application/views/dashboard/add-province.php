@@ -138,11 +138,15 @@
                             </td>
                             <?php if($role=='admin'): ?>
                                 <td class="text-center">
-                                    <a class="me-3" href="">
+                                    <a class="me-3 editProv" data-id="<?= $province->provinceId; ?>" data-bs-toggle="offcanvas" href="#editCanvas">
                                         <img src="<?= base_url('assets/img/icons/edit.svg'); ?>" alt="img">
                                     </a>
-                                    <a class="me-3 confirm-text" href="javascript:void(0);">
-                                        <img src="<?= base_url('assets/img/icons/delete.svg'); ?>" alt="img">
+                                    <a class="me-3 confirm-text delProv" data-id="<?= $province->provinceId; ?>">
+                                        <?php if($status==1){ ?>
+                                            <img src="<?= base_url('assets/img/icons/delete.svg'); ?>" alt="img">
+                                        <?php }else{ ?>
+                                            <img src="<?= base_url('assets/img/icon/recycle.png'); ?>" width="20">
+                                        <?php } ?>
                                     </a>
                                 </td>
                             <?php endif; ?>
@@ -204,4 +208,83 @@
             swal("Sorry!", "Please fill all the field.", "info");
         }
 	});
+    $('.editProv').click(function(){
+        var id = $(this).data('id');
+        $.ajax({
+            url: "<?php echo base_url("dashboard/editProvince/"); ?>" + id,
+            method: 'POST',
+            dataType: 'JSON',
+            data: {id: id},
+            success: function(res){
+                $('#canvasBody').html('');
+                $('#canvasTitle').text('Edit Province Details');
+                if(res[0].updatedProv==0){
+                    var lastUpdate="Not updated yet.";
+                }else{
+                    var lastUpdate=res[0].updatedProv;
+                }
+                $('#lastUpdate').text(lastUpdate);
+                $('#canvasBody').html(`
+                    <div class='row'>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Province Code</label>
+                                <div class="input-groupicon">
+                                    <input oninput="validate(event)" type="text" value="${res[0].provCode}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Province Name</label>
+                                <div class="input-groupicon">
+                                    <input oninput="validate(event)" type="text" value="${res[0].provName}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <button type="button" class="btn-cancel form-control" data-bs-dismiss="offcanvas" aria-label="Close">Close</button>
+                        </div>
+                        <div class="col-6">
+                            <button class='btn btn-submit form-control'>Save Changes</button>
+                        </div>
+                    </div>
+                `);
+            }
+        });
+    });
+    $('.delProv').click(function(){
+        var id = $(this).data('id');
+        swal({
+            title: "Are you sure?",
+            text: "You want to change the status!",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonClass: "btn-success",
+            confirmButtonText: "Yes, change",
+            cancelButtonClass: "btn-primary",
+            cancelButtonText: "No, cancel",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+        function(isConfirm){
+            if(isConfirm){
+                $.ajax({
+                    url: "<?php echo base_url("dashboard/deleteProvince/"); ?>" + id,
+                    method: 'POST',
+                    dataType: 'JSON',
+                    data: {id: id},
+                    success: function(res){
+                        if(res==true){
+                            window.location.reload();
+                        }else{
+                            swal("Ops", "Something went wrong", "info");
+                        }
+                    }
+                });
+            }else{
+                swal.close()
+            }
+        });
+    });
 </script>

@@ -52,6 +52,25 @@
                     </span>
                 </a>
                 <ul class="nav user-menu">
+                    <!-- <li class="nav-item dropdown has-arrow flag-nav">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="javascript:void(0);" role="button">
+                            Reports
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a href="javascript:void(0);" class="dropdown-item">
+                                <img src="<?= base_url('assets/img/icon/agent.png'); ?>" height="16"> Agent Reoprt
+                            </a>
+                            <a href="javascript:void(0);" class="dropdown-item">
+                                <img src="<?= base_url('assets/img/icon/calendarReport.png'); ?>" height="16"> Monthly Report
+                            </a>
+                            <a href="javascript:void(0);" class="dropdown-item">
+                                <img src="<?= base_url('assets/img/icon/KYC.png'); ?>" height="16"> KYC
+                            </a>
+                            <a href="javascript:void(0);" class="dropdown-item">
+                                <img src="<?= base_url('assets/img/icon/report.png'); ?>" height="16"> Report
+                            </a>
+                        </div>
+                    </li> -->
                     <li class="nav-item dropdown has-arrow flag-nav">
                         <a href="javascript:void(0);">
                             Login as: <?= ucwords($this->session->userdata('role')); ?>
@@ -98,7 +117,7 @@
                                 </ul>
                             </li>
                             <li><a href="<?= base_url('agents'); ?>"><img src="<?= base_url('assets/img/icons/users1.svg'); ?>" alt="img"><span>Agents</span></a></li>
-                            <li><a href="<?= base_url('dashboard/addTeam'); ?>"><img src="<?= base_url('assets/img/icons/users1.svg'); ?>" alt="img"><span>Teams</span></a></li>
+                            <!-- <li><a href="<?= base_url('dashboard/addTeam'); ?>"><img src="<?= base_url('assets/img/icons/users1.svg'); ?>" alt="img"><span>Teams</span></a></li> -->
                             <li><a href="<?= base_url('customers'); ?>"><img src="<?= base_url('assets/img/icons/users1.svg'); ?>" alt="img"><span>Customers</span></a></li>
                             <li>
                                 <a href="<?= base_url('booking'); ?>"><img src="<?= base_url('assets/img/icons/places.svg'); ?>" alt="img">

@@ -114,17 +114,63 @@ class Dashboard_model extends CI_Model{
 			return false;
 		}
 	}
+	// ---------------------------- Delete Queries ------------------------------------
+
+	public function deleteDesignation($id){
+		$result = $this->db->query("UPDATE designations SET `desigStatus` = NOT `desigStatus` WHERE desigId=$id");
+		return $result ? true : false;
+	}
+	public function deleteProvince($id){
+		$result = $this->db->query("UPDATE provinces SET `provStatus` = NOT `provStatus` WHERE provinceId=$id");
+		return $result ? true : false;
+	}
+	public function deleteCity($id){
+		$result = $this->db->query("UPDATE locations SET `locStatus` = NOT `locStatus` WHERE locationId=$id");
+		return $result ? true : false;
+	}
+	public function deleteOffice($id){
+		$result = $this->db->query("UPDATE offices SET `officeStatus` = NOT `officeStatus` WHERE officeId=$id");
+		return $result ? true : false;
+	}
+	public function deleteDepart($id){
+		$result = $this->db->query("UPDATE departments SET `departStatus` = NOT `departStatus` WHERE departId=$id");
+		return $result ? true : false;
+	}
+	public function deleteProject($id){
+		$result = $this->db->query("UPDATE projects SET `projStatus` = NOT `projStatus` WHERE projectId=$id");
+		return $result ? true : false;
+	}
+	public function deleteCategory($id){
+		$result = $this->db->query("UPDATE categories SET `catStatus` = NOT `catStatus` WHERE catId=$id");
+		return $result ? true : false;
+	}
+	public function deleteSubCategory($id){
+		$result = $this->db->query("UPDATE sub_categories SET `subCatStatus` = NOT `subCatStatus` WHERE subCatId=$id");
+		return $result ? true : false;
+	}
+	public function deleteType($id){
+		$result = $this->db->query("UPDATE types SET `typeStatus` = NOT `typeStatus` WHERE typeId=$id");
+		return $result ? true : false;
+	}
+	public function deletePayPlan($id){
+		$result = $this->db->query("UPDATE payment_plans SET `planStatus` = NOT `planStatus` WHERE payPlanId=$id");
+		return $result ? true : false;
+	}
 
 	// ---------------------------- Select Queries ------------------------------------
 
-	public function getProvinces(){
+	public function getProvinces($id = null){
 		$this->db->select('*');
 		$this->db->from('provinces')->order_by('provinceId', 'DESC');
+		$id && $this->db->where('provinceId', $id);
 		return $this->db->get()->result();
 	}
-	public function getCities(){
+	public function getCities($id = null){
 		$this->db->select('*');
-		$this->db->from('locations')->order_by('locationId', 'DESC');
+		$this->db->from('locations');
+		$this->db->join('provinces', 'locations.provinceId = provinces.provinceId', 'left');
+		$this->db->order_by('locationId', 'DESC');
+		$id && $this->db->where('locationId', $id);
 		return $this->db->get()->result();
 	}
 	public function getDepartments(){
@@ -147,9 +193,10 @@ class Dashboard_model extends CI_Model{
 		$id && $this->db->where(array('users.userId' => $id, 'users.role !=' => 'admin'));
 		return $this->db->get()->result();
 	}
-	public function getDesignations(){
+	public function getDesignations($id = null){
 		$this->db->select('*');
 		$this->db->from('designations')->order_by('desigId', 'DESC');
+		$id && $this->db->where(array('desigId' => $id));
 		return $this->db->get()->result();
 	}
 	public function totalCustomers(){

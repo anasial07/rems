@@ -1,6 +1,7 @@
 <style>
     .product-details{ height:90px!important; cursor: pointer; }
     .product-details img{ width:38px!important; }
+    .lineH{ MARGIN-TOP:-15PX; }
 </style>
 <?php $role=$this->session->userdata('role'); ?>
 <div class="page-wrapper px-4 mt-4">
@@ -209,9 +210,9 @@
                                 <td><?= $project->projCode; ?></td>
                                 <td><?= $project->projName; ?></td>
                                 <td class="text-center">
-                                    <?php if($status==1){ ?>
+                                    <?php if($status==1){ $val="Delete"; ?>
                                         <span class="badges bg-lightgreen">Active</span>
-                                    <?php }else{ ?>
+                                    <?php }else{ $val="Recover"; ?>
                                         <span class="badges bg-lightred">Inactive</span>
                                     <?php } ?>
                                 </td>
@@ -220,15 +221,15 @@
                                         <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li data-id="<?= $project->projectId; ?>" class="viewProject" data-bs-toggle="modal" data-bs-target="#projectDetail">
+                                        <li data-id="<?= $project->projectId; ?>" class="viewProject" data-bs-toggle="offcanvas" href="#editCanvas">
                                             <a class="dropdown-item"><img src="<?= base_url('assets/img/icons/eye1.svg'); ?>" class="me-2" alt="img">View Detail</a>
                                         </li>
                                         <?php if($role=='admin'): ?>
                                             <li>
                                                 <a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Project</a>
                                             </li>
-                                            <li>
-                                                <a href="" class="dropdown-item confirm-text"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img">Delete Project</a>
+                                            <li class="delProj" data-id="<?= $project->projectId; ?>">
+                                                <a class="dropdown-item confirm-text"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img"><?= $val; ?> Project</a>
                                             </li>
                                         <?php endif; ?>
                                     </ul>
@@ -238,21 +239,6 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="projectDetail" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modelTitle"></h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body" id="modalBody">
-
             </div>
         </div>
     </div>
@@ -344,12 +330,17 @@
             dataType: 'JSON',
             data: {projId: projId},
             success: function(res){
-                $('#modalBody').html('');
-                $('#modelTitle').html(res[0].projName);
-                $('#modalBody').html(`
+                $('#canvasBody').html('');
+                $('#canvasTitle').text('View Project Detail');
+                $('#notShow').text('');
+                $('#canvasBody').html(`
                     <div class="row">
-                        <div class="col-5">
+                        <div class="col-12">
                             <table class="table">
+                                <tr>
+                                    <td>Project Name</td>
+                                    <td>${res[0].projName}</td>
+                                </tr>
                                 <tr>
                                     <td>Project Code</td>
                                     <td>${res[0].projCode}</td>
@@ -368,22 +359,56 @@
                                 </tr>
                             </table>
                         </div>
-                        <div class="col-2"></div>
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-12">
+                        <div class="col-12 mt-2">
+                            <p>The information below will be mentioned on the letterhead.</p>
+                            <p class=""><i class="fa fa-map-marker text-danger"></i>&emsp;${res[0].projAddress}</p>
+                            <p class="lineH"><i class="fa fa-globe text-primary"></i>&emsp;${res[0].webAddress}</p>
+                            <p class="lineH"><i class="fa fa-envelope text-dark"></i>&emsp;${res[0].mailAddress}</p>
+                        </div>
+                        <div class="col-12 mt-3 text-center">
+                            <div class="form-group">
+                                <div class="image-upload py-5">
                                     <img src="${imgUrl}uploads/letterHead/${res[0].projLogo}">
-                                </div>
-                                <div class="col-12 text-start mt-4">
-                                    <p><i class="fa fa-map-marker"></i>&emsp;${res[0].projAddress}</p>
-                                    <p><i class="fa fa-globe"></i>&emsp;${res[0].webAddress}</p>
-                                    <p><i class="fa fa-envelope"></i>&emsp;${res[0].mailAddress}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 `);
                 $('#projectDetail').modal('show');
+            }
+        });
+    });
+    $('.delProj').click(function(){
+        var id = $(this).data('id');
+        swal({
+            title: "Are you sure?",
+            text: "You want to change the status!",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonClass: "btn-success",
+            confirmButtonText: "Yes, change",
+            cancelButtonClass: "btn-primary",
+            cancelButtonText: "No, cancel",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+        function(isConfirm){
+            if(isConfirm){
+                $.ajax({
+                    url: "<?php echo base_url("dashboard/deleteProject/"); ?>" + id,
+                    method: 'POST',
+                    dataType: 'JSON',
+                    data: {id: id},
+                    success: function(res){
+                        if(res==true){
+                            window.location.reload();
+                        }else{
+                            swal("Ops", "Something went wrong", "info");
+                        }
+                    }
+                });
+            }else{
+                swal.close()
             }
         });
     });

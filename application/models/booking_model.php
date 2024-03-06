@@ -89,6 +89,10 @@ class Booking_model extends CI_Model{
 		$this->db->where('bookings.customerID', $id);
 		return $this->db->get()->result();
 	}
+	public function issueFile($id){
+		$issueDate=date("Y-m-d H:i:s");
+		return $this->db->query("UPDATE bookings SET fileIssuanceDate = '$issueDate' WHERE bookingId=$id");
+	}
 
 	// ---------------------------- Insert Records ------------------------------------
 

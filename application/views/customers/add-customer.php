@@ -45,7 +45,7 @@
                                     <div class="input-groupicon">
                                         <input id="custDOB" name="custDOB" type="text" placeholder="DD-MM-YYYY" class="datetimepicker">
                                         <div class="addonset">
-                                            <img src="<?= base_url('assets/img/icons/calendars.svg'); ?>" alt="img">
+                                            <img src="<?= base_url('assets/img/icon/calendar.png'); ?>" alt="img" width="20">
                                         </div>
                                     </div>
                                 </div>
@@ -73,7 +73,21 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-sm-12 col-lg-6">
+                            <div class="col-sm-12 col-lg-3">
+                                <div class="status-toggle mt-4">
+                                    <span id="empSh">Customer</span>
+                                    <input onclick="isEmploye(this.value)" value="0" type="checkbox" id="isEmployee" class="check" checked>
+                                    <label for="isEmployee" class="checktoggle">checkbox</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-lg-3">
+                                <div class="status-toggle mt-4">
+                                <span id="genSh">Male</span>
+                                <input onclick="gender(this.value)" value="1" type="checkbox" id="gender" class="check" checked>
+                                    <label for="gender" class="checktoggle">checkbox</label>
+                                </div>
+                            </div>
+                            <!-- <div class="col-sm-12 col-lg-6">
                                 <div class="form-group">
                                     <label>Is Employee?</label>
                                     <select id="isEmployee" name="isEmployee" class="form-control">
@@ -81,7 +95,7 @@
                                         <option value="Yes">Yes - Customer is our employee</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label>Present Address</label>
@@ -152,7 +166,6 @@
 <script>
     $('.addCustomer').on('click', function () {
         var formData = new FormData();
-
         formData.append('custCNIC', $('#custCNIC').val());
         formData.append('custName', $('#custName').val());
         formData.append('custFather', $('#custFather').val());
@@ -162,6 +175,7 @@
         formData.append('custSecondary', $('#custSecondary').val());
         formData.append('custCity', $('#custCity').val());
         formData.append('isEmployee', $('#isEmployee').val());
+        formData.append('gender', $('#gender').val());
         formData.append('custPresent', $('#custPresent').val());
         formData.append('custPermanent', $('#custPermanent').val());
         formData.append('NOKname', $('#NOKname').val());
@@ -222,13 +236,30 @@
             swal("Sorry!", "Please fill the mandatory fields.", "info");
         }
     });
-
     function selected(){
         var cutmImg=document.getElementById('uploadCustm');
         var baseUrl=document.getElementById('baseUrl').value;
         if(cutmImg.files.length>0){
             document.getElementById('custmSel').innerHTML="<span class='text-success'>Image selected</span> | <span class='text-danger'>Browse</span>";
             document.getElementById('logoCloud').src=baseUrl+"/assets/img/icon/check.png";
+        }
+    }
+    function gender(gen){
+        if(gen==1){
+            document.getElementById('gender').value=0;
+            document.getElementById('genSh').innerHTML='Female';
+        }else{
+            document.getElementById('gender').value=1;
+            document.getElementById('genSh').innerHTML='Male';
+        }
+    }
+    function isEmploye(emp){
+        if(emp==0){
+            document.getElementById('isEmployee').value=1;
+            document.getElementById('empSh').innerHTML='Employee';
+        }else{
+            document.getElementById('isEmployee').value=0;
+            document.getElementById('empSh').innerHTML='Customer';
         }
     }
 </script>
