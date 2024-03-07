@@ -24,6 +24,10 @@ class Customer_model extends CI_Model{
 		$this->db->where(array('custmCNIC' => $CNIC));
 		return $this->db->get()->row();
 	}
+	public function deleteCustomer($id){
+		$result = $this->db->query("UPDATE customers SET `custmStatus` = NOT `custmStatus` WHERE customerId=$id");
+		return $result ? true : false;
+	}
 
 	// ---------------------------- Insert Records ------------------------------------
 

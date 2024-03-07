@@ -29,8 +29,10 @@ class Customers extends CI_Controller {
 		$data = $this->customer_model->getCustmInfo($CNIC);
 		echo json_encode($data);
 	}
-
-
+	public function deleteCustomer($id){ // Delete Customer
+		$data = $this->customer_model->deleteCustomer($id);
+		echo json_encode($data);
+	}
 
 	public function saveCustomer(){
 		$config = array(
@@ -49,9 +51,9 @@ class Customers extends CI_Controller {
 		}
 		$data = array(
 			'custmCNIC' => $this->input->post('custCNIC'),
-			'custmName' => ucwords($this->input->post('custName')),
-			'fatherName' => ucwords($this->input->post('custFather')),
-			'custmEmail' => $this->input->post('custEmail'),
+			'custmName' => ucwords(strtolower($this->input->post('custName'))),
+			'fatherName' => ucwords(strtolower($this->input->post('custFather'))),
+			'custmEmail' => strtolower($this->input->post('custEmail')),
 			'custmDOB' => $this->input->post('custDOB'),
 			'primaryPhone' => $this->input->post('custPrimary'),
 			'secondaryPhone' => $this->input->post('custSecondary'),
@@ -60,11 +62,11 @@ class Customers extends CI_Controller {
 			'custmGender' => $custmGender,
 			'presentAddress' => ucwords($this->input->post('custPresent')),
 			'permanentAddress' => ucwords($this->input->post('custPermanent')),
-			'nokName' => ucwords($this->input->post('NOKname')),
+			'nokName' => ucwords(strtolower($this->input->post('NOKname'))),
 			'nokCNIC' => $this->input->post('NOKcnic'),
 			'nokPhone' => $this->input->post('NOKcontact'),
-			'nokEmail' => $this->input->post('NOKemail'),
-			'nokRelation' => ucwords($this->input->post('NOKrelation')),
+			'nokEmail' => strtolower($this->input->post('NOKemail')),
+			'nokRelation' => ucwords(strtolower($this->input->post('NOKrelation'))),
 			'custmPic' => $image,
 			'addedBy' => $this->session->userdata('userId')
 		);
@@ -72,7 +74,6 @@ class Customers extends CI_Controller {
 		$this->form_validation->set_rules('custName', 'Customer Name', 'required');
 		$this->form_validation->set_rules('custCity', 'Select City', 'required');
 		$this->form_validation->set_rules('custPrimary', 'Primary Phone', 'required');
-	
 		if ($this->form_validation->run() == true) {
 			if ($this->customer_model->add_Customer($data)) {
 				echo true;

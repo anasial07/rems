@@ -113,7 +113,7 @@
                                     <li><a href="<?= base_url('dashboard/provinces'); ?>">Geolocation</a></li>
                                     <li><a href="<?= base_url('dashboard/addProject'); ?>">Projects</a></li>
                                     <li><a href="<?= base_url('dashboard/paymentPlan'); ?>">Payment Plans</a></li>
-                                    <li><a href="<?= base_url('dashboard/addOffers'); ?>">Offers</a></li>
+                                    <!-- <li><a href="<?= base_url('dashboard/addOffers'); ?>">Offers</a></li> -->
                                 </ul>
                             </li>
                             <li><a href="<?= base_url('agents'); ?>"><img src="<?= base_url('assets/img/icons/users1.svg'); ?>" alt="img"><span>Agents</span></a></li>
@@ -135,6 +135,7 @@
                             </li>
                             <li><a href="<?= base_url('booking/addInstallment'); ?>"><img src="<?= base_url('assets/img/icons/expense1.svg'); ?>" alt="img"><span>Insallments</span></a></li>
                             <li><a href="<?= base_url('dashboard/viewUsers'); ?>"><img src="<?= base_url('assets/img/icons/users1.svg'); ?>" alt="img"><span>Users Management</span></a></li>
+                            <li><a href="<?= base_url('login/signout'); ?>"><img src="<?= base_url('assets/img/icons/logout-2.svg'); ?>" alt="img"><span>Log out</span></a></li>
                         </ul>
                     </div>
                 </div>

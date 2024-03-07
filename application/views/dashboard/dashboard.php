@@ -7,7 +7,7 @@
                         <span><img src="<?= base_url('assets/img/icons/dash1.svg'); ?>" alt="img"></span>
                     </div>
                     <div class="dash-widgetcontent">
-                        <h5><span class="counters" data-count="<?= $bookingAmount + $installAmount; ?>"><?= $bookingAmount + $installAmount; ?></span></h5>
+                        <h5><span class="counters" data-count="<?= $bookingAmount; ?>"><?= $bookingAmount; ?></span></h5>
                         <h6>Total Booking Amount</h6>
                     </div>
                 </div>

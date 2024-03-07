@@ -18,6 +18,7 @@
                             <div class="form-group">
                                 <label>Select Project</label>
                                 <input type="hidden" id="projectCode">
+                                <input type="hidden" id="projectBasePrice">
                                 <select id="projID" class="form-control">
                                     <option selected disabled>Select Project</option>
                                     <?php foreach($projects as $project): ?>
@@ -46,6 +47,7 @@
                             <div class="form-group">
                                 <input type="hidden" id="typeSize">
                                 <input type="hidden" id="typeAmount">
+                                <input type="hidden" id="typeDiscount">
                                 <label>Select Type</label>
                                 <select id="typeID" class="form-control">
                                     <option selected disabled>Select Type</option>
@@ -337,7 +339,9 @@
         var filerStatus = $('#filerStatus').val();
         var filerPercent = $('#filerPercent').val();
         var projectCode = $('#projectCode').val();
+        var projectBasePrice = $('#projectBasePrice').val();
         var typeSize = $('#typeSize').val();
+        var typeDiscount = $('#typeDiscount').val();
         var custmID = $('#customerID').val();
         var featuresPercent = $('#featuresPercent').val();
         var typeAmount = $('#typeAmount').val();
@@ -382,7 +386,9 @@
                             filerStatus: filerStatus,
                             filerPercent: filerPercent,
                             projectCode: projectCode,
+                            projectBasePrice: projectBasePrice,
                             typeSize: typeSize,
+                            typeDiscount: typeDiscount,
                             customerID: custmID,
                             featuresPercent: featuresPercent,
                             typeAmount: typeAmount,
@@ -459,18 +465,18 @@
             }
         });
     });
-    $('#typeID').change(function(){
-        var typeID = $(this).val();
-        $.ajax({
-            url: "<?php echo base_url('dashboard/typeInfo/'); ?>" + typeID,
-            method: 'POST',
-            dataType: 'json',
-            data: {typeID: typeID},
-            success: function(res){
-                $('#typeAmount').val(res[0].totalPrice);
-            }
-        });
-    });
+    // $('#typeID').change(function(){
+    //     var typeID = $(this).val();
+    //     $.ajax({
+    //         url: "<?php echo base_url('dashboard/typeInfo/'); ?>" + typeID,
+    //         method: 'POST',
+    //         dataType: 'json',
+    //         data: {typeID: typeID},
+    //         success: function(res){
+    //             $('#typeAmount').val(res[0].totalPrice);
+    //         }
+    //     });
+    // });
     $('#cityID').change(function(){
         var cityID = $(this).val();
         $.ajax({
@@ -508,6 +514,7 @@
             data: { projID: projID },
             success: function(res){
                 $('#projectCode').val(res[0].projCode);
+                $('#projectBasePrice').val(res[0].projBasePrice);
             }
         });
     }
@@ -601,6 +608,8 @@
             success: function(data){
                 if(data){
                     $('#typeSize').val(data[0].marlaSize);
+                    $('#typeDiscount').val(data[0].discount);
+                    $('#typeAmount').val(data[0].totalPrice);
                 }
             }
         });

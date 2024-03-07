@@ -19,6 +19,13 @@ class Agents extends CI_Controller {
 		$data = $this->agent_model->activeManagers($id);
 		echo json_encode($data);
 	}
+	public function deleteAgent($id){ // Delete Agent
+		$data = $this->agent_model->deleteAgent($id);
+		echo json_encode($data);
+	}
+
+    // -----------------------------------------------------------------
+
 	public function addAgent(){
 		$data['title'] = 'Dashboard | REMS';
 		$data['body'] = 'agents/add-agent';

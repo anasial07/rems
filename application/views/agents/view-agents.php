@@ -74,9 +74,9 @@
                         <td><?= $agent->locName; ?></td>
                         <td><?= date('M d, Y',strtotime($agent->doj)); ?></td>
                         <td class="text-center">
-                            <?php if($status==1){ ?>
+                            <?php if($status==1){ $val="Delete"; ?>
                                 <span class="badges bg-lightgreen">Active</span>
-                            <?php }else{ ?>
+                            <?php }else{ $val="Recover"; ?>
                                 <span class="badges bg-lightred">Inactive</span>
                             <?php } ?>
                         </td>
@@ -89,8 +89,8 @@
                                     <li>
                                         <a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Agent</a>
                                     </li>
-                                    <li>
-                                        <a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img">Delete Agent</a>
+                                    <li class="delAgent" data-id="<?= $agent->agentId; ?>">
+                                        <a class="dropdown-item confirm-text"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img"><?= $val; ?> Agent</a>
                                     </li>
                                 </ul>
                             </td>
@@ -102,3 +102,39 @@
         </div>
     </div>
 </div>
+<script>
+    $('.delAgent').click(function(){
+        var id = $(this).data('id');
+        swal({
+            title: "Are you sure?",
+            text: "You want to change the status!",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonClass: "btn-success",
+            confirmButtonText: "Yes, change",
+            cancelButtonClass: "btn-primary",
+            cancelButtonText: "No, cancel",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+        function(isConfirm){
+            if(isConfirm){
+                $.ajax({
+                    url: "<?php echo base_url("agents/deleteAgent/"); ?>" + id,
+                    method: 'POST',
+                    dataType: 'JSON',
+                    data: {id: id},
+                    success: function(res){
+                        if(res==true){
+                            window.location.reload();
+                        }else{
+                            swal("Ops", "Something went wrong", "info");
+                        }
+                    }
+                });
+            }else{
+                swal.close()
+            }
+        });
+    });
+</script>

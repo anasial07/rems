@@ -402,15 +402,15 @@ class Dashboard extends CI_Controller {
 				'catId' => $catId,
 				'subCatId' => $subCatId,
 				'typeName' => $typeName,
-				'base_price' => $base_price,
+				// 'base_price' => $base_price,
 				'marlaSize' => $marlaSize,
-				'perMarla' => $perMarla,
+				// 'perMarla' => $perMarla,
 				'totalPrice' => $totalPrice,
 				'dimenssion' => $dimenssion,
 				'discount' => $typeDiscount,
 				'addedBy' => $this->session->userdata('userId')
 			);
-			if($this->dashboard_model->add_type($data)) {
+			if($this->dashboard_model->add_type($data)){
 				echo true;
 			}else{
 				echo false;

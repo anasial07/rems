@@ -93,7 +93,10 @@ class Booking_model extends CI_Model{
 		$issueDate=date("Y-m-d H:i:s");
 		return $this->db->query("UPDATE bookings SET fileIssuanceDate = '$issueDate' WHERE bookingId=$id");
 	}
-
+	public function deleteBooking($id){
+		$result = $this->db->query("UPDATE bookings SET `bookingStatus` = NOT `bookingStatus` WHERE bookingId=$id");
+		return $result ? true : false;
+	}
 	// ---------------------------- Insert Records ------------------------------------
 
 	public function saveBooking($data){

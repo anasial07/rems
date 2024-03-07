@@ -52,6 +52,10 @@ class Booking extends CI_Controller {
 		$data = $this->booking_model->customerBookings($id);
 		echo json_encode($data);
 	}
+	public function deleteBooking($id){	// Get Booking info By CNIC
+		$data = $this->booking_model->deleteBooking($id);
+		echo json_encode($data);
+	}
 	public function addBooking(){
 		$data['title'] = 'Dashboard | REMS';
 		$data['body'] = 'bookings/add-booking';
@@ -63,6 +67,7 @@ class Booking extends CI_Controller {
 	public function saveBooking(){	// Add New Booking
 		$projID=$this->input->post('projID');
 		$projCode=$this->input->post('projectCode');
+		$projectBasePrice=$this->input->post('projectBasePrice');
 		$typeSize=$this->input->post('typeSize');
 		$typeSizeCheck=$typeSize;
 		$custmID=$this->input->post('customerID');
@@ -115,6 +120,7 @@ class Booking extends CI_Controller {
 		$features = !empty($this->input->post('features')) ? implode(',', $this->input->post('features')) : 0;
 		$data = array(
 			'projID' => $projID,
+			'bookingBasePrice' => $projectBasePrice,
 			'catID' => $this->input->post('catID'),
 			'subCatID' => $this->input->post('subCatID'),
 			'typeID' => $this->input->post('typeID'),
@@ -128,6 +134,7 @@ class Booking extends CI_Controller {
 			'bookBankId' => $bankName,
 			'bookReceivedIn' => $this->input->post('receivedIn'),
 			'payPlanID' => $this->input->post('payPlanID'),
+			'bookingtypeDiscount' => $this->input->post('typeDiscount'),
 			'exCharges' => $exCharges,
 			'salePrice' => $salePrice,
 			'purchaseDate' => $this->input->post('purchaseDate'),
@@ -218,6 +225,7 @@ class Booking extends CI_Controller {
 		$pdf->SetKeywords('File Issuance Memo');
 		$filename='File Issuance Memo'.'.pdf';
 		$pdf->SetMargins(7, 7, 7, 7);
+		$pdf->SetAutoPageBreak(TRUE, $bottom = 0);
         $pdf->AddPage('A4');
         $pdf->SetFont('', 'B', 14);
 		$pdf->SetTitle('File Issuance Memo - '.$info[0]->membershipNo);
@@ -252,8 +260,10 @@ class Booking extends CI_Controller {
 		$pdf->cell(197, 7, 'File may be issued as per the following detail please:-', 0, 1, '');
 		$pdf->Ln(5);
 		
+		($info[0]->custmGender=='1') ? $pre='Mr. ' : $pre='Ms. ';
+
 		$pdf->cell(38, 6, 'Customer Name:', 0, 0, '');
-		$pdf->cell(160, 6, $info[0]->custmName, 0, 1, '');
+		$pdf->cell(160, 6, $pre.$info[0]->custmName, 0, 1, '');
 		$pdf->cell(38, 6, 'File No:', 0, 0, '');
 		$pdf->cell(160, 6, $info[0]->membershipNo, 0, 1, '');
 		$pdf->cell(38, 6, 'Booking Date:', 0, 0, '');
@@ -268,8 +278,8 @@ class Booking extends CI_Controller {
 		$pdf->cell(160, 6, $info[0]->sepDiscount.'%', 0, 1, '');
 		$pdf->cell(38, 6, 'Sale Price:', 0, 0, '');
 		$pdf->cell(160, 6, number_format($info[0]->salePrice), 0, 1, '');
-		$pdf->cell(38, 6, 'Per Marla Price:', 0, 0, '');
-		$pdf->cell(160, 6, number_format($info[0]->perMarla), 0, 1, '');
+		// $pdf->cell(38, 6, 'Per Marla Price:', 0, 0, '');
+		// $pdf->cell(160, 6, ''), 0, 1, '');
 		$pdf->cell(38, 6, 'Amount Received:', 0, 0, '');
 
 		$totalInstallAmount = $this->booking_model->totalInstallmentAmount($bookingID);
@@ -339,6 +349,16 @@ class Booking extends CI_Controller {
 		$pdf->cell(30, 6, '', '');
 		$pdf->cell(40, 6, 'Dated:', 0, 0, '');
 		$pdf->cell(40, 6, '______________________',0, 1);
+		$pdf->Ln(42);
+
+		$pdf->SetFont('', 'B', 9);
+		$pdf->Cell(19, 4, 'Head Office');
+        $pdf->SetFont('', '', 9);
+		$pdf->Cell(178, 4, '- Office #11 2nd floor, Umer Building,', 0, 1);
+		$pdf->Cell(98, 0, 'Jinnah Avenue, Blue Area, Islamabad 440000.');
+		$pdf->Cell(98, 0, $this->session->userdata('username'), 0, 1, 'R');
+		$pdf->Cell(98, 0, 'Conatct Number: 0331-1110884');
+		$pdf->Cell(98, 0, date('M d, Y g:i A'), 0, 1, 'R');
 		
         $pdf->Output($filename, 'I');
     }
@@ -354,6 +374,7 @@ class Booking extends CI_Controller {
 		$pdf->SetKeywords('Welcome Letter');
 		$filename='Welcome Letter'.'.pdf';
 		$pdf->SetMargins(7, 7, 7, 7);
+		$pdf->SetAutoPageBreak(TRUE, $bottom = 0);
         $pdf->AddPage('A4');
         $pdf->SetFont('', 'B', 14);
 		$pdf->SetTitle('Welcome Letter - '.$info[0]->membershipNo);
@@ -385,8 +406,10 @@ class Booking extends CI_Controller {
 		$pdf->cell(99, 5, date('F d, Y'), 0, 1, 'R');
 		$pdf->Ln(5);
 		
+		($info[0]->custmGender=='1') ? $pre='Mr. ' : $pre='Ms. ';
+
 		$pdf->cell(99, 5, 'Customer Name', 1);
-		$pdf->cell(99, 5, $info[0]->custmName, 1, 1);
+		$pdf->cell(99, 5, $pre.$info[0]->custmName, 1, 1);
 		$pdf->cell(99, 5, "Father's/Spouse Name", 1);
 		$pdf->cell(99, 5, $info[0]->fatherName, 1, 1);
 		$pdf->cell(99, 5, "CNIC/NICOP", 1);
@@ -413,7 +436,7 @@ class Booking extends CI_Controller {
 		$pdf->MultiCell(197, 5, 'Thanking you in anticipation and assuring you our best services.', 0, 1);
 		$pdf->Ln(3);
 		$pdf->MultiCell(197, 5, 'With Profound Regards,', 0, 1);
-		$pdf->Ln(40);
+		$pdf->Ln(20);
 
 		$pdf->cell(60, 5, '', 'B');
 		$pdf->cell(78, 5, '');
@@ -422,6 +445,16 @@ class Booking extends CI_Controller {
 		$pdf->cell(78, 5, '');
 		$pdf->cell(60, 5, 'Stamp', 0, 1, 'C');
 		$pdf->cell(60, 5, $info[0]->projName, 0, 0, 'C');
+		$pdf->Ln(30);
+
+		$pdf->SetFont('', 'B', 9);
+		$pdf->Cell(19, 4, 'Head Office');
+        $pdf->SetFont('', '', 9);
+		$pdf->Cell(178, 4, '- Office #11 2nd floor, Umer Building,', 0, 1);
+		$pdf->Cell(98, 0, 'Jinnah Avenue, Blue Area, Islamabad 440000.');
+		$pdf->Cell(98, 0, $this->session->userdata('username'), 0, 1, 'R');
+		$pdf->Cell(98, 0, 'Conatct Number: 0331-1110884');
+		$pdf->Cell(98, 0, date('M d, Y g:i A'), 0, 1, 'R');
 
 		$pdf->Output($filename, 'I');
 	}
@@ -437,6 +470,7 @@ class Booking extends CI_Controller {
 		$pdf->SetKeywords('Confirmation Letter');
 		$filename='Confirmation Letter'.'.pdf';
 		$pdf->SetMargins(7, 7, 7, 7);
+		$pdf->SetAutoPageBreak(TRUE, $bottom = 0);
         $pdf->AddPage('A4');
         $pdf->SetFont('', 'B', 14);
 		$pdf->SetTitle('Confirmation Letter - '.$info[0]->membershipNo);
@@ -462,8 +496,10 @@ class Booking extends CI_Controller {
 		$pdf->cell(99, 5, date('F d, Y'), 0, 1, 'R');
 		$pdf->Ln(5);
 		
+		($info[0]->custmGender=='1') ? $pre='Mr. ' : $pre='Ms. ';
+
 		$pdf->cell(99, 5, 'Customer Name', 1);
-		$pdf->cell(99, 5, $info[0]->custmName, 1, 1);
+		$pdf->cell(99, 5, $pre.$info[0]->custmName, 1, 1);
 		$pdf->cell(99, 5, "Father's/Spouse Name", 1);
 		$pdf->cell(99, 5, $info[0]->fatherName, 1, 1);
 		$pdf->cell(99, 5, "CNIC/NICOP", 1);
@@ -496,6 +532,16 @@ class Booking extends CI_Controller {
 		$pdf->cell(78, 5, '');
 		$pdf->cell(60, 5, 'Stamp', 0, 1, 'C');
 		$pdf->cell(60, 5, $info[0]->projName, 0, 0, 'C');
+		$pdf->Ln(62);
+
+		$pdf->SetFont('', 'B', 9);
+		$pdf->Cell(19, 4, 'Head Office');
+        $pdf->SetFont('', '', 9);
+		$pdf->Cell(178, 4, '- Office #11 2nd floor, Umer Building,', 0, 1);
+		$pdf->Cell(98, 0, 'Jinnah Avenue, Blue Area, Islamabad 440000.');
+		$pdf->Cell(98, 0, $this->session->userdata('username'), 0, 1, 'R');
+		$pdf->Cell(98, 0, 'Conatct Number: 0331-1110884');
+		$pdf->Cell(98, 0, date('M d, Y g:i A'), 0, 1, 'R');
 
 		$pdf->Output($filename, 'I');
 	}
@@ -528,6 +574,7 @@ class Booking extends CI_Controller {
 		$pdf->SetKeywords($receiptType.' Receipt');
 		$filename=$receiptType.' Receipt'.'.pdf';
 		$pdf->SetMargins(7, 7, 7, 7);
+		$pdf->SetAutoPageBreak(TRUE, $bottom = 0);
         $pdf->AddPage('A4');
         $pdf->SetFont('', 'B', 14);
 		$pdf->SetTitle($receiptType.' Receipt - '.$info[0]->membershipNo);
@@ -565,10 +612,12 @@ class Booking extends CI_Controller {
 		$pdf->cell(50, 6, date('M d, Y',strtotime($receiptDate)),'B', 1);
 		$pdf->cell(197, 10, 'We are hereby acknowledged for and on behalf of '.$info[0]->projName.', that we have received', 0, 1);
 		
+		($info[0]->custmGender=='1') ? $pre='Mr. ' : $pre='Ms. ';
+
         $pdf->SetFont('', '', 11);
 		$pdf->cell(50, 6, 'Received with thanks from:');
         $pdf->SetFont('', '', 11);
-		$pdf->cell(147, 6, $info[0]->custmName,'B', 1);
+		$pdf->cell(147, 6, $pre.$info[0]->custmName,'B', 1);
 		$pdf->Ln(3);
 		
         $pdf->SetFont('', 'B', 11);
@@ -673,6 +722,16 @@ class Booking extends CI_Controller {
 		$pdf->cell(25, 7, 'Name:');
         $pdf->SetFont('', '', 11);
 		$pdf->cell(50, 7, '______________________', 0, 1);
+		$pdf->Ln(58);
+
+		$pdf->SetFont('', 'B', 9);
+		$pdf->Cell(19, 4, 'Head Office');
+        $pdf->SetFont('', '', 9);
+		$pdf->Cell(178, 4, '- Office #11 2nd floor, Umer Building,', 0, 1);
+		$pdf->Cell(98, 0, 'Jinnah Avenue, Blue Area, Islamabad 440000.');
+		$pdf->Cell(98, 0, $this->session->userdata('username'), 0, 1, 'R');
+		$pdf->Cell(98, 0, 'Conatct Number: 0331-1110884');
+		$pdf->Cell(98, 0, date('M d, Y g:i A'), 0, 1, 'R');
 
 		$pdf->Output($filename, 'I');
 		// $pdf->Output();
@@ -755,12 +814,20 @@ class Booking extends CI_Controller {
         $pdf->SetFont('', '', 11);
 		$pdf->Ln(5);
 
+		if($info[0]->custmGender=='1'){
+			$pre='Mr. ';
+			$extra='S/O';
+		}else{
+			$pre='Ms. ';
+			$extra='D/O, W/O';
+		}
+
 		$pdf->Cell(40, 7, 'Applicant Name');
 		$custName = $info[0]->custmName;
 		if(strlen($custName)>20){ $custName = substr($custName,0,20).'...'; }
-		$pdf->Cell(53, 7, $custName, 'B');
+		$pdf->Cell(53, 7, $pre.$custName, 'B');
 		$pdf->Cell(10, 7, '');
-		$pdf->Cell(40, 7, 'S/O, D/O, W/O');
+		$pdf->Cell(40, 7, $extra);
 		$DO=$info[0]->fatherName;
 		if(strlen($DO)>20){ $DO = substr($DO,0,20).'...'; }
 		$pdf->Cell(53, 7, $DO , 'B', 1);
@@ -982,14 +1049,20 @@ class Booking extends CI_Controller {
 		$currentRemianing=$downPayment - $bookingAmount;   // Remaining Amount 
 		$balance=$salePrice - $bookingAmount;	   // Total Remianing Amount (Balance)
 
-		$confirmMonth=date('M, Y', strtotime($info[0]->purchaseDate . ' +1 month'));    // Next Month After Booking
+		$date = DateTime::createFromFormat('d-m-Y', $info[0]->purchaseDate);
+		$date->modify('+1 month');
+		$compareMonth1 = $date->format('Y-m');
+		$confirmMonth = date('M, Y',strtotime($compareMonth1));
 
 		$installments=$this->booking_model->getInstallments($bookingID);
+		$enable=0;
 		// ------------------------------------------------------------------------------------------------------------
 
         $pdf->SetFont('', 'B', 12);
 		$pdf->Cell(260, 6, 'Member Information');
 		$pdf->Cell(78, 6, 'Other Information', 0, 1);
+
+		($info[0]->custmGender=='1') ? $pre='Mr. ' : $pre='Ms. ';
 
         $pdf->SetFont('', '', 12);
 		$pdf->Cell(40, 6, 'Reg No');
@@ -997,13 +1070,13 @@ class Booking extends CI_Controller {
 		$pdf->Cell(35, 6, 'Category');
 		$pdf->Cell(43, 6, $info[0]->catName, 0, 1);
 		$pdf->Cell(40, 6, 'Member Name');
-		$pdf->Cell(220, 6, $info[0]->custmName);
+		$pdf->Cell(220, 6, $pre.$info[0]->custmName);
 		$pdf->Cell(35, 6, 'Sub-Category');
 		$pdf->Cell(43, 6, $info[0]->subCatName, 0, 1);
 		$pdf->Cell(40, 6, 'CNIC');
 		$pdf->Cell(220, 6, $info[0]->custmCNIC);
-		$pdf->Cell(35, 6, 'Type');
-		$pdf->Cell(43, 6, $info[0]->typeName.' ('.$info[0]->dimenssion.')', 0, 1);
+		$pdf->Cell(35, 6, 'Type Name');
+		$pdf->Cell(43, 6, $info[0]->typeName, 0, 1);
 		$pdf->Cell(40, 6, "Phone");
 		$pdf->Cell(220, 6, $info[0]->primaryPhone);
 		$pdf->Cell(35, 6, 'Plan Name');
@@ -1022,10 +1095,10 @@ class Booking extends CI_Controller {
 		$pdf->Cell(338, 1, '', 0, 1, '', true);
 		$pdf->Cell(40, 6, 'Project Name', 0, 0, '', true);
 		$pdf->Cell(220, 6, $info[0]->projName, 0, 0, '', true);
-		$pdf->Cell(35, 6, 'Type Size', 0, 0, '', true);
-		$pdf->Cell(43, 6, $info[0]->typeName, 0, 1, '', true);
-		$pdf->Cell(40, 6, 'Per Marla Price', 0, 0, '', true);
-		$pdf->Cell(220, 6, number_format($info[0]->perMarla), 0, 0, '', true);
+		$pdf->Cell(35, 6, 'Dimension', 0, 0, '', true);
+		$pdf->Cell(43, 6, $info[0]->dimenssion, 0, 1, '', true);
+		$pdf->Cell(40, 6, 'Type Discount', 0, 0, '', true);
+		$pdf->Cell(220, 6, $info[0]->bookingtypeDiscount.'%', 0, 0, '', true);
 		$pdf->Cell(35, 6, 'Payment Mode', 0, 0, '', true);
 		$pdf->Cell(43, 6, $info[0]->bookingMode, 0, 1, '', true);
         $pdf->SetFont('', '', 12);
@@ -1038,7 +1111,7 @@ class Booking extends CI_Controller {
 		$pdf->Cell(35, 6, 'Recevied In', 0, 0, '', true);
 		$pdf->Cell(43, 6, $info[0]->locName, 0, 1, '', true);
 		$pdf->Cell(40, 6, 'Features ('.$info[0]->featuresPercent.'%)', 0, 0, '', true);
-		$pdf->Cell(220, 6, ($info[0]->features==0) ? 'N/A' : $info[0]->features, 0, 0, '', true);
+		$pdf->Cell(220, 6, ($info[0]->featuresPercent==0) ? 'N/A' : $info[0]->features, 0, 0, '', true);
 		$pdf->Cell(35, 6, 'Booking Date', 0, 0, '', true);
 		$pdf->Cell(43, 6, date('F d, Y',strtotime($info[0]->purchaseDate)), 0, 1, '', true);
 		$pdf->Cell(40, 6, 'Sale Price', 0, 0, '', true);
@@ -1085,6 +1158,7 @@ class Booking extends CI_Controller {
 		
 		$totalPay=$bookingAmount;
 		
+		$today=date('Y-m');
 		$currentMonth=date('M, Y');
 		$confirmDate="";
 		$confirmAmount=0;
@@ -1093,36 +1167,36 @@ class Booking extends CI_Controller {
 		$confirmTax="";
 		if(count($installments)>0):
 			foreach($installments as $confirm):
-				$confirmDateMatch=date('M, Y',strtotime($confirm->installReceivedDate));
-				if($confirmDateMatch == $confirmMonth){
-					$confirmDate=date('d M, Y',strtotime($confirm->installReceivedDate));
+				$confirmDateMatch=date('Y-m',strtotime($confirm->installReceivedDate));
+				if($confirmDateMatch == $compareMonth1){
+					$confirmDate=date('d M, Y',strtotime($confirmDateMatch));
 					$confirmAmount=$confirm->installAmount;
 					$confirmMode=$confirm->installPayMode;
 					$confirmFiler=$confirm->installFilerStatus;
 					$confirmTax=$confirm->installFilerPercent;
+					break;
 				}
-				break;
 			endforeach;
 		endif;
-
-		$currentRemianing = $currentRemianing + $confirmation - $confirmAmount;
 		
-		if($currentRemianing>$balance){
-			$currentRemianing=$balance;
+		if($compareMonth1 <= $today){
+			$currentRemianing = $currentRemianing + $confirmation - $confirmAmount;
+			$showCurrentRemianing=number_format($currentRemianing);
+		}else{
+			$showCurrentRemianing='';
 		}
+		($compareMonth1 == $today) ? $color=true : $color=false;
 
 		$balance = $balance - $confirmAmount;
 		$showConfirmAmount=number_format($confirmAmount);
-
-		$showCurrentRemianing=number_format($currentRemianing);
+		$totalPay+=$confirmAmount;
 		
-
 		$pdf->Cell(8, 6, '02', 1, 0, 'C');
 		$pdf->Cell(75, 6, 'Confirmation ('.$info[0]->confirmPay.'%)', 1);
 		$pdf->Cell(30, 6, $confirmMonth, 1, 0, 'C');
 		$pdf->Cell(30, 6, number_format($confirmation), 1, 0, 'C');
 		$pdf->Cell(30, 6, $showConfirmAmount, 1, 0, 'C');
-		$pdf->Cell(30, 6, $showCurrentRemianing, 1, 0, 'C');
+		$pdf->Cell(30, 6, $showCurrentRemianing, 1, 0, 'C', $color);
 		$pdf->Cell(30, 6, $confirmDate, 1, 0, 'C');
 		$pdf->Cell(30, 6, $confirmMode, 1, 0, 'C');
 		$pdf->Cell(25, 6, $confirmFiler, 1, 0, 'C');
@@ -1145,8 +1219,8 @@ class Booking extends CI_Controller {
 		for($i=1; $i<=$totalMonths; $i++):
 			$date = DateTime::createFromFormat('M, Y', $confirmMonth);
 			$date->modify('+'.$i.' month');
-			$thisMonth = $date->format('M, Y');
-			$installmentMonth = $thisMonth;
+			$compareMonth2 = $date->format('Y-m');
+			$installmentMonth = date('M, Y',strtotime($compareMonth2));
 			$thisInstallment = ($i) % 6 ? $myInstallment : $mySemiAnnual;
 
 			$installAmount=0;
@@ -1155,44 +1229,54 @@ class Booking extends CI_Controller {
 			$instalFiler="";
 			$instalTax="";
 			$totalPaid=0;
+			$instalRecipt='';
 			if(count($installments)>0):
 				foreach($installments as $instal):
-					$instalMonthMatch=date('M, Y',strtotime($instal->installReceivedDate));
-					if($instalMonthMatch == $thisMonth){
-						$instalMonth=date('d M, Y',strtotime($instal->installReceivedDate));
+					$instalMonthMatch=date('Y-m',strtotime($instal->installReceivedDate));
+					if($instalMonthMatch == $compareMonth2){
+						$instalMonth=date('d M, Y',strtotime($instalMonthMatch));
+						$instalRecipt=$instal->projCode.'-'.sprintf('%02d',$instal->installmentId);
 						$installAmount=$instal->installAmount;
 						$instalMode=$instal->installPayMode;
 						$instalFiler=$instal->installFilerStatus;
 						$instalTax=$instal->installFilerPercent."%";
+						break;
 					}
 				endforeach;
 			endif;
-
-			$currentRemianing = $currentRemianing + $thisInstallment - $installAmount;
-
-			$totalPaid+=$installAmount;
-			$balance = $balance - $confirmAmount - $totalPaid;
 			
-			if($currentRemianing>$balance){
-				$currentRemianing=$balance;
+			if($compareMonth2 <= $today){
+				$currentRemianing = $currentRemianing + $thisInstallment - $installAmount;
+				$showCurrentRemianing=number_format($currentRemianing);
+				$showInstallAmount=number_format($installAmount);
+			}else{
+				$showCurrentRemianing='';
+				$showInstallAmount='';
 			}
 
-			$showInstallAmount=number_format($installAmount);
-			$showCurrentRemianing=number_format($currentRemianing);
+			$totalPaid+=$installAmount;
+			$totalPay+=$totalPaid;
+			$balance = $balance - $confirmAmount - $totalPaid;
 
+			($compareMonth2 == $today) ? $color=true : $color=false;
+			
 			$sr=$i+2;
 			$pdf->Cell(8, 6, sprintf('%02d', $sr), 1, 0, 'C');
-			$pdf->Cell(40, 6, 'Installment', 1);
+			$pdf->Cell(20, 6, 'Installment', 'TBL');
+			$pdf->SetFont('', '', 8);
+			$pdf->Cell(20, 6, $instalRecipt, 'TBR', 0, 'C');
+			$pdf->SetFont('', '', 11);
 			$pdf->Cell(35, 6, ($i % 6) ? 'Monthly' : 'Semi-Annual', 1);
 			$pdf->Cell(30, 6, $installmentMonth, 1, 0, 'C');
 			$pdf->Cell(30, 6, number_format($thisInstallment), 1, 0, 'C');
 			$pdf->Cell(30, 6, $showInstallAmount, 1, 0, 'C');
-			$pdf->Cell(30, 6, $showCurrentRemianing, 1, 0, 'C');
+			$pdf->Cell(30, 6, $showCurrentRemianing, 1, 0, 'C', $color);
 			$pdf->Cell(30, 6, $instalMonth, 1, 0, 'C');
 			$pdf->Cell(30, 6, $instalMode, 1, 0, 'C');
 			$pdf->Cell(25, 6, $instalFiler, 1, 0, 'C');
 			$pdf->Cell(15, 6, $instalTax, 1, 0, 'C');
 			$pdf->Cell(35, 6, number_format($balance), 1, 1, 'C');
+			$lastMonth=$installmentMonth;
 		endfor;
 		
 		$pdf->SetFillColor(193, 193, 193);
@@ -1201,7 +1285,8 @@ class Booking extends CI_Controller {
 		
 		$newPoss = DateTime::createFromFormat('M, Y', $installmentMonth);
 		$newPoss->modify('+1 month');
-		$possMonth = $newPoss->format('M, Y');
+		$compareMonth3 = $newPoss->format('Y-m');
+		$possMonth=date('M, Y',strtotime($compareMonth3));
 
 		$possAmount=0;
 		$possMode="";
@@ -1210,35 +1295,39 @@ class Booking extends CI_Controller {
 		$possTax="";
 		if(count($installments)>0):
 			foreach($installments as $poss):
-				$possMonthMatch=date('M, Y',strtotime($poss->installReceivedDate));
-				if($possMonthMatch == $possMonth){
-					$possessionMonth=date('d M, Y',strtotime($poss->installReceivedDate));
+				$possMonthMatch=date('Y-m',strtotime($poss->installReceivedDate));
+				if($possMonthMatch >= $compareMonth3){
+					$possessionMonth=date('d M, Y',strtotime($possMonthMatch));
 					$possAmount=$poss->installAmount;
 					$possMode=$poss->installPayMode;
 					$possFiler=$poss->installFilerStatus;
 					$possTax=$poss->installFilerPercent."%";
+					break;
 				}
 			endforeach;
 		endif;
 
-		$currentRemianing = $currentRemianing + $possession - $possAmount;
-		
-		if($currentRemianing>$balance){
-			$currentRemianing=$balance;
+		if($compareMonth3 <= $today){
+			$currentRemianing = $currentRemianing + $possession - $possAmount;
+			$showCurrentRemianing=number_format($currentRemianing);
+			$showPossAmount=number_format($possAmount);
+		}else{
+			$showCurrentRemianing='';
+			$showPossAmount='';
 		}
 
 		$balance = $balance - $possAmount;
-		$totalPay=$totalPay + $possAmount + $totalPaid;
-
-		$showPossAmount=number_format($possAmount);
-		$showCurrentRemianing=number_format($currentRemianing);
+		$totalPay+=$possAmount;
+		
+		($compareMonth3 == $today) ? $color=true : $color=false;
+		
 
 		$pdf->Cell(8, 6, sprintf('%02d', $sr+1), 1, 0, 'C');
 		$pdf->Cell(75, 6, 'Possession ('.$info[0]->possession.'%)', 1);
 		$pdf->Cell(30, 6, $possMonth, 1, 0, 'C');
 		$pdf->Cell(30, 6, number_format($possession), 1, 0, 'C');
-		$pdf->Cell(30, 6, $possAmount, 1, 0, 'C');
-		$pdf->Cell(30, 6, $showCurrentRemianing, 1, 0, 'C');
+		$pdf->Cell(30, 6, $showPossAmount, 1, 0, 'C');
+		$pdf->Cell(30, 6, $showCurrentRemianing, 1, 0, 'C', $color);
 		$pdf->Cell(30, 6, $possessionMonth, 1, 0, 'C');
 		$pdf->Cell(30, 6, $possMode, 1, 0, 'C');
 		$pdf->Cell(25, 6, $possFiler, 1, 0, 'C');
@@ -1263,8 +1352,6 @@ class Booking extends CI_Controller {
 		if($installSize==0){
 			$info = $this->booking_model->getBookings($bookingID);
 		}
-		// var_dump($installSize); exit;
-
         $pdf = new Pdf();
 		$pdf->SetCreator(PDF_CREATOR);
 		$pdf->SetAuthor('Muhammad Anas');
@@ -1300,8 +1387,10 @@ class Booking extends CI_Controller {
 		$pdf->Cell(57, 5, 'Payment Information', 0, 1);
         $pdf->SetFont('', '', 11);
 		
+		($info[0]->custmGender=='1') ? $pre='Mr. ' : $pre='Ms. ';
+
 		$pdf->Cell(40, 5, 'Member Name:');
-		$pdf->Cell(100, 5, $info[0]->custmName);
+		$pdf->Cell(100, 5, $pre.$info[0]->custmName);
 		$pdf->Cell(28, 5, 'Net Price:');
 		$pdf->Cell(28, 5, number_format($info[0]->totalPrice), 0, 1, 'R');
 		

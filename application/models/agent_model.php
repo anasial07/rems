@@ -19,6 +19,10 @@ class Agent_model extends CI_Model{
 	public function activeAgents(){
 		return $this->db->select('*')->from('agents')->where(array('agentStatus' => 1))->order_by('agentId', 'DESC')->get()->result();
 	}
+	public function deleteAgent($id){
+		$result = $this->db->query("UPDATE agents SET `agentStatus` = NOT `agentStatus` WHERE agentId=$id");
+		return $result ? true : false;
+	}
 	public function getAgents(){
 		$this->db->select('*');
 		$this->db->from('agents');
