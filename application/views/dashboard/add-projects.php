@@ -226,7 +226,7 @@
                                         </li>
                                         <?php if($role=='admin'): ?>
                                             <li>
-                                                <a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Project</a>
+                                                <a href="<?= base_url('dashboard/editProject/').$project->projectId; ?>" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Project</a>
                                             </li>
                                             <li class="delProj" data-id="<?= $project->projectId; ?>">
                                                 <a class="dropdown-item confirm-text"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img"><?= $val; ?> Project</a>

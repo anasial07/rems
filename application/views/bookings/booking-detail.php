@@ -155,10 +155,31 @@
                                         <?= $info[0]->projCode.'-'.sprintf('%02d',$info[0]->bookingId); ?>
                                         <p style="font-size:11px; margin-top:-4px!important;">Down Payment</p>
                                     </td>
-                                    <td><?= number_format($info[0]->bookingAmount); ?></td>
+                                    <td>
+                                        <?= number_format($info[0]->bookingAmount); ?>
+                                        <?php if($info[0]->bookingStatus==0){ ?>
+                                            <p class="text-danger" style="font-size:11px; margin-top:-4px!important;">Inactive</p>
+                                        <?php } ?>
+                                    </td>
                                     <td><?php echo ($info[0]->bookingReferenceNo == 0) ? "N/A" : $info[0]->bookingReferenceNo; ?></td>
                                     <td><?php echo ($info[0]->bookBankId == 0) ? "N/A" : $info[0]->bankName; ?></td>
-                                    <td><?= $info[0]->bookingMode; ?></td>
+                                    <td>
+                                        <?php 
+                                            if($info[0]->bookingMode == 'Cash'){
+                                                $modeIcon="cash.png";
+                                            }else if($info[0]->bookingMode == 'Cheque'){
+                                                $modeIcon="cheque.png";
+                                            }else if($info[0]->bookingMode == 'IBFT'){
+                                                $modeIcon="ibft.png";
+                                            }else if($info[0]->bookingMode == 'Wire Transfer'){
+                                                $modeIcon="wiretransfer.png";
+                                            }else if($info[0]->bookingMode == 'Pay Order'){
+                                                $modeIcon="payOrder.png";
+                                            }
+                                            echo "<img width='20' src='".base_url('assets/img/icons/'.$modeIcon)."'> ";
+                                            echo $info[0]->bookingMode;
+                                         ?>
+                                    </td>
                                     <td><?= $info[0]->locName; ?></td>
                                     <td><?= date('M d, Y',strtotime($info[0]->purchaseDate)); ?></td>
                                     <td>

@@ -18,7 +18,7 @@
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label>Customer CNIC</label>
-                                    <input oninput="validateNmbr(event)" id="custCNIC" name="custCNIC" type="text" placeholder="Enter CNIC without (-) dashes">
+                                    <input maxlength="13" oninput="validateNmbr(event)" id="custCNIC" name="custCNIC" type="text" placeholder="Enter CNIC without (-) dashes">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-sm-12">
@@ -53,13 +53,13 @@
                             <div class="col-lg-3 col-sm-12">
                                 <div class="form-group">
                                     <label>Primary Phone</label>
-                                    <input oninput="validateNmbr(event)" id="custPrimary" name="custPrimary" type="text" placeholder="Primary Phone">
+                                    <input maxlength="13" oninput="validateNmbr(event)" id="custPrimary" name="custPrimary" type="text" placeholder="Primary Phone">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-12">
                                 <div class="form-group">
                                     <label>Secondary Phone</label>
-                                    <input oninput="validateNmbr(event)" id="custSecondary" name="custSecondary" type="text" placeholder="Optional">
+                                    <input maxlength="13" oninput="validateNmbr(event)" id="custSecondary" name="custSecondary" type="text" placeholder="Optional">
                                 </div>
                             </div>
                             <div class="col-sm-12 col-lg-6">
@@ -122,13 +122,13 @@
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label>Next of Kin CNIC</label>
-                                    <input oninput="validateNmbr(event)" id="NOKcnic" name="NOKcnic" type="text" placeholder="Next of Kin CNIC">
+                                    <input maxlength="13" oninput="validateNmbr(event)" id="NOKcnic" name="NOKcnic" type="text" placeholder="Next of Kin CNIC">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label>Next of Kin Contact</label>
-                                    <input oninput="validateNmbr(event)" id="NOKcontact" name="NOKcontact" type="text" placeholder="Next of Kin Contact">
+                                    <input maxlength="11" oninput="validateNmbr(event)" id="NOKcontact" name="NOKcontact" type="text" placeholder="Next of Kin Contact">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-sm-12">

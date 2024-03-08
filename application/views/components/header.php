@@ -76,6 +76,42 @@
                             Login as: <?= ucwords($this->session->userdata('role')); ?>
                          </a>
                     </li>
+                    <?php $notiBook=$this->db->from('bookings')->get()->num_rows(); ?>
+                    <li class="nav-item dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+                            <img src="<?= base_url('assets/img/icons/notification-bing.svg'); ?>" alt="img"> <span class="badge rounded-pill"><?= $notiBook; ?></span>
+                        </a>
+                        <div class="dropdown-menu notifications">
+                        <div class="topnav-dropdown-header">
+                            <span class="notification-title">Today's booking notifications</span>
+                        </div>
+                        <div class="noti-content">
+                            <ul class="notification-list">
+                                <?php
+                                    $today=date('Y-m-d');
+                                    $this->db->select('*')->from('bookings');
+                                    $this->db->join('users', 'bookings.bookAddedBy = users.userId', 'left');
+                                    $this->db->where('DATE(bookings.createdBooking)', $today);
+                                    $todayBookings = $this->db->get()->result();
+                                    foreach($todayBookings as $todayNoti):
+                                ?>
+                                <li class="notification-message">
+                                    <a>
+                                        <div class="media d-flex">
+                                            <span class="avatar flex-shrink-0">
+                                                <img class="mt-2" src="<?= base_url('assets/img/AH.png'); ?>">
+                                            </span>
+                                            <div class="media-body flex-grow-1">
+                                                <p class="noti-details"><span class="noti-title"><?= $todayNoti->userName; ?> has added a new booking with the membership# </span> <label class="text-danger"><?= $todayNoti->membershipNo; ?></label></p>
+                                                <p class="noti-time"><span class="notification-time"><?= date('g:i:s A',strtotime($todayNoti->createdBooking)); ?></span></p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    </li>
                     <li class="nav-item dropdown has-arrow main-drop">
                         <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
                             <span class="user-img"><img src="<?= base_url('assets/img/AH.png'); ?>" alt="">
@@ -121,7 +157,7 @@
                             <li><a href="<?= base_url('customers'); ?>"><img src="<?= base_url('assets/img/icons/users1.svg'); ?>" alt="img"><span>Customers</span></a></li>
                             <li>
                                 <a href="<?= base_url('booking'); ?>"><img src="<?= base_url('assets/img/icons/places.svg'); ?>" alt="img">
-                                    <span>Bookings</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                                    <span>Bookings</span>&emsp;&emsp;
                                     <span style="font-size:13px!important;">
                                         <?php
                                             $this->db->select('COUNT(*) as total_records')->from('bookings');

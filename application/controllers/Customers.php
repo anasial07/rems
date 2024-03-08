@@ -70,10 +70,12 @@ class Customers extends CI_Controller {
 			'custmPic' => $image,
 			'addedBy' => $this->session->userdata('userId')
 		);
-		$this->form_validation->set_rules('custCNIC', 'Customer CNIC', 'required');
+		$this->form_validation->set_rules('custCNIC', 'Customer CNIC', 'required|exact_length[13]|numeric');
 		$this->form_validation->set_rules('custName', 'Customer Name', 'required');
 		$this->form_validation->set_rules('custCity', 'Select City', 'required');
-		$this->form_validation->set_rules('custPrimary', 'Primary Phone', 'required');
+		$this->form_validation->set_rules('custPrimary', 'Primary Phone', 'required|exact_length[13]|numeric');
+		$this->form_validation->set_rules('NOKcnic', 'NOK CNIC', 'exact_length[13]|numeric');
+		$this->form_validation->set_rules('NOKcontact', 'NOK Contact', 'exact_length[13]|numeric');
 		if ($this->form_validation->run() == true) {
 			if ($this->customer_model->add_Customer($data)) {
 				echo true;

@@ -34,7 +34,7 @@
                             <div class="form-group">
                                 <label>Employee Contact</label>
                                 <div class="input-groupicon">
-                                    <input oninput="validateNmbr(event)" id="empContact" name="empContact" type="text" placeholder="Enter Contact no">
+                                    <input maxlength="11" oninput="validateNmbr(event)" id="empContact" name="empContact" type="text" placeholder="Enter Contact no">
                                 </div>
                             </div>
                         </div>

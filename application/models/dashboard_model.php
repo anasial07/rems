@@ -182,6 +182,7 @@ class Dashboard_model extends CI_Model{
 		$this->db->select('*');
 		$this->db->from('projects');
 		$this->db->join('locations', 'projects.projLocation = locations.locationId', 'left');
+		$this->db->join('users', 'projects.projAddedBy = users.userId', 'left');
 		$id && $this->db->where('projects.projectId', $id);
 		return $this->db->get()->result();
 	}
@@ -360,60 +361,26 @@ class Dashboard_model extends CI_Model{
 		$this->db->update('users', $data);
 		return true;
 	}
-
-	// Fetching Data for Apex-Chart
-	public function chart1Months(){
-		$currentDate = date('d-m-Y');
-		$sixMonthsAgo = date('d-m-Y', strtotime('-6 months', strtotime($currentDate)));
-		$this->db->select("DATE_FORMAT(date, '%Y-%m') AS month", false);
-		$this->db->from("(SELECT ADDDATE('{$sixMonthsAgo}', INTERVAL @i:=@i+1 MONTH) as date
-						FROM information_schema.columns,
-							(SELECT @i:=0) tmp
-						WHERE @i < DATEDIFF('{$currentDate}', '{$sixMonthsAgo}') ) months");
-		$monthList = $this->db->get()->result_array();
-		$this->db->select("DATE_FORMAT(STR_TO_DATE(purchaseDate, '%d-%m-%Y'), '%Y-%m') AS bookingDate, COUNT(*) AS count");
-		$this->db->from('bookings');
-		$this->db->where("STR_TO_DATE(purchaseDate, '%d-%m-%Y') BETWEEN STR_TO_DATE('$sixMonthsAgo', '%d-%m-%Y') AND STR_TO_DATE('$currentDate', '%d-%m-%Y')");
-		$this->db->order_by('bookingDate', 'ASC');
-		$this->db->group_by("bookingDate");
-		$result = $this->db->get()->result_array();
-		$mergedResult = array_merge_recursive($monthList, $result);
-		return $mergedResult;
-	}
-	public function chart1BookingAmt(){
-		$currentDate = date('d-m-Y');
-		$sixMonthsAgo = date('d-m-Y', strtotime('-6 months', strtotime($currentDate)));
-		$this->db->select("DATE_FORMAT(date, '%Y-%m') AS month", false);
-		$this->db->from("(SELECT ADDDATE('{$sixMonthsAgo}', INTERVAL @i:=@i+1 MONTH) as date
-						FROM information_schema.columns,
-							(SELECT @i:=0) tmp
-						WHERE @i < DATEDIFF('{$currentDate}', '{$sixMonthsAgo}') ) months");
-		$monthList = $this->db->get()->result_array();
-		$this->db->select("DATE_FORMAT(STR_TO_DATE(purchaseDate, '%d-%m-%Y'), '%Y-%m') AS bookingDate, SUM(bookingAmount) AS totalBookingAmount");
-		$this->db->from('bookings');
-		$this->db->where("STR_TO_DATE(purchaseDate, '%d-%m-%Y') BETWEEN STR_TO_DATE('$sixMonthsAgo', '%d-%m-%Y') AND STR_TO_DATE('$currentDate', '%d-%m-%Y')");
-		$this->db->order_by('bookingDate', 'ASC');
-		$this->db->group_by("bookingDate");
-		$result = $this->db->get()->result_array();
-		$mergedResult = array_merge_recursive($monthList, $result);
-		return $mergedResult;
-	}
-	public function chart1InstallAmt(){
-		$currentDate = date('d-m-Y');
-		$sixMonthsAgo = date('d-m-Y', strtotime('-6 months', strtotime($currentDate)));
-		$this->db->select("DATE_FORMAT(date, '%Y-%m') AS month", false);
-		$this->db->from("(SELECT ADDDATE('{$sixMonthsAgo}', INTERVAL @i:=@i+1 MONTH) as date
-						FROM information_schema.columns,
-							(SELECT @i:=0) tmp
-						WHERE @i < DATEDIFF('{$currentDate}', '{$sixMonthsAgo}') ) months");
-		$monthList = $this->db->get()->result_array();
-		$this->db->select("DATE_FORMAT(STR_TO_DATE(installReceivedDate, '%d-%m-%Y'), '%Y-%m') AS installmentDate, SUM(installAmount) AS totalInstallAmount");
-		$this->db->from('installments');
-		$this->db->where("STR_TO_DATE(installReceivedDate, '%d-%m-%Y') BETWEEN STR_TO_DATE('$sixMonthsAgo', '%d-%m-%Y') AND STR_TO_DATE('$currentDate', '%d-%m-%Y')");
-		$this->db->order_by('installReceivedDate', 'ASC');
-		$this->db->group_by("installReceivedDate");
-		$result = $this->db->get()->result_array();
-		$mergedResult = array_merge_recursive($monthList, $result);
-		return $mergedResult;
+	public function update_project($id, $data){
+		$basePrice = $data['projBasePrice'];
+		$this->db->trans_start();
+		$this->db->where('projectId', $id);
+		$this->db->update('projects', $data);
+		if($this->db->trans_status() === false){
+			$this->db->trans_rollback();
+			return false;
+		}
+		$types = $this->db->get_where('types', array('projectId' => $id))->result();
+		foreach ($types as $type) {
+			$discount = $type->discount;
+			$typeId = $type->typeId;
+			$typeSize = $type->marlaSize;
+			$percent = $discount / 100;
+			$finalPrice = ($basePrice - ($percent * $basePrice)) * $typeSize;
+			$this->db->where('typeId', $typeId);
+			$this->db->update('types', array('totalPrice' => $finalPrice));
+		}
+		$this->db->trans_complete();
+		return $this->db->trans_status();
 	}
 }

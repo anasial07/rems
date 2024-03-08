@@ -263,8 +263,9 @@
         var projId = $('#projID').val();
         var typeSize = $('#typeSize').val();
         var discount = $('#typeDiscount').val();
-        if(discount==""){ discount =0; }
-        if(typeSize != "" && projId != "Select Project"){
+        if(discount==""){ discount=0; }
+        if(typeSize==""){ typeSize=0; }
+        if(projId != "Select Project"){
             $.ajax({
                 url: "<?php echo base_url('dashboard/projectDetail/'); ?>" + projId,
                 method: 'POST',

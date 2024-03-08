@@ -21,13 +21,6 @@ class Dashboard extends CI_Controller {
 		$data['totalTeams'] = $this->dashboard_model->totalTeams();
 		$data['bookingAmount'] = $this->dashboard_model->totalBookingAmount();
 		$data['installAmount'] = $this->dashboard_model->totalInstallmentAmount();
-
-		// -----------------------------------------------------------------------------------
-        $data['chart1Months'] = $this->dashboard_model->chart1Months();
-        $data['chart1BookingAmt'] = $this->dashboard_model->chart1BookingAmt();
-        $data['chart1InstallAmt'] = $this->dashboard_model->chart1InstallAmt();
-		// -----------------------------------------------------------------------------------
-
 		$this->load->view('components/template', $data);
 	}
 	public function provinces(){
@@ -187,7 +180,7 @@ class Dashboard extends CI_Controller {
 		echo json_encode($data);
 	}
 
-
+// ---------------------------Delete--------------------------------------
 	
 	public function deleteDesignation($id){	// Delete Designation
 		$data = $this->dashboard_model->deleteDesignation($id);
@@ -229,6 +222,17 @@ class Dashboard extends CI_Controller {
 		$data = $this->dashboard_model->deletePayPlan($id);
 		echo json_encode($data);
 	}
+	// ----------------------------Edit-----------------------------------
+
+	public function editProject($id){
+		$data['title'] = 'Dashboard | REMS';
+		$data['body'] = 'dashboard/edit/edit-project';
+		$data['cities'] = $this->dashboard_model->activeCities();
+		$data['projects'] = $this->dashboard_model->getProjects();
+		$data['projInfo'] = $this->dashboard_model->getProjects($id);
+		$this->load->view('components/template', $data);
+	}
+
 	// ------------------------ Insert Records ------------------------
 
 	public function addProvince(){	// Add Province
@@ -322,7 +326,7 @@ class Dashboard extends CI_Controller {
 			'mailAddress' => $this->input->post('mailAddress'),
 			'projAddress' => $this->input->post('projAddress'),
 			'projLogo' => $image,
-			'addedBy' => $this->session->userdata('userId')
+			'projAddedBy' => $this->session->userdata('userId')
 		);
 		$this->form_validation->set_rules('projCode', 'Project Code', 'required');
 		$this->form_validation->set_rules('projName', 'Project Name', 'required');
@@ -548,5 +552,38 @@ class Dashboard extends CI_Controller {
 		}else{
 			echo false;
 		}
+	}
+	public function updateProject(){
+		if(isset($_FILES['projLogo']['name'])){
+			$config = array(
+				'upload_path' => './uploads/letterHead/',
+				'allowed_types' => 'jpg|jpeg|png',
+				'encrypt_name' => false,
+				'file_name' => $this->input->post('projCode').'_'.time(),
+			);
+			$this->load->library('upload', $config);
+			if($this->upload->do_upload('projLogo')){
+				$data = $this->upload->data();
+				$image = $data['file_name'];
+				unlink('./uploads/letterHead/'.$this->input->post('oldProjLogo'));
+			}
+		}else{
+			$image = $this->input->post('oldProjLogo');
+		}
+		$id = $this->input->post('projId');
+		$data = array(
+			'projCode' => strtoupper($this->input->post('projCode')),
+			'projName' => $this->input->post('projName'),
+			'projLocation' => $this->input->post('projLocation'),
+			'projArea' => $this->input->post('projArea'),
+			'projBasePrice' => $this->input->post('projBasePrice'),
+			'webAddress' => $this->input->post('webAddress'),
+			'mailAddress' => $this->input->post('mailAddress'),
+			'projAddress' => $this->input->post('projAddress'),
+			'projLogo' => $image,
+			'updatedProj' => date('Y-m-d H:i:s')
+		);
+		$update=$this->dashboard_model->update_project($id, $data);
+		echo $update;
 	}
 }

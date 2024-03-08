@@ -53,7 +53,7 @@ class Agents extends CI_Controller {
         );
         $this->form_validation->set_rules('agentCode', 'Agent Code', 'required');
         $this->form_validation->set_rules('agentName', 'Agent Name', 'required');
-        $this->form_validation->set_rules('agentPhone', 'Agent Contact', 'required');
+        $this->form_validation->set_rules('agentPhone', 'Agent Contact', 'required|exact_length[12]|numeric');
         $this->form_validation->set_rules('designationId', 'Select Designation', 'required');
         $this->form_validation->set_rules('departId', 'Select Department', 'required');
         $this->form_validation->set_rules('locationId', 'Select City', 'required');

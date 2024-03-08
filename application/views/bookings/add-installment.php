@@ -37,7 +37,7 @@
                             <div class="form-group">
                             <label style="display: flex; justify-content: space-between; align-items: center;">Enter Customer CNIC<span onclick="changeField('1')" style="text-align: right; cursor:pointer;" class="text-primary">Search by name</span></label>
                                 <div class="input-groupicon">
-                                    <input id="customerCNIC" oninput="validateNmbr(event)" type="text" placeholder="without (-) dashes">
+                                    <input maxlength="13" id="customerCNIC" oninput="validateNmbr(event)" type="text" placeholder="without (-) dashes">
                                 </div>
                             </div>
                         </div>
