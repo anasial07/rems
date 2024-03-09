@@ -114,6 +114,14 @@ class Dashboard_model extends CI_Model{
 			return false;
 		}
 	}
+	public function create_logs($data){
+		$this->db->insert('applicationLogs', $data);
+		if($this->db->affected_rows() > 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
 	// ---------------------------- Delete Queries ------------------------------------
 
 	public function deleteDesignation($id){
@@ -275,6 +283,13 @@ class Dashboard_model extends CI_Model{
 		$this->db->order_by('subCatId', 'DESC');
 		return $this->db->get()->result();
 	}
+	public function projSubCats($id){
+		$this->db->select('*');
+		$this->db->from('sub_categories');
+		$this->db->where(array('catId' => $id, 'subCatStatus' => 1));
+		$this->db->order_by('subCatId', 'DESC');
+		return $this->db->get()->result();
+	}
 	public function activeTypes($id){
 		$this->db->select('*');
 		$this->db->from('types');
@@ -355,6 +370,16 @@ class Dashboard_model extends CI_Model{
 		$this->db->select('password')->from('users')->where(array('password' => $password, 'userId' => $userID));
 		return $this->db->get()->row();
 	}
+	public function getLogs(){
+		$this->db->select('*');
+		$this->db->from('applicationlogs');
+		$this->db->join('users', 'applicationlogs.logAddedBy = users.userId', 'left');
+		$this->db->order_by('logId', 'DESC');
+		return $this->db->get()->result();
+	}
+
+	// -------------------------------Update--------------------------------
+
 	public function update_password($data){
 		$userID = $this->session->userdata('userId');
 		$this->db->where('userId', $userID);

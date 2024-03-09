@@ -119,6 +119,12 @@ class Dashboard extends CI_Controller {
 		$data['departments'] = $this->dashboard_model->activeDepart();
 		$this->load->view('components/template', $data);
 	}
+	public function logActivity(){
+		$data['title'] = 'Dashboard | REMS';
+		$data['body'] = 'dashboard/view-logs';
+		$data['allLogs'] = $this->dashboard_model->getLogs();
+		$this->load->view('components/template', $data);
+	}
 	public function projectDetail($progId){	// Get Project Full Details (View in Model)
 		$data = $this->dashboard_model->getProjects($progId);
 		echo json_encode($data);
@@ -532,6 +538,9 @@ class Dashboard extends CI_Controller {
 			}
 		}
 	}
+
+	// -------------------------Update-------------------------------------
+
 	public function updateProfile(){	// Update Profile
 		$oldPassword = sha1($this->input->post('oldPass'));
 		$this->form_validation->set_rules('oldPass', 'Enter Old Password', 'required');
@@ -553,7 +562,7 @@ class Dashboard extends CI_Controller {
 			echo false;
 		}
 	}
-	public function updateProject(){
+	public function updateProject(){	// Update Project Info
 		if(isset($_FILES['projLogo']['name'])){
 			$config = array(
 				'upload_path' => './uploads/letterHead/',
@@ -571,19 +580,35 @@ class Dashboard extends CI_Controller {
 			$image = $this->input->post('oldProjLogo');
 		}
 		$id = $this->input->post('projId');
+		$projArea=$this->input->post('projArea');
+		$oldBasePrice=$this->input->post('oldBasePrice');
+		$projBasePrice=$this->input->post('projBasePrice');
 		$data = array(
 			'projCode' => strtoupper($this->input->post('projCode')),
 			'projName' => $this->input->post('projName'),
 			'projLocation' => $this->input->post('projLocation'),
-			'projArea' => $this->input->post('projArea'),
-			'projBasePrice' => $this->input->post('projBasePrice'),
+			'projArea' => $projArea,
+			'projBasePrice' => $projBasePrice,
 			'webAddress' => $this->input->post('webAddress'),
 			'mailAddress' => $this->input->post('mailAddress'),
 			'projAddress' => $this->input->post('projAddress'),
 			'projLogo' => $image,
 			'updatedProj' => date('Y-m-d H:i:s')
 		);
-		$update=$this->dashboard_model->update_project($id, $data);
-		echo $update;
+		if($this->dashboard_model->update_project($id, $data)){
+			$logData = array(
+				'Price before update' => number_format($oldBasePrice),
+				'Base Price' => number_format($projBasePrice)
+			);
+			$logs = array(
+				'logCategory' => 'project',
+				'logData' => json_encode($logData),
+				'logAddedBy' => $this->session->userdata('userId')
+			);
+			$this->dashboard_model->create_logs($logs);
+			echo true;
+		}else{
+			echo false;
+		}
 	}
 }

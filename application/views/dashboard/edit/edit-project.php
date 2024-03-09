@@ -45,6 +45,7 @@
                                 <label>Base Price</label>
                                 <div class="input-groupicon">
                                     <input oninput="validateNmbr(event)" id="basePrice" type="text" placeholder="0.0" value="<?= $projInfo[0]->projBasePrice; ?>">
+                                    <input id="oldBasePrice" type="hidden" value="<?= $projInfo[0]->projBasePrice; ?>">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/rs.png'); ?>" alt="img" width="21">
                                     </div>
@@ -153,6 +154,7 @@
         var projectCity = $('#projectCity').val();
         var projectArea = $('#projectArea').val();
         var basePrice = $('#basePrice').val();
+        var oldBasePrice = $('#oldBasePrice').val();
         var webAddress = $('#webAddress').val();
         var mailAddress = $('#mailAddress').val();
         var projAddress = $('#projAddress').val();
@@ -182,6 +184,7 @@
                         formData.append('projName', projectName);
                         formData.append('projLocation', projectCity);
                         formData.append('projArea', projectArea);
+                        formData.append('oldBasePrice', oldBasePrice);
                         formData.append('projBasePrice', basePrice);
                         formData.append('webAddress', webAddress);
                         formData.append('mailAddress', mailAddress);

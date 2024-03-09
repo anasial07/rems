@@ -26,7 +26,9 @@
 
             <script src="https://lipis.github.io/bootstrap-sweetalert/dist/sweetalert.js"></script>
             <link rel="stylesheet" href="https://lipis.github.io/bootstrap-sweetalert/dist/sweetalert.css">
-
+            <style>
+                .cursor{ cursor: pointer; }
+            </style>
         </head>
     <body>
         <!-- <div id="global-loader">
@@ -81,6 +83,7 @@
                         <a href="javascript:void(0);" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
                             <img src="<?= base_url('assets/img/icons/notification-bing.svg'); ?>" alt="img"> <span class="badge rounded-pill"><?= $notiBook; ?></span>
                         </a>
+                        <?php if($notiBook>0){ ?>
                         <div class="dropdown-menu notifications">
                         <div class="topnav-dropdown-header">
                             <span class="notification-title">Today's booking notifications</span>
@@ -96,13 +99,13 @@
                                     foreach($todayBookings as $todayNoti):
                                 ?>
                                 <li class="notification-message">
-                                    <a>
+                                    <a href="<?= base_url('booking/bookingDetail/').base_convert($todayNoti->bookingId, 10, 36); ?>">
                                         <div class="media d-flex">
                                             <span class="avatar flex-shrink-0">
                                                 <img class="mt-2" src="<?= base_url('assets/img/AH.png'); ?>">
                                             </span>
                                             <div class="media-body flex-grow-1">
-                                                <p class="noti-details"><span class="noti-title"><?= $todayNoti->userName; ?> has added a new booking with the membership# </span> <label class="text-danger"><?= $todayNoti->membershipNo; ?></label></p>
+                                                <p class="noti-details"><span class="noti-title"><?= $todayNoti->userName; ?> has added a new booking with the membership# </span> <label class="text-danger cursor"><?= $todayNoti->membershipNo; ?></label></p>
                                                 <p class="noti-time"><span class="notification-time"><?= date('g:i:s A',strtotime($todayNoti->createdBooking)); ?></span></p>
                                             </div>
                                         </div>
@@ -111,10 +114,14 @@
                                 <?php endforeach; ?>
                             </ul>
                         </div>
+                        <div class="topnav-dropdown-footer">
+                            <a href="<?= base_url('booking'); ?>">View all Bookings</a>
+                        </div>
+                        <?php } ?>
                     </li>
                     <li class="nav-item dropdown has-arrow main-drop">
                         <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
-                            <span class="user-img"><img src="<?= base_url('assets/img/AH.png'); ?>" alt="">
+                            <span class="user-img"><img src="<?= base_url('assets/img/favicon.png'); ?>" alt="">
                             <span class="status online"></span></span>
                         </a>
                         <div class="dropdown-menu menu-drop-user">
@@ -122,6 +129,7 @@
                                 <hr class="m-0">
                                 <a class="dropdown-item" href="<?= base_url('dashboard/myProfile'); ?>"> <i class="me-2" data-feather="user"></i> My Profile</a>
                                 <hr class="m-0">
+                                <a class="dropdown-item" href="<?= base_url('dashboard/logActivity'); ?>"><i class="me-2" data-feather="settings"></i>Log Activity</a>
                                 <a class="dropdown-item logout pb-0" href="<?= base_url('login/signout'); ?>"><img src="<?= base_url('assets/img/icons/log-out.svg'); ?>" class="me-2" alt="img">Logout</a>
                             </div>
                         </div>
@@ -131,6 +139,7 @@
                     <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                     <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item" href="<?= base_url('dashboard/myProfile'); ?>">My Profile</a>
+                        <a class="dropdown-item" href="<?= base_url('dashboard/logActivity'); ?>">Log Activity</a>
                         <a class="dropdown-item" href="<?= base_url('login/signout'); ?>">Logout</a>
                     </div>
                 </div>

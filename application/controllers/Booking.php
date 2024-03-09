@@ -136,6 +136,7 @@ class Booking extends CI_Controller {
 			'payPlanID' => $this->input->post('payPlanID'),
 			'bookingtypeDiscount' => $this->input->post('typeDiscount'),
 			'exCharges' => $exCharges,
+			'bokNetPrice' => $typeAmount,
 			'salePrice' => $salePrice,
 			'purchaseDate' => $this->input->post('purchaseDate'),
 			'bookFilerStatus' => $this->input->post('filerStatus'),
@@ -213,6 +214,24 @@ class Booking extends CI_Controller {
 		echo json_encode($data);
 	}
 
+	// -------------------------------  Update -------------------------------
+
+	public function updateBooking($id){
+		$bookingID=base_convert($id, 36, 10);
+		$data['title'] = 'Dashboard | REMS';
+		$data['body'] = 'bookings/edit/edit-booking';
+		$data['bookingInfo'] = $this->booking_model->getBookings($bookingID);
+		$data['projects'] = $this->dashboard_model->activeProjects();
+		$data['cities'] = $this->dashboard_model->activeCities();
+		$data['banks'] = $this->dashboard_model->activeBanks();
+		$data['categories'] = $this->dashboard_model->activeCategories($data['bookingInfo'][0]->projectId);
+		$data['subCategories'] = $this->dashboard_model->projSubCats($data['bookingInfo'][0]->catID);
+		$data['types'] = $this->dashboard_model->activeTypes($data['bookingInfo'][0]->subCatId);
+		$data['agents'] = $this->dashboard_model->cityAgents($data['bookingInfo'][0]->cityID);
+		$data['payPlans'] = $this->dashboard_model->getPayPlans($data['bookingInfo'][0]->projID);
+		$this->load->view('components/template', $data);
+	}
+
 	// ------------------------------- Generate PDF Files -------------------------------
 	public function generateBookingMemo($id){
 		$bookingID=base_convert($id, 36, 10);
@@ -272,8 +291,10 @@ class Booking extends CI_Controller {
 		$pdf->cell(160, 6, $info[0]->typeName, 0, 1, '');
 		$pdf->cell(38, 6, 'Property Type:', 0, 0, '');
 		$pdf->cell(160, 6, $info[0]->catName, 0, 1, '');
+		$pdf->cell(38, 6, 'Type Discount:', 0, 0, '');
+		$pdf->cell(160, 6, $info[0]->bookingtypeDiscount.'%', 0, 1, '');
 		$pdf->cell(38, 6, 'Net Price:', 0, 0, '');
-		$pdf->cell(160, 6, number_format($info[0]->totalPrice), 0, 1, '');
+		$pdf->cell(160, 6, number_format($info[0]->bokNetPrice), 0, 1, '');
 		$pdf->cell(38, 6, 'Special Discount:', 0, 0, '');
 		$pdf->cell(160, 6, $info[0]->sepDiscount.'%', 0, 1, '');
 		$pdf->cell(38, 6, 'Sale Price:', 0, 0, '');
@@ -289,10 +310,10 @@ class Booking extends CI_Controller {
 		($paidPercent >= 20) ? $other='Booking and Confirmation' : $other='Booking';
 
 		$pdf->cell(40, 6, number_format($totalPaid), 0, 0, '');
-        $pdf->SetFont('', 'I', 10);
+        $pdf->SetFont('', 'I', 11);
 		$pdf->cell(20, 6, substr($paidPercent, 0, 4).'%', 0, 0, 'C');
 		$pdf->cell(100, 6, '('.$other.')', 0, 1, '');
-        $pdf->SetFont('', '', 10);
+        $pdf->SetFont('', '', 11);
 
 		function numberToWords($number) {
 			$words=array('Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eeight', 'Nine');
@@ -890,7 +911,7 @@ class Booking extends CI_Controller {
 		$pdf->Ln(3);
 
 		$pdf->Cell(40, 7, 'Land Price');
-		$pdf->Cell(53, 7, number_format($info[0]->totalPrice), 'B');
+		$pdf->Cell(53, 7, number_format($info[0]->bokNetPrice), 'B');
 		$pdf->Cell(10, 7, '');
 		$pdf->Cell(40, 7, 'Special Discount');
 		$pdf->Cell(53, 7, $info[0]->sepDiscount.'%', 'B', 1);
@@ -1097,8 +1118,8 @@ class Booking extends CI_Controller {
 		$pdf->Cell(220, 6, $info[0]->projName, 0, 0, '', true);
 		$pdf->Cell(35, 6, 'Dimension', 0, 0, '', true);
 		$pdf->Cell(43, 6, $info[0]->dimenssion, 0, 1, '', true);
-		$pdf->Cell(40, 6, 'Type Discount', 0, 0, '', true);
-		$pdf->Cell(220, 6, $info[0]->bookingtypeDiscount.'%', 0, 0, '', true);
+		$pdf->Cell(40, 6, 'Net Price', 0, 0, '', true);
+		$pdf->Cell(220, 6, number_format($info[0]->bokNetPrice), 0, 0, '', true);
 		$pdf->Cell(35, 6, 'Payment Mode', 0, 0, '', true);
 		$pdf->Cell(43, 6, $info[0]->bookingMode, 0, 1, '', true);
         $pdf->SetFont('', '', 12);
@@ -1392,7 +1413,7 @@ class Booking extends CI_Controller {
 		$pdf->Cell(40, 5, 'Member Name:');
 		$pdf->Cell(100, 5, $pre.$info[0]->custmName);
 		$pdf->Cell(28, 5, 'Net Price:');
-		$pdf->Cell(28, 5, number_format($info[0]->totalPrice), 0, 1, 'R');
+		$pdf->Cell(28, 5, number_format($info[0]->bokNetPrice), 0, 1, 'R');
 		
 		$pdf->Cell(40, 5, "Father's Name:");
 		$pdf->Cell(100, 5, $info[0]->fatherName);

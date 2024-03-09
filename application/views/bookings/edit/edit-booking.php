@@ -3,10 +3,14 @@
         <div class="col">
             <div class="page-header">
                 <div class="page-title">
-                    <h4>Add New Booking</h4>
-                    <h6>Booking Just a Click Away</h6>
+                    <h4>Edit Booking - <span class="text-primary"><?= $bookingInfo[0]->membershipNo; ?></span></h4>
+                    <h6>Modify Your Booking</h6>
                 </div>
             </div>
+        </div>
+        <div class="col text-end">
+            Booking Date: <?= date('d M, Y l',strtotime($bookingInfo[0]->purchaseDate)); ?><br>
+            Booked By: <span class="text-danger"><?= $bookingInfo[0]->empName; ?></span>
         </div>
     </div>
     <div class="row">
@@ -20,9 +24,9 @@
                                 <input type="hidden" id="projectCode">
                                 <input type="hidden" id="projectBasePrice">
                                 <select id="projID" class="form-control">
-                                    <option selected disabled>Select Project</option>
+                                    <option disabled>Select Project</option>
                                     <?php foreach($projects as $project): ?>
-                                        <option value="<?= $project->projectId; ?>"><?= $project->projName; ?></option>
+                                        <option <?= ($project->projectId==$bookingInfo[0]->projID) ? 'selected' : ''; ?> value="<?= $project->projectId; ?>"><?= $project->projName; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -31,7 +35,10 @@
                             <div class="form-group">
                                 <label>Select Category</label>
                                 <select id="catID" class="form-control">
-                                    <option selected disabled>Select Category</option>
+                                    <option disabled>Select Category</option>
+                                    <?php foreach($categories as $cat): ?>
+                                        <option <?= ($cat->catId==$bookingInfo[0]->catId) ? 'selected' : ''; ?> value="<?= $cat->catId; ?>"><?= $cat->catName; ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
@@ -39,7 +46,10 @@
                             <div class="form-group">
                                 <label>Select Sub-Category</label>
                                 <select id="subCatID" class="form-control">
-                                    <option selected disabled>Select Sub-Category</option>
+                                    <option disabled>Select Sub-Category</option>
+                                    <?php foreach($subCategories as $subCat): ?>
+                                        <option <?= ($subCat->subCatId==$bookingInfo[0]->subCatID) ? 'selected' : ''; ?> value="<?= $subCat->subCatId; ?>"><?= $subCat->subCatName; ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
@@ -50,7 +60,10 @@
                                 <input type="hidden" id="typeDiscount">
                                 <label>Select Type</label>
                                 <select id="typeID" class="form-control">
-                                    <option selected disabled>Select Type</option>
+                                    <option disabled>Select Type</option>
+                                    <?php foreach($types as $type): ?>
+                                        <option <?= ($type->typeId==$bookingInfo[0]->typeID) ? 'selected' : ''; ?> value="<?= $type->typeId; ?>"><?= $type->typeName; ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
@@ -59,7 +72,7 @@
                                 <input type="hidden" id="customerID">
                                 <label>Customer CNIC</label>
                                 <div class="input-groupicon">
-                                    <input maxlength="13" oninput="validateNmbr(event)" id="custCNIC" type="text" placeholder="without (-) dashes">
+                                    <input maxlength="13" value="<?= $bookingInfo[0]->custmCNIC; ?>" oninput="validateNmbr(event)" id="custCNIC" type="text" placeholder="without (-) dashes">
                                 </div>
                             </div>
                         </div>
@@ -67,9 +80,9 @@
                             <div class="form-group">
                                 <label>Select City</label>
                                 <select id="cityID" class="form-control">
-                                    <option selected disabled>Select City</option>
+                                    <option disabled>Select City</option>
                                     <?php foreach($cities as $city): ?>
-                                        <option value="<?= $city->locationId; ?>"><?= $city->locName; ?></option>
+                                        <option <?= ($city->locationId==$bookingInfo[0]->cityID) ? 'selected' : ''; ?> value="<?= $city->locationId; ?>"><?= $city->locName; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -78,7 +91,10 @@
                             <div class="form-group">
                                 <label>Select Agent</label>
                                 <select id="agentID" class="form-control">
-                                    <option selected disabled>Select Agent</option>
+                                    <option disabled>Select Agent</option>
+                                    <?php foreach($agents as $agent): ?>
+                                        <option <?= ($agent->agentId==$bookingInfo[0]->agentID) ? 'selected' : ''; ?> value="<?= $agent->agentId; ?>"><?= $agent->agentName; ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
@@ -86,7 +102,7 @@
                             <div class="form-group">
                                 <label>Special Discount</label>
                                 <div class="input-groupicon">
-                                    <input oninput="validateDecimal(event)" id="sepDiscount" type="text" placeholder="0.0">
+                                    <input value="<?= $bookingInfo[0]->sepDiscount; ?>" oninput="validateDecimal(event)" id="sepDiscount" type="text" placeholder="0.0">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/percent.png'); ?>" alt="img" width="18">
                                     </div>
@@ -97,7 +113,7 @@
                             <div class="form-group">
                                 <label>Amount Paid/Down Payment</label>
                                 <div class="input-groupicon">
-                                    <input oninput="validateNmbr(event)" id="paidAmount" type="text" placeholder="0.0">
+                                    <input value="<?= $bookingInfo[0]->bookingAmount; ?>" oninput="validateNmbr(event)" id="paidAmount" type="text" placeholder="0.0">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/rs.png'); ?>" alt="img" width="22">
                                     </div>
@@ -111,7 +127,7 @@
                                 <select id="paymentMode" class="form-control">
                                     <option selected disabled>Payment Mode</option>
                                     <?php foreach ($paymentMode as $payMode): ?>
-                                    <option value="<?= $payMode; ?>"><?= $payMode; ?></option>
+                                    <option <?= ($payMode==$bookingInfo[0]->bookingMode) ? 'selected' : ''; ?> value="<?= $payMode; ?>"><?= $payMode; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -122,7 +138,7 @@
                             <div class="form-group">
                                 <label>Reference no</label>
                                 <div class="input-groupicon">
-                                    <input oninput="validateNmbr(event)" id="referenceNo" type="text" placeholder="Reference no">
+                                    <input value="<?= $bookingInfo[0]->bookingReferenceNo; ?>" oninput="validateNmbr(event)" id="referenceNo" type="text" placeholder="Reference no">
                                 </div>
                             </div>
                         </div>
@@ -132,7 +148,7 @@
                                 <select id="bank_name" class="form-control">
                                     <option selected disabled>Select Bank</option>
                                     <?php foreach($banks as $bank): ?>
-                                        <option value="<?= $bank->bankId; ?>"><?= $bank->bankName; ?></option>
+                                        <option <?= ($bank->bankId==$bookingInfo[0]->bookBankId) ? 'selected' : ''; ?> value="<?= $bank->bankId; ?>"><?= $bank->bankName; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -149,9 +165,9 @@
                             <div class="form-group">
                                 <label>Received In</label>
                                 <select id="receivedIn" class="form-control">
-                                    <option selected disabled>Select Location</option>
+                                    <option disabled>Select Location</option>
                                     <?php foreach($cities as $city): ?>
-                                        <option value="<?= $city->locationId; ?>"><?= $city->locName; ?></option>
+                                        <option <?= ($city->locationId==$bookingInfo[0]->bookReceivedIn) ? 'selected' : ''; ?> value="<?= $city->locationId; ?>"><?= $city->locName; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -160,7 +176,10 @@
                             <div class="form-group">
                                 <label>Select Payment Plan</label>
                                 <select id="payPlanID" class="form-control">
-                                    <option selected disabled>Select Payment Plan</option>
+                                    <option disabled>Select Payment Plan</option>
+                                    <?php foreach($payPlans as $payPlan): ?>
+                                        <option <?= ($payPlan->payPlanId==$bookingInfo[0]->payPlanID) ? 'selected' : ''; ?> value="<?= $payPlan->payPlanId; ?>"><?= $payPlan->planYears.' Year &emsp;(' .$payPlan->downPayment.'% - ' .$payPlan->confirmPay.'% - ' .$payPlan->semiAnnual.'% - ' .$payPlan->possession.'%)' ; ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
@@ -168,7 +187,7 @@
                             <div class="form-group">
                                 <label>Extra Land Charges</label>
                                 <div class="input-groupicon">
-                                    <input oninput="validateNmbr(event)" id="exCharges" type="text" placeholder="0.0">
+                                    <input value="<?= $bookingInfo[0]->exCharges; ?>" oninput="validateNmbr(event)" id="exCharges" type="text" placeholder="0.0">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/rs.png'); ?>" alt="img" width="22">
                                     </div>
@@ -179,7 +198,7 @@
                             <div class="form-group">
                                 <label>Purchase Date</label>
                                 <div class="input-groupicon">
-                                    <input oninput="validateDate(event)" id="purchaseDate" type="text" placeholder="DD-MM-YYYY" class="datetimepicker">
+                                    <input value="<?= $bookingInfo[0]->purchaseDate; ?>" oninput="validateDate(event)" id="purchaseDate" type="text" placeholder="DD-MM-YYYY" class="datetimepicker">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/calendar.png'); ?>" alt="img" width="20">
                                     </div>
@@ -190,8 +209,8 @@
                             <div class="form-group">
                                 <label>Filer Status</label>
                                 <select id="filerStatus" class="form-control">
-                                    <option value="Inactive">Inactive</option>
-                                    <option value="Active">Active</option>
+                                    <option <?= ('Inactive'==$bookingInfo[0]->bookFilerStatus) ? 'selected' : ''; ?> value="Inactive">Inactive</option>
+                                    <option <?= ('Active'==$bookingInfo[0]->bookFilerStatus) ? 'selected' : ''; ?> value="Active">Active</option>
                                 </select>
                             </div>
                         </div>
@@ -199,30 +218,31 @@
                             <div class="form-group">
                                 <label>Tax Percentage</label>
                                 <div class="input-groupicon">
-                                    <input oninput="validateDecimal(event)" id="filerPercent" type="text" placeholder="0.0">
+                                    <input value="<?= $bookingInfo[0]->bookFilerPercent; ?>" oninput="validateDecimal(event)" id="filerPercent" type="text" placeholder="0.0">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/percent.png'); ?>" alt="img" width="18">
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <?php $bokFeatures=explode(",",$bookingInfo[0]->features); ?>
                         <div class="col-sm-12 col-lg-6">
                             <label>Features</label>
                             <div class="row mt-3">
                                 <div class="col-4">
-                                    <input id="cornerFeature" value="Corner" name="feature-charges[]" type="checkbox">
+                                    <input <?php if(in_array("Corner", $bokFeatures)){ echo "checked"; } ?> id="cornerFeature" value="Corner" name="feature-charges[]" type="checkbox">
                                     <label for="cornerFeature">
                                         <span class="checkmarks"></span>Corner
                                     </label>
                                 </div>
                                 <div class="col-4">
-                                    <input id="boulevardFeature" value="Boulevard" name="feature-charges[]" type="checkbox">
+                                    <input <?php if(in_array("Boulevard", $bokFeatures)){ echo "checked"; } ?> id="boulevardFeature" value="Boulevard" name="feature-charges[]" type="checkbox">
                                     <label for="boulevardFeature">
                                         <span class="checkmarks"></span>Boulevard
                                     </label>
                                 </div>
                                 <div class="col">
-                                    <input id="parkFacingFeature" value="Park Facing" name="feature-charges[]" type="checkbox">
+                                    <input <?php if(in_array("Park Facing", $bokFeatures)){ echo "checked"; } ?> id="parkFacingFeature" value="Park Facing" name="feature-charges[]" type="checkbox">
                                     <label for="parkFacingFeature">
                                         <span class="checkmarks"></span>Park Facing
                                     </label>
@@ -250,15 +270,19 @@
                                 <ul>
                                     <li>
                                         <h4>Name</h4>
-                                        <h5 id="custmName">-</h5>
+                                        <h5 id="custmName"><?= $bookingInfo[0]->custmName; ?></h5>
                                     </li>
                                     <li>
                                         <h4>Employee</h4>
-                                        <h5 id="custmEmp">-</h5>
+                                        <h5 id="custmEmp">
+                                            <?= ($bookingInfo[0]->isEmployee==1) ? 'Employee' : 'Customer'; ?>
+                                        </h5>
                                     </li>
                                     <li>
                                         <h4>Status</h4>
-                                        <h5 id="custmStatus">-</h5>
+                                        <h5 id="custmStatus">
+                                            <?= ($bookingInfo[0]->custmStatus==1) ? 'Active' : 'Inactive'; ?>
+                                        </h5>
                                     </li>
                                 </ul>
                             </div>
@@ -269,27 +293,27 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="total-order" style="margin:0%!important;">
-                                <h6 class="text-muted fw-bold text-center mb-2 showPlaName"></h6>
+                                <h6 class="text-muted fw-bold text-center mb-2 showPlaName"><?= $bookingInfo[0]->planName; ?></h6>
                                 <ul>
                                     <li>
                                         <h4>Payment Plan</h4>
-                                        <h5><span class="showPayPlan">0</span> Yr(s)</h5>
+                                        <h5><span class="showPayPlan"><?= $bookingInfo[0]->planYears; ?></span> Yr(s)</h5>
                                     </li>
                                     <li>
                                         <h4>Down Payment</h4>
-                                        <h5><span class="showDownPay">0</span> &middot; %</h5>
+                                        <h5><span class="showDownPay"><?= $bookingInfo[0]->downPayment; ?></span> &middot; %</h5>
                                     </li>
                                     <li>
                                         <h4>Confirmation</h4>
-                                        <h5><span class="showConfirm">0</span> &middot; %</h5>
+                                        <h5><span class="showConfirm"><?= $bookingInfo[0]->confirmPay; ?></span> &middot; %</h5>
                                     </li>
                                     <li>
                                         <h4>Semi Annual</h4>
-                                        <h5><span class="showSemiAn">0</span> &middot; %</h5>
+                                        <h5><span class="showSemiAn"><?= $bookingInfo[0]->semiAnnual; ?></span> &middot; %</h5>
                                     </li>
                                     <li>
                                         <h4>Possession</h4>
-                                        <h5><span class="showPossession">0</span> &middot; %</h5>
+                                        <h5><span class="showPossession"><?= $bookingInfo[0]->possession; ?></span> &middot; %</h5>
                                     </li>
                                 </ul>
                             </div>
@@ -303,7 +327,7 @@
                                 <ul>
                                     <li>
                                         <h4>Features</h4>
-                                        <h5><span class="showFeatures">0</span> &middot; %</h5>
+                                        <h5><span class="showFeatures"><?= $bookingInfo[0]->featuresPercent; ?></span> &middot; %</h5>
                                         <input type="hidden" id="featuresPercent">
                                     </li>
                                 </ul>

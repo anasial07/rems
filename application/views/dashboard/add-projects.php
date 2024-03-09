@@ -76,7 +76,7 @@
                             <div class="form-group">
                                 <label>Select Location</label>
                                 <select name="projLocation" id="projectCity" class="form-control projectData">
-                                    <option selected disabled>Select Location</option>
+                                    <option disabled>Select Location</option>
                                     <?php foreach($cities as $city): ?>
                                         <option value="<?= $city->locationId; ?>"><?= $city->locName; ?></option>
                                     <?php endforeach; ?>

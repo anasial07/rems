@@ -22,6 +22,7 @@ class Booking_model extends CI_Model{
 		$this->db->join('agents', 'bookings.agentID = agents.agentId', 'left');
 		$this->db->join('banks', 'bookings.bookBankId = banks.bankId', 'left');
 		$this->db->join('payment_plans', 'bookings.payPlanID = payment_plans.payPlanId', 'left');
+		$this->db->join('users', 'bookings.bookAddedBy = users.userId', 'left');
 		$this->db->order_by('bookings.bookingId', 'DESC');
 		$id && $this->db->where('bookings.bookingId', $id);
 		return $this->db->get()->result();

@@ -83,7 +83,7 @@
                             <ul class="dropdown-menu">
                                 <li><a href="<?= base_url('booking/bookingDetail/').base_convert($booking->bookingId, 10, 36); ?>" class="dropdown-item"><img src="<?= base_url('assets/img/icons/eye1.svg'); ?>" class="me-2" alt="img">View Booking</a></li>
                                 <?php if($role=='admin'): ?>
-                                    <li><a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Booking</a></li>
+                                    <li><a href="<?= base_url('booking/updateBooking/').base_convert($booking->bookingId, 10, 36); ?>" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Booking</a></li>
                                     <li class="delBooking" data-id="<?= $booking->bookingId; ?>">
                                         <a class="dropdown-item confirm-text"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img"><?= $val; ?> Booking</a>
                                     </li>
