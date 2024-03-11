@@ -30,6 +30,7 @@
                 .cursor{ cursor: pointer; }
             </style>
         </head>
+        <?php $role=$this->session->userdata('role'); ?>
     <body>
         <!-- <div id="global-loader">
             <div class="whirly-loader"> </div>
@@ -75,10 +76,14 @@
                     </li> -->
                     <li class="nav-item dropdown has-arrow flag-nav">
                         <a href="javascript:void(0);">
-                            Login as: <?= ucwords($this->session->userdata('role')); ?>
+                            Login as: <?= ucwords($role); ?>
                          </a>
                     </li>
-                    <?php $notiBook=$this->db->from('bookings')->get()->num_rows(); ?>
+                    <?php
+                    if($role='admin'){
+                        $today=date('d-m-Y');
+                        $notiBook=$this->db->from('bookings')->where('purchaseDate', $today)->get()->num_rows();
+                    ?>
                     <li class="nav-item dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
                             <img src="<?= base_url('assets/img/icons/notification-bing.svg'); ?>" alt="img"> <span class="badge rounded-pill"><?= $notiBook; ?></span>
@@ -91,10 +96,9 @@
                         <div class="noti-content">
                             <ul class="notification-list">
                                 <?php
-                                    $today=date('Y-m-d');
                                     $this->db->select('*')->from('bookings');
                                     $this->db->join('users', 'bookings.bookAddedBy = users.userId', 'left');
-                                    $this->db->where('DATE(bookings.createdBooking)', $today);
+                                    $this->db->where('purchaseDate', $today);
                                     $todayBookings = $this->db->get()->result();
                                     foreach($todayBookings as $todayNoti):
                                 ?>
@@ -105,7 +109,7 @@
                                                 <img class="mt-2" src="<?= base_url('assets/img/AH.png'); ?>">
                                             </span>
                                             <div class="media-body flex-grow-1">
-                                                <p class="noti-details"><span class="noti-title"><?= $todayNoti->userName; ?> has added a new booking with the membership# </span> <label class="text-danger cursor"><?= $todayNoti->membershipNo; ?></label></p>
+                                                <p class="noti-details"><span class="noti-title"><label class="text-primary"><?= $todayNoti->userName; ?></label> has added a new booking with the membership# </span> <label class="text-danger cursor"><?= $todayNoti->membershipNo; ?></label></p>
                                                 <p class="noti-time"><span class="notification-time"><?= date('g:i:s A',strtotime($todayNoti->createdBooking)); ?></span></p>
                                             </div>
                                         </div>
@@ -119,6 +123,7 @@
                         </div>
                         <?php } ?>
                     </li>
+                    <?php } ?>
                     <li class="nav-item dropdown has-arrow main-drop">
                         <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
                             <span class="user-img"><img src="<?= base_url('assets/img/favicon.png'); ?>" alt="">

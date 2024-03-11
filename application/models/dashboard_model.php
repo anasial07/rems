@@ -122,6 +122,14 @@ class Dashboard_model extends CI_Model{
 			return false;
 		}
 	}
+	public function createPermissions($data){
+		$this->db->insert('userpermissions', $data);
+		if($this->db->affected_rows() > 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
 	// ---------------------------- Delete Queries ------------------------------------
 
 	public function deleteDesignation($id){
@@ -200,7 +208,14 @@ class Dashboard_model extends CI_Model{
 		$this->db->join('locations', 'users.locationId = locations.locationId', 'left');
 		$this->db->join('departments', 'users.departmentId = departments.departId', 'left');
 		$id && $this->db->where(array('users.userId' => $id, 'users.role !=' => 'admin'));
+		// $id && $this->db->where(array('users.userId' => $id));
 		return $this->db->get()->result();
+	}
+	public function getPermissions($id){
+		$this->db->select('*');
+		$this->db->from('userpermissions');
+		$this->db->where('userId', $id);
+		return $this->db->get()->row();
 	}
 	public function getDesignations($id = null){
 		$this->db->select('*');
@@ -407,5 +422,10 @@ class Dashboard_model extends CI_Model{
 		}
 		$this->db->trans_complete();
 		return $this->db->trans_status();
+	}
+	public function updatePermissions($data, $id){
+		$this->db->where('userID', $id);
+		$this->db->update('userpermissions', $data);
+		return true;
 	}
 }

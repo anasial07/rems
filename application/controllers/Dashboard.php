@@ -125,6 +125,13 @@ class Dashboard extends CI_Controller {
 		$data['allLogs'] = $this->dashboard_model->getLogs();
 		$this->load->view('components/template', $data);
 	}
+	public function addPermissions($id){
+		$data['title'] = 'Dashboard | REMS';
+		$data['body'] = 'dashboard/create-permissions';
+		$data['users'] = $this->dashboard_model->getUser($id);
+		$data['permissions'] = $this->dashboard_model->getPermissions($id);
+		$this->load->view('components/template', $data);
+	}
 	public function projectDetail($progId){	// Get Project Full Details (View in Model)
 		$data = $this->dashboard_model->getProjects($progId);
 		echo json_encode($data);
@@ -538,7 +545,24 @@ class Dashboard extends CI_Controller {
 			}
 		}
 	}
-
+	public function savePermissions(){	// Create & Update Permissions
+		$allPermissions = !empty($this->input->post('permissions')) ? implode(',', $this->input->post('permissions')) : 0;
+		$data = array(
+			'userID' => $this->input->post('userID'),
+			'userPermissions' => $allPermissions
+		);
+		$exist=$this->input->post('isExistRow');
+		if($exist==0){
+			$reponse=$this->dashboard_model->createPermissions($data);
+		}else{
+			$reponse=$this->dashboard_model->updatePermissions($data, $data['userID']);
+		}
+		if($reponse==true){
+			echo true;
+		}else{
+			echo false;
+		}
+	}
 	// -------------------------Update-------------------------------------
 
 	public function updateProfile(){	// Update Profile
