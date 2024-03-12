@@ -399,7 +399,7 @@
                     <?php endif; ?>
 					<div class="input-field">
 						<i class="fas fa-envelope"></i>
-						<input autocomplete="off" name="useremail" type="text" placeholder="Official email" required>
+						<input name="useremail" type="text" placeholder="Official email" required>
 					</div>
 					<div class="input-field">
 						<i class="fas fa-lock"></i>

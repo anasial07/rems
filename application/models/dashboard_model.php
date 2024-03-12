@@ -207,8 +207,8 @@ class Dashboard_model extends CI_Model{
 		$this->db->from('users');
 		$this->db->join('locations', 'users.locationId = locations.locationId', 'left');
 		$this->db->join('departments', 'users.departmentId = departments.departId', 'left');
-		$id && $this->db->where(array('users.userId' => $id, 'users.role !=' => 'admin'));
-		// $id && $this->db->where(array('users.userId' => $id));
+		$this->db->where(array('users.role !=' => 'master'));
+		$id && $this->db->where(array('users.userId' => $id));
 		return $this->db->get()->result();
 	}
 	public function getPermissions($id){

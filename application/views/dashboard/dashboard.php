@@ -90,5 +90,13 @@
                 </div>
             </div>
         </div>
+        <div class="text-center mt-1 p-3 bg-white rounded" style="border:1px solid #EBEBEB;">
+            <div class="row">
+                <div class="col">
+                    <h4>Have a nice day! <span style="font-weight: bold; color:#FE9F43;"><?= $this->session->userdata('username'); ?></span></h4>
+                    <p>Welcome to REMS - Where Every Moment Shapes the future</p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

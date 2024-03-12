@@ -16,8 +16,8 @@ class Login extends CI_Controller {
 	public function signin(){
 		$useremail = $this->input->post('useremail');
       	$password = sha1($this->input->post('userPass'));
-		$this->form_validation->set_rules('useremail', 'Email', 'required');
-		$this->form_validation->set_rules('userPass', 'Password', 'required');
+		$this->form_validation->set_rules('useremail', 'Email', 'required|trim|valid_email|callback_check_email');
+		$this->form_validation->set_rules('userPass', 'Password', 'trim|required');
 		if($this->form_validation->run() == TRUE){
 			$user_signin = $this->login_model->signin($useremail, $password);
 			if($user_signin > '0'){
@@ -37,9 +37,15 @@ class Login extends CI_Controller {
 				return redirect('login', 'refresh');
 			}
 		}else{
+			$this->session->set_flashdata('failed', 'Please enter your official email address.');
 			return redirect('login', 'refresh');
 		}
 	}
+	public function check_email($email){
+        if(stristr($email, '@ahgroup-pk.com') !== false) return true;
+        if(stristr($email, '@s2smark.com') !== false) return true;
+        if(stristr($email, '@realtorspk.com') !== false) return true;
+    }
 	public function auth(){
 		if($this->session->userdata('email')){
 			$data['title'] = 'Authentication | REMS';

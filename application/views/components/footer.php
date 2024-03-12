@@ -177,6 +177,19 @@
                     }
                 });
             }
+            
+        window.setInterval('conn()', 5000);
+        status="ON";
+        function conn(){
+            if(!navigator.onLine){ 
+                var status="OFF"; 
+            }
+            if(status!="OFF"){ 
+                // swal.close(); 
+            }else{
+              swal("Connection Error", "Please stop working. You have lost your internet connection.", "error");
+            }
+        }
         </script>
         <script src="<?= base_url('assets/js/feather.min.js'); ?>"></script>
         <script src="<?= base_url('assets/js/jquery.slimscroll.min.js'); ?>"></script>

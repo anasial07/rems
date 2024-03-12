@@ -10,7 +10,7 @@
     <div class="content">
         <div class="page-header">
             <div class="page-title">
-                <h4>Create Permissions - <span class="text-primary"><?= $users[0]->empName; ?></span></h4>
+                <h4>Create Permissions - <span class="text-primary"><?= $users[0]->empName; ?></span> (<?= ucwords($users[0]->role); ?>)</h4>
                 <h6>Administration of Access Rights</h6>
                 <input type="hidden" value="<?= $users[0]->userId; ?>" id="thisUser">
             </div>
@@ -247,7 +247,7 @@
                                 </div>
                             </li>
                             <li>
-                                <h4><img width="15" src="<?= base_url('assets/img/icon/calendarReport.png'); ?>"> Installments</h4>
+                                <h4><img width="15" src="<?= base_url('assets/img/icon/calendarReport.png'); ?>"> Installment</h4>
                                 <div class="input-checkset">
                                     <ul>
                                         <li>
@@ -376,12 +376,18 @@
                                 </div>
                             </li>
                             <li>
-                                <h4><img width="15" src="<?= base_url('assets/img/icon/track.png'); ?>"> Log Activty</h4>
+                                <h4><img width="15" src="<?= base_url('assets/img/icon/track.png'); ?>"> Others</h4>
                                 <div class="input-checkset">
                                     <ul>
                                         <li>
-                                            <label class="inputcheck">View
+                                            <label class="inputcheck">Log Activity
                                                 <input <?= in_array("viewLogs", $myRights) ? 'checked' : ''; ?> type="checkbox" value="viewLogs" name="user-permission[]">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </li>
+                                        <li>
+                                            <label class="inputcheck">Notifications
+                                                <input <?= in_array("viewNotification", $myRights) ? 'checked' : ''; ?> type="checkbox" value="viewNotification" name="user-permission[]">
                                                 <span class="checkmark"></span>
                                             </label>
                                         </li>

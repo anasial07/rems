@@ -58,11 +58,7 @@
                     ?>
                         <tr>
                             <td><?= sprintf("%02d", $sr++); ?></td>
-                            <?php if($user->role=='master'){ ?>
-                                <td><?= $user->empName; ?></td>
-                            <?php }else{ ?>
-                                <td><a class="text-primary" href="<?= base_url('dashboard/addPermissions/').$user->userId; ?>"><?= $user->empName; ?></a></td>
-                            <?php } ?>
+                            <td><a class="text-primary" href="<?= base_url('dashboard/addPermissions/').$user->userId; ?>"><?= $user->empName; ?></a></td>
                             <td><?= $user->userName; ?></td>
                             <td><?= $user->userEmail; ?></td>
                             <td><?= $user->locName; ?></td>

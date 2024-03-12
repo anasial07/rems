@@ -39,7 +39,7 @@ class Agents extends CI_Controller {
 	public function saveAgent(){    // Add Agent
         $data = array(
             'agentCode' => $this->input->post('agentCode'),
-            'agentName' => ucwords($this->input->post('agentName')),
+            'agentName' => ucwords(strtolower($this->input->post('agentName'))),
             'agentPhone' => $this->input->post('agentPhone'),
             'agentEmail' => $this->input->post('agentEmail'),
             'designationId' => $this->input->post('designationId'),
@@ -51,13 +51,14 @@ class Agents extends CI_Controller {
             'managerId' => $this->input->post('empManger'),
             'addedBy' => $this->session->userdata('userId')
         );
-        $this->form_validation->set_rules('agentCode', 'Agent Code', 'required');
-        $this->form_validation->set_rules('agentName', 'Agent Name', 'required');
-        $this->form_validation->set_rules('agentPhone', 'Agent Contact', 'required|exact_length[12]|numeric');
-        $this->form_validation->set_rules('designationId', 'Select Designation', 'required');
-        $this->form_validation->set_rules('departId', 'Select Department', 'required');
-        $this->form_validation->set_rules('locationId', 'Select City', 'required');
-        $this->form_validation->set_rules('officeId', 'Select Office', 'required');
+        $this->form_validation->set_rules('agentCode', 'Agent Code', 'numeric');
+        $this->form_validation->set_rules('agentName', 'Agent Name', 'trim|required|alpha');
+        $this->form_validation->set_rules('agentEmail', 'Agent Email', 'trim|valid_email|');
+        $this->form_validation->set_rules('agentPhone', 'Agent Contact', 'trim|required|max_length[12]|numeric|integer');
+        $this->form_validation->set_rules('designationId', 'Select Designation', 'required|numeric');
+        $this->form_validation->set_rules('departId', 'Select Department', 'required|numeric');
+        $this->form_validation->set_rules('locationId', 'Select City', 'required|numeric');
+        $this->form_validation->set_rules('officeId', 'Select Office', 'required|numeric');
         $this->form_validation->set_rules('doj', 'Date of Joining', 'required');
         if($this->form_validation->run() == TRUE){
             if($this->agent_model->add_agent($data)){

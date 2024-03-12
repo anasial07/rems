@@ -159,7 +159,7 @@ class Booking extends CI_Controller {
 		$this->form_validation->set_rules('payPlanID', 'Select Payment Plan', 'required');
 		$this->form_validation->set_rules('purchaseDate', 'Enter Purchase Date', 'required');
 		if($payMode!='Cash'){
-			$this->form_validation->set_rules('referenceNo', 'Enter Reference No', 'required');
+			$this->form_validation->set_rules('referenceNo', 'Enter Reference No', 'required|numeric');
 			$this->form_validation->set_rules('bank_name', 'Select Bank', 'required');
 		}
 		if($this->form_validation->run() == TRUE){
@@ -198,7 +198,7 @@ class Booking extends CI_Controller {
 		$this->form_validation->set_rules('filerPercent', 'Enter Filer Percentage', 'required');
 		
 		if($payMode!='Cash'){
-			$this->form_validation->set_rules('refrncNo', 'Enter Reference No', 'required');
+			$this->form_validation->set_rules('refrncNo', 'Enter Reference No', 'required|numeric');
 			$this->form_validation->set_rules('bank_name', 'Select Bank', 'required');
 		}
 		if($this->form_validation->run() == TRUE){

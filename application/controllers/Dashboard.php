@@ -523,7 +523,7 @@ class Dashboard extends CI_Controller {
 	public function addUser(){	// Add New User
 		$data = array(
 			'empName' => ucfirst(strtolower($this->input->post('userFullName'))),
-			'userName' => $this->input->post('userName'),
+			'userName' => strtolower($this->input->post('userName')),
 			'userEmail' => $this->input->post('userEmailAddr'),
 			'password' => sha1($this->input->post('userPassword')),
 			'locationId' => $this->input->post('userCity'),
@@ -532,8 +532,8 @@ class Dashboard extends CI_Controller {
 		);
 		$this->form_validation->set_rules('userFullName', 'Enter Full Name', 'required');
 		$this->form_validation->set_rules('userName', 'Enter Username', 'required');
-		$this->form_validation->set_rules('userEmailAddr', 'User Email Address', 'required');
-		$this->form_validation->set_rules('userPassword', 'Set Password', 'required');
+		$this->form_validation->set_rules('userEmailAddr', 'User Email Address', 'trim|valid_email|required');
+		$this->form_validation->set_rules('userPassword', 'Set Password', 'trim|required');
 		$this->form_validation->set_rules('userCity', 'Select City', 'required');
 		$this->form_validation->set_rules('userDepart', 'Select Department', 'required');
 		$this->form_validation->set_rules('userRole', 'Select Role', 'required');
