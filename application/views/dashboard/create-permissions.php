@@ -399,7 +399,10 @@
                 </div>
             </div>
         </div>
-        <strong>Note:</strong> Please be aware that the assigned permissions are crafted to enrich user experience while upholding the integrity and security of our platform.
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Note:</strong> Please be aware that the assigned permissions are crafted to enrich user experience while upholding the integrity and security of our platform.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         <?php if($users[0]->userStatus==0){ ?>
         <div class="row">
             <div class="col-12 text-center">

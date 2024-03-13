@@ -6,8 +6,8 @@
                 <h6>Fill out the form</h6>
             </div>
             <div class="page-btn">
-                <a class="btn btn-submit me-2 addCustomer">Add Customer</a>
-                <a href="javascript:history.go(-1);" class="btn btn-cancel">Back</a>
+                <a class="btn btn-primary text-white me-2 addCustomer">Add Customer</a>
+                <a class="btn btn-danger me-2" data-bs-toggle="offcanvas" data-bs-target="#captureLivePic" aria-controls="offcanvasTop"><i class="fa fa-camera"></i></a>
             </div>
         </div>
         <div class="card">
@@ -161,6 +161,15 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+<div class="offcanvas offcanvas-end" tabindex="-1" id="captureLivePic" aria-labelledby="offcanvasTopLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Offcanvas top</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        
     </div>
 </div>
 <script>

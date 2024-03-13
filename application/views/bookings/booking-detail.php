@@ -1,6 +1,7 @@
 <style>
     .heading{ font-size:14px; color:#7367F0; font-weight:600; line-height: 35px; padding-left:2.5%!important; }
     .bookingTable tr td{ border:none!important; line-height:0.3; }
+    .custom-xl { height: 52%!important; }
 </style>
 <?php $role=$this->session->userdata('role'); ?>
 <div class="page-wrapper">
@@ -108,26 +109,15 @@
             <div class="row">
                 <div class="card-body p-0">
                     <div class="row my-3">
-                        <div class="col">
-                            <div class="search-set">
-                                <div class="search-path">
-                                    <a class="btn btn-filter" id="filter_search">
-                                        <img src="<?= base_url('assets/img/icons/filter.svg'); ?>" alt="img">
-                                        <span><img src="<?= base_url('assets/img/icons/closes.svg'); ?>" alt="img"></span>
-                                    </a>
-                                </div>
-                                <div class="search-input">
-                                    <a class="btn btn-searchset"><img src="<?= base_url('assets/img/icons/search-white.svg'); ?>" alt="img"></a>
-                                </div>
-                            </div>
+                        <div class="col py-2">
+                            <h6 data-bs-toggle="offcanvas" data-bs-target="#paySummary" aria-controls="offcanvasTop"><a>View Payment Summary</a></h6>
+                            <div class="search-input" style="display:none!important;"></div>
                         </div>
-                        <div class="col text-center mt-2">
-                            <h6 style="font-size:14px!important;"><?= ($info[0]->fileIssuanceDate=="") ? "The file has not been issued yet." : "The file was issued on <span class='text-danger'>".date('M d, Y',strtotime($info[0]->fileIssuanceDate))."</span> at <span class='text-danger'>".date('g:i:s A',strtotime($info[0]->fileIssuanceDate))."</span>"; ?></h6>
-                        </div>
-                        <div class="col text-end mt-2">
+                        <div class="col text-end">
                             <h6><a target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Print Account Statement" href="<?= base_url('booking/generateAccountStatement/').base_convert($info[0]->bookingId, 10, 36); ?>">
                                 Account Statement
                             </a></h6>
+                            <p style="font-size:14px!important;"><?= ($info[0]->fileIssuanceDate=="") ? "The file has not been issued yet." : "The file was issued on <span class='text-danger'>".date('M d, Y',strtotime($info[0]->fileIssuanceDate))."</span> at <span class='text-danger'>".date('g:i:s A',strtotime($info[0]->fileIssuanceDate))."</span>"; ?></p>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -240,6 +230,110 @@
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="offcanvas offcanvas-top custom-xl" tabindex="-1" id="paySummary" aria-labelledby="offcanvasTopLabel">
+    <div class="offcanvas-body mx-3">
+        <div class="card bg-light">
+            <div class="row py-2">
+                <div class="col text-center">
+                    <h4 style="font-weight:900; color:#8967F0;"><?= $info[0]->membershipNo; ?></h4>
+                    Membership#
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <table class="table bookingTable">
+                    <tr>
+                        <td colspan="2"><span class="pl-3" style="font-weight:900; color:#8967F0;">Payment Information</span></td>
+                    </tr>
+                    <tr>
+                        <td>Plan Price</td>
+                        <td><?= number_format($info[0]->bookingBasePrice*$info[0]->marlaSize); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Type Discount</td>
+                        <td>
+                            <?= $info[0]->bookingtypeDiscount; ?>% &middot;
+                            <span class="text-primary"><?= number_format(($info[0]->bookingBasePrice * $info[0]->marlaSize) * ($info[0]->bookingtypeDiscount/100)); ?></span>
+                            <span style="font-size:10px;">Rupees</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Net Price</td>
+                        <td><?= number_format($info[0]->bokNetPrice); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Per Marla Price</td>
+                        <td><?= number_format($info[0]->bokNetPrice/$info[0]->marlaSize); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Special Discount</td>
+                        <td>
+                            <?= $info[0]->sepDiscount; ?>% &middot; 
+                            <span class="text-primary"><?= number_format($info[0]->bokNetPrice * ($info[0]->sepDiscount/100)); ?></span>
+                            <span style="font-size:10px;">Rupees</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Extra Land Charges</td>
+                        <td><?= number_format($info[0]->exCharges); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Feature Charges <?= ($info[0]->featuresPercent==0) ? "<span class='text-primary' style='font-size:10px;'>(N/A)</span>" : $info[0]->features; ?></td>
+                        <td>
+                            <?= $info[0]->featuresPercent; ?>% &middot;
+                            <span class="text-primary"><?= number_format($info[0]->salePrice * ($info[0]->featuresPercent/100)); ?></span>
+                            <span style="font-size:10px;">Rupees</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold text-danger">Sale Price</td>
+                        <td class="fw-bold text-danger"><?= number_format($info[0]->salePrice); ?></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-4" style="border-left:1px solid #C6C7C2;">
+                <table class="table bookingTable">
+                    <tr>
+                        <td colspan="2"><span class="pl-3" style="font-weight:900; color:#8967F0;">Booking Information</span></td>
+                    </tr>
+                    <tr>
+                        <td>Receipt No</td>
+                        <td><?= $info[0]->projCode.'-'.$info[0]->bookingId; ?></td>
+                    </tr>
+                    <tr>
+                        <td>Booking Amount <span style="font-size:10px;">(Down Payment)</span></td>
+                        <td><?= number_format($info[0]->bookingAmount); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Payment Plan</td>
+                        <td><?= $info[0]->planYears; ?> Years <span class="text-primary" style="font-size:12px;">(<?= $info[0]->planYears*12; ?> mo*)</span></td>
+                    </tr>
+                    <tr>
+                        <td>Payment Mode</td>
+                        <td><?= $info[0]->bookingMode; ?></td>
+                    </tr>
+                    <tr>
+                        <td>Reference No</td>
+                        <td><?php echo ($info[0]->bookingReferenceNo == 0) ? "<span class='text-danger'>N/A</span>" : $info[0]->bookingReferenceNo; ?></td>
+                    </tr>
+                    <tr>
+                        <td>Bank Name</td>
+                        <td><?php echo ($info[0]->bankName == 0) ? "<span class='text-danger'>N/A</span>" : $info[0]->bankName; ?></td>
+                    </tr>
+                    <tr>
+                        <td>Received In</td>
+                        <td><?= $info[0]->locName; ?></td>
+                    </tr>
+                    <tr>
+                        <td>Booking Date</td>
+                        <td><?= date('d-m-Y l',strtotime($info[0]->purchaseDate)); ?></td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>

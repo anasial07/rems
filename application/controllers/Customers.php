@@ -73,15 +73,17 @@ class Customers extends CI_Controller {
 		$this->form_validation->set_rules('custCNIC', 'Customer CNIC', 'required|exact_length[13]|numeric');
 		$this->form_validation->set_rules('custName', 'Customer Name', 'required');
 		$this->form_validation->set_rules('custCity', 'Select City', 'required');
-		$this->form_validation->set_rules('custPrimary', 'Primary Phone', 'required|exact_length[13]|numeric');
+		$this->form_validation->set_rules('custPrimary', 'Primary Phone', 'required|max_length[13]|numeric');
 		$this->form_validation->set_rules('NOKcnic', 'NOK CNIC', 'exact_length[13]|numeric');
-		$this->form_validation->set_rules('NOKcontact', 'NOK Contact', 'exact_length[13]|numeric');
+		$this->form_validation->set_rules('NOKcontact', 'NOK Contact', 'max_length[13]|numeric');
 		if ($this->form_validation->run() == true) {
 			if ($this->customer_model->add_Customer($data)) {
 				echo true;
 			} else {
 				echo false;;
 			}
+		}else{
+			echo validation_errors();
 		}
 	}
 }
