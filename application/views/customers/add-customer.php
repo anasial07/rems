@@ -7,7 +7,7 @@
             </div>
             <div class="page-btn">
                 <a class="btn btn-primary text-white me-2 addCustomer">Add Customer</a>
-                <a class="btn btn-danger me-2" data-bs-toggle="offcanvas" data-bs-target="#captureLivePic" aria-controls="offcanvasTop"><i class="fa fa-camera"></i></a>
+                <a class="btn btn-danger me-2" data-bs-toggle="offcanvas" data-bs-target="#captureLivePic" aria-controls="offcanvasRight"><i class="fa fa-camera"></i></a>
             </div>
         </div>
         <div class="card">
@@ -58,14 +58,14 @@
                             </div>
                             <div class="col-lg-3 col-sm-12">
                                 <div class="form-group">
-                                    <label>Secondary Phone</label>
+                                    <label>Secondary</label>
                                     <input maxlength="13" oninput="validateNmbr(event)" id="custSecondary" name="custSecondary" type="text" placeholder="Optional">
                                 </div>
                             </div>
                             <div class="col-sm-12 col-lg-6">
                                 <div class="form-group">
                                     <label>Select Location</label>
-                                    <select id="custCity" name="custCity" class="form-control">
+                                    <select id="custCity" class="form-control">
                                         <option selected disabled>Select Location</option>
                                         <?php foreach($cities as $city): ?>
                                             <option value="<?= $city->locationId; ?>"><?= $city->locName; ?></option>
@@ -163,15 +163,128 @@
         </div>
     </div>
 </div>
-<div class="offcanvas offcanvas-end" tabindex="-1" id="captureLivePic" aria-labelledby="offcanvasTopLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title">Offcanvas top</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false"  tabindex="-1" id="captureLivePic" aria-labelledby="offcanvasTopLabel">
+    <div class="row mt-3">
+        <div class="col text-center">
+            <h4>Capture Image</h4>
+            <p>Here, you can capture the customer's live image.</p>
+        </div>
     </div>
-    <div class="offcanvas-body">
-        
+    <div class="offcanvas-body text-center">
+        <video id="video" autoplay style="border-radius:5px!important;"></video>
+        <style>
+            .bottom-buttons {
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              width: 100%;
+              text-align: center;
+              padding: 10px 0;
+            }
+            .bottom-buttons button {
+              margin: 0 10px;
+            }
+        </style>
+        <center id="ahImg">
+            <img width="100" src="<?= base_url('assets/img/favicon.png'); ?>">
+        </center>
+        <div class="bottom-buttons">
+            <p>Ensure that the image is clear and the customer's face is properly framed within the shot.</p>
+          <button class="btn btn-success" id="start-btn">Start Camera</button>
+          <button class="btn btn-danger" id="stop-btn">Stop Camera</button>
+          <button onclick="stopCamera()" class="btn btn-dark" type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close">Close</button>
+        </div>
+        <canvas id="canvas" style="display:none;"></canvas>
+        <a id="download-link" style="display: none;"></a>
+        <div class="row">
+            <div class="col mx-1">
+                <button class="btn btn-primary form-control" id="capture-btn">Capture Image</button> 
+            </div>
+        </div>
     </div>
 </div>
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const startBtn = document.getElementById('start-btn');
+    const stopBtn = document.getElementById('stop-btn');
+    const captureBtn = document.getElementById('capture-btn');
+    const downloadLink = document.getElementById('download-link');
+    const ahImg = document.getElementById('ahImg');
+    let stream;
+
+    // Initially hide capture button
+    captureBtn.style.display = 'none';
+
+    // Initialize camera and start streaming
+    async function startCamera() {
+        try {
+            const constraints = {
+                video: {
+                    width: { exact: Number(350) || undefined },
+                    height: { exact: Number(350) || undefined }
+                }
+            };
+            stream = await navigator.mediaDevices.getUserMedia(constraints);
+            video.srcObject = stream;
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            captureBtn.style.display = 'block';
+            ahImg.style.display = 'none';
+        } catch (err) {
+            console.error("Error accessing camera:", err);
+        }
+    }
+
+    // Stop camera streaming
+    function stopCamera() {
+        const tracks = stream.getTracks();
+        tracks.forEach(track => track.stop());
+        video.srcObject = null;
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+        captureBtn.style.display = 'none';
+            ahImg.style.display = 'block';
+    }
+
+    // Capture image from video stream
+    function captureImage() {
+        const context = canvas.getContext('2d');
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        // Create a temporary canvas with desired dimensions
+        const tempCanvas = document.createElement('canvas');
+        const tempContext = tempCanvas.getContext('2d');
+        const desiredWidth = 600; // Set desired width
+        const desiredHeight = 600; // Set desired height
+        tempCanvas.width = desiredWidth;
+        tempCanvas.height = desiredHeight;
+        tempContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, desiredWidth, desiredHeight);
+        
+        // Convert canvas to image data
+        const imageData = tempCanvas.toDataURL('image/png');
+
+        // Generate random filename
+        const filename = generateRandomFilename() + '.png';
+
+        // Create a link element to download the image
+        downloadLink.href = imageData;
+        downloadLink.download = filename;
+        
+        // Simulate click to trigger download
+        downloadLink.click();
+    }
+
+    // Generate a random filename
+    function generateRandomFilename() {
+        return Math.random().toString(36).substring(7);
+    }
+
+    // Event listeners for buttons
+    startBtn.addEventListener('click', startCamera);
+    stopBtn.addEventListener('click', stopCamera);
+    captureBtn.addEventListener('click', captureImage);
+</script>
 <script>
     $('.addCustomer').on('click', function () {
         var formData = new FormData();
@@ -199,12 +312,13 @@
             var defaultImageName = 'default.jpg';
             formData.append('custmPic', defaultImageName);
         }
-        if (formData.get('custCNIC') !== "" && formData.get('custName') !== "" && formData.get('custCity') != "Select Location" && formData.get('custPrimary') !== "") {
+        if (formData.get('custCNIC') !== "" && formData.get('custName') !== "" && formData.get('custCity') != "null" && formData.get('custPrimary') !== "") {
             swal({
                 title: "Are you sure?",
                 text: "You want to add the customer!",
                 type: "info",
                 showCancelButton: true,
+                showLoaderOnConfirm: true,
                 confirmButtonClass: "btn-success",
                 confirmButtonText: "Yes, add it!",
                 cancelButtonClass: "btn-primary",

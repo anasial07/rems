@@ -90,12 +90,15 @@ class Booking_model extends CI_Model{
 		$this->db->where('bookings.customerID', $id);
 		return $this->db->get()->result();
 	}
-	public function issueFile($id){
-		$issueDate=date("Y-m-d H:i:s");
+	public function issueFile($id, $issueDate){
 		return $this->db->query("UPDATE bookings SET fileIssuanceDate = '$issueDate' WHERE bookingId=$id");
 	}
 	public function deleteBooking($id){
 		$result = $this->db->query("UPDATE bookings SET `bookingStatus` = NOT `bookingStatus` WHERE bookingId=$id");
+		return $result ? true : false;
+	}
+	public function approveBooking($id){
+		$result = $this->db->query("UPDATE bookings SET `bookVerifyStatus` = NOT `bookVerifyStatus` WHERE bookingId=$id");
 		return $result ? true : false;
 	}
 	// ---------------------------- Insert Records ------------------------------------
@@ -124,8 +127,11 @@ class Booking_model extends CI_Model{
 			$row = $query->row();
 			$totalInstallAmount = $row->totalInstallAmount;
 			return $totalInstallAmount;
-		} else {
+		}else{
 			return 0;
 		}
 	}
+	public function count_all_installments($id){
+	return $this->db->from('installments')->where('bookingId', $id)->get()->num_rows();
+		}
 }

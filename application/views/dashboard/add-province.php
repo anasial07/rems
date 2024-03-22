@@ -2,7 +2,7 @@
     .product-details{ height:90px!important; cursor: pointer; }
     .product-details img{ width:38px!important; }
 </style>
-<?php $role=$this->session->userdata('role'); ?>
+<?php $rights=explode(',',$userPermissions); ?>
 <div class="page-wrapper px-4 mt-4">
     <div class="row">
         <div class="col">
@@ -73,10 +73,12 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-6 col-sm-6">
+                        <?php if(in_array('createGeolocation',$rights)): ?>
+                        <div class="col">
                             <a class="btn form-control btn-submit me-2" id="addProvince">Add Province</a>
                         </div>
-                        <div class="col-lg-6 col-sm-6">
+                        <?php endif; ?>
+                        <div class="col">
                             <a href="javascript:history.go(-1);" class="btn form-control btn-cancel">Back</a>
                         </div>
                     </div>
@@ -114,7 +116,7 @@
                             <th>Code</th>
                             <th>Province</th>
                             <th class="text-center">Status</th>
-                            <?php if($role=='admin'): ?>
+                            <?php if(in_array('editGeolocation', $rights) || in_array('deleteGeolocation', $rights)): ?>
                                 <th class="text-center">Action</th>
                             <?php endif; ?>
                         </tr>
@@ -125,10 +127,13 @@
                             foreach($provinces as $province):
                             $status=$province->provStatus;
                         ?>
-                        <tr>
+                        <tr <?php if($status==0){ ?> style="background:#F7E4E7;" <?php } ?>>
                             <td><?= sprintf("%02d", $sr++); ?></td>
                             <td><?= $province->provCode; ?></td>
-                            <td><?= $province->provName; ?></td>
+                            <td><?php
+                                echo $province->provName;
+                                if($status==0){ echo "<p class='text-muted' style='font-size:10px;'>Deleted</p>"; }
+                            ?></td>
                             <td class="text-center">
                                 <?php if($status==1){ ?>
                                     <span class="badges bg-lightgreen">Active</span>
@@ -136,11 +141,13 @@
                                     <span class="badges bg-lightred">Inactive</span>
                                 <?php } ?>
                             </td>
-                            <?php if($role=='admin'): ?>
+                            <?php if(in_array('editGeolocation', $rights) || in_array('deleteGeolocation', $rights)): ?>
                                 <td class="text-center">
+                                <?php if(in_array('editGeolocation', $rights)): ?>
                                     <a class="me-3 editProv" data-id="<?= $province->provinceId; ?>" data-bs-toggle="offcanvas" href="#editCanvas">
                                         <img src="<?= base_url('assets/img/icons/edit.svg'); ?>" alt="img">
                                     </a>
+                                <?php endif; if(in_array('deleteGeolocation', $rights)): ?>
                                     <a class="me-3 confirm-text delProv" data-id="<?= $province->provinceId; ?>">
                                         <?php if($status==1){ ?>
                                             <img src="<?= base_url('assets/img/icons/delete.svg'); ?>" alt="img">
@@ -148,6 +155,7 @@
                                             <img src="<?= base_url('assets/img/icon/recycle.png'); ?>" width="20">
                                         <?php } ?>
                                     </a>
+                                <?php endif; ?>
                                 </td>
                             <?php endif; ?>
                         </tr>
@@ -156,6 +164,8 @@
                 </table>
             </div>
         </div>
+    </div>
+</div>
     </div>
 </div>
 <script>
@@ -168,6 +178,7 @@
                 text: "You want to add the province!",
                 type: "info",
                 showCancelButton: true,
+                showLoaderOnConfirm: true,
                 confirmButtonClass: "btn-success",
                 confirmButtonText: "Yes, add it!",
                 cancelButtonClass: "btn-primary",
@@ -260,6 +271,7 @@
             text: "You want to change the status!",
             type: "info",
             showCancelButton: true,
+            showLoaderOnConfirm: true,
             confirmButtonClass: "btn-success",
             confirmButtonText: "Yes, change",
             cancelButtonClass: "btn-primary",

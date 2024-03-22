@@ -121,7 +121,7 @@
                         <input type="hidden" value="0" id="base_price">
                         <div class="col-sm-12 col-12">
                             <div class="form-group">
-                                <label>Discount Per Marla <span style="font-size:12px;" class="text-muted">(Optional)</span></label>
+                                <label>Discount Per Marla <span style="font-size:10px;" class="text-muted">(Optional)</span></label>
                                 <div class="input-groupicon">
                                     <input oninput="validateDecimal(event)" name="typeDiscount" id="typeDiscount" type="text" placeholder="0.0">
                                     <div class="addonset">
@@ -222,6 +222,7 @@
         </div>
     </div>
 </div>
+</div>
 <script>
     $('#projID').change(function(){
         var projID = $(this).val();
@@ -298,6 +299,7 @@
                 text: "You want to add the type!",
                 type: "info",
                 showCancelButton: true,
+                showLoaderOnConfirm: true,
                 confirmButtonClass: "btn-success",
                 confirmButtonText: "Yes, add it!",
                 cancelButtonClass: "btn-primary",
@@ -349,6 +351,7 @@
             text: "You want to change the status!",
             type: "info",
             showCancelButton: true,
+            showLoaderOnConfirm: true,
             confirmButtonClass: "btn-success",
             confirmButtonText: "Yes, change",
             cancelButtonClass: "btn-primary",

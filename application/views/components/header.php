@@ -26,6 +26,7 @@
 
             <script src="https://lipis.github.io/bootstrap-sweetalert/dist/sweetalert.js"></script>
             <link rel="stylesheet" href="https://lipis.github.io/bootstrap-sweetalert/dist/sweetalert.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
             <style>
                 .cursor{ cursor: pointer; }
             </style>
@@ -35,7 +36,7 @@
         <!-- <div id="global-loader">
             <div class="whirly-loader"> </div>
         </div> -->
-        <div class="main-wrapper">
+        <!--<div class="main-wrapper">-->
             <div class="header">
                 <div class="header-left active">
                     <a href="<?= base_url(); ?>" class="logo">
@@ -47,109 +48,108 @@
                     <a id="toggle_btn" href="javascript:void(0);">
                     </a>
                 </div>
-                <a id="mobile_btn" class="mobile_btn" href="#sidebar">
-                    <span class="bar-icon">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </span>
-                </a>
-                <ul class="nav user-menu">
-                    <!-- <li class="nav-item dropdown has-arrow flag-nav">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="javascript:void(0);" role="button">
-                            Reports
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a href="javascript:void(0);" class="dropdown-item">
-                                <img src="<?= base_url('assets/img/icon/agent.png'); ?>" height="16"> Agent Reoprt
+                    <a id="mobile_btn" class="mobile_btn" href="#sidebar">
+                        <span class="bar-icon">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </span>
+                    </a>
+                    <ul class="nav user-menu">
+                        <!-- <li class="nav-item dropdown has-arrow flag-nav">-->
+                        <!--    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="javascript:void(0);" role="button">-->
+                        <!--        Reports-->
+                        <!--    </a>-->
+                        <!--    <div class="dropdown-menu dropdown-menu-right">-->
+                        <!--        <a href="javascript:void(0);" class="dropdown-item">-->
+                        <!--            <img src="<?= base_url('assets/img/icon/agent.png'); ?>" height="16"> Agent Reoprt-->
+                        <!--        </a>-->
+                        <!--        <a href="javascript:void(0);" class="dropdown-item">-->
+                        <!--            <img src="<?= base_url('assets/img/icon/calendarReport.png'); ?>" height="16"> Monthly Report-->
+                        <!--        </a>-->
+                        <!--        <a href="javascript:void(0);" class="dropdown-item">-->
+                        <!--            <img src="<?= base_url('assets/img/icon/KYC.png'); ?>" height="16"> KYC-->
+                        <!--        </a>-->
+                        <!--        <a href="javascript:void(0);" class="dropdown-item">-->
+                        <!--            <img src="<?= base_url('assets/img/icon/report.png'); ?>" height="16"> Report-->
+                        <!--        </a>-->
+                        <!--    </div>-->
+                        <!--</li>-->
+                        <li class="nav-item dropdown flag-nav">
+                            <a href="javascript:void(0);">
+                                Login as: <?= ucwords($role)."&nbsp;<i class='fa fa-angle-right'></i>&nbsp;".$this->session->userdata('empCity'); ?>
+                             </a>
+                        </li>
+                        <?php
+                        if($role='admin'){
+                            $today=date('d-m-Y');
+                            $notiBook=$this->db->from('bookings')->where('purchaseDate', $today)->get()->num_rows();
+                        ?>
+                        <li class="nav-item dropdown mt-1">
+                            <a href="javascript:void(0);" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+                                <img src="<?= base_url('assets/img/icons/notification-bing.svg'); ?>" alt="img"> <span class="badge rounded-pill"><?= $notiBook; ?></span>
                             </a>
-                            <a href="javascript:void(0);" class="dropdown-item">
-                                <img src="<?= base_url('assets/img/icon/calendarReport.png'); ?>" height="16"> Monthly Report
-                            </a>
-                            <a href="javascript:void(0);" class="dropdown-item">
-                                <img src="<?= base_url('assets/img/icon/KYC.png'); ?>" height="16"> KYC
-                            </a>
-                            <a href="javascript:void(0);" class="dropdown-item">
-                                <img src="<?= base_url('assets/img/icon/report.png'); ?>" height="16"> Report
-                            </a>
-                        </div>
-                    </li> -->
-                    <li class="nav-item dropdown has-arrow flag-nav">
-                        <a href="javascript:void(0);">
-                            Login as: <?= ucwords($role); ?>
-                         </a>
-                    </li>
-                    <?php
-                    if($role='admin'){
-                        $today=date('d-m-Y');
-                        $notiBook=$this->db->from('bookings')->where('purchaseDate', $today)->get()->num_rows();
-                    ?>
-                    <li class="nav-item dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
-                            <img src="<?= base_url('assets/img/icons/notification-bing.svg'); ?>" alt="img"> <span class="badge rounded-pill"><?= $notiBook; ?></span>
-                        </a>
-                        <?php if($notiBook>0){ ?>
-                        <div class="dropdown-menu notifications">
-                        <div class="topnav-dropdown-header">
-                            <span class="notification-title">Today's booking notifications</span>
-                        </div>
-                        <div class="noti-content">
-                            <ul class="notification-list">
-                                <?php
-                                    $this->db->select('*')->from('bookings');
-                                    $this->db->join('users', 'bookings.bookAddedBy = users.userId', 'left');
-                                    $this->db->where('purchaseDate', $today);
-                                    $todayBookings = $this->db->get()->result();
-                                    foreach($todayBookings as $todayNoti):
-                                ?>
-                                <li class="notification-message">
-                                    <a href="<?= base_url('booking/bookingDetail/').base_convert($todayNoti->bookingId, 10, 36); ?>">
-                                        <div class="media d-flex">
-                                            <span class="avatar flex-shrink-0">
-                                                <img class="mt-2" src="<?= base_url('assets/img/AH.png'); ?>">
-                                            </span>
-                                            <div class="media-body flex-grow-1">
-                                                <p class="noti-details"><span class="noti-title"><label class="text-primary"><?= $todayNoti->userName; ?></label> has added a new booking with the membership# </span> <label class="text-danger cursor"><?= $todayNoti->membershipNo; ?></label></p>
-                                                <p class="noti-time"><span class="notification-time"><?= date('g:i:s A',strtotime($todayNoti->createdBooking)); ?></span></p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </div>
-                        <div class="topnav-dropdown-footer">
-                            <a href="<?= base_url('booking'); ?>">View all Bookings</a>
-                        </div>
-                        <?php } ?>
-                    </li>
-                    <?php } ?>
-                    <li class="nav-item dropdown has-arrow main-drop">
-                        <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
-                            <span class="user-img"><img src="<?= base_url('assets/img/favicon.png'); ?>" alt="">
-                            <span class="status online"></span></span>
-                        </a>
-                        <div class="dropdown-menu menu-drop-user">
-                            <div class="profilename">
-                                <hr class="m-0">
-                                <a class="dropdown-item" href="<?= base_url('dashboard/myProfile'); ?>"> <i class="me-2" data-feather="user"></i> My Profile</a>
-                                <hr class="m-0">
-                                <a class="dropdown-item" href="<?= base_url('dashboard/logActivity'); ?>"><i class="me-2" data-feather="settings"></i>Log Activity</a>
-                                <a class="dropdown-item logout pb-0" href="<?= base_url('login/signout'); ?>"><img src="<?= base_url('assets/img/icons/log-out.svg'); ?>" class="me-2" alt="img">Logout</a>
+                            <?php if($notiBook>0){ ?>
+                            <div class="dropdown-menu notifications">
+                            <div class="topnav-dropdown-header">
+                                <span class="notification-title">Today's booking notifications</span>
                             </div>
+                            <div class="noti-content">
+                                <ul class="notification-list">
+                                    <?php
+                                        $this->db->select('*')->from('bookings');
+                                        $this->db->join('users', 'bookings.bookAddedBy = users.userId', 'left');
+                                        $this->db->where('purchaseDate', $today);
+                                        $todayBookings = $this->db->get()->result();
+                                        foreach($todayBookings as $todayNoti):
+                                    ?>
+                                    <li class="notification-message">
+                                        <a href="<?= base_url('booking/bookingDetail/').base_convert($todayNoti->bookingId, 10, 36); ?>">
+                                            <div class="media d-flex">
+                                                <span class="avatar flex-shrink-0">
+                                                    <img class="mt-2" src="<?= base_url('assets/img/AH.png'); ?>">
+                                                </span>
+                                                <div class="media-body flex-grow-1">
+                                                    <p class="noti-details"><span class="noti-title"><label class="text-primary"><?= $todayNoti->userName; ?></label> has added a new booking with the membership# </span> <label class="text-danger cursor"><?= $todayNoti->membershipNo; ?></label></p>
+                                                    <p class="noti-time"><span class="notification-time"><?= date('g:i:s A',strtotime($todayNoti->createdBooking)); ?></span></p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div>
+                            <div class="topnav-dropdown-footer">
+                                <a href="<?= base_url('booking'); ?>">View all Bookings</a>
+                            </div>
+                            <?php } ?>
+                        </li>
+                        <?php } ?>
+                        <li class="nav-item dropdown has-arrow main-drop">
+                            <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
+                                <span class="user-img"><img src="<?= base_url('assets/img/favicon.png'); ?>" alt="">
+                                <span class="status online"></span></span>
+                            </a>
+                            <div class="dropdown-menu menu-drop-user">
+                                <div class="profilename">
+                                    <hr class="m-0">
+                                    <a class="dropdown-item" href="<?= base_url('dashboard/myProfile'); ?>"> <i class="me-2" data-feather="user"></i> My Profile</a>
+                                    <hr class="m-0">
+                                    <a class="dropdown-item" href="<?= base_url('dashboard/logActivity'); ?>"><i class="me-2" data-feather="settings"></i>Log Activity</a>
+                                    <a class="dropdown-item logout pb-0" href="<?= base_url('login/signout'); ?>"><img src="<?= base_url('assets/img/icons/log-out.svg'); ?>" class="me-2" alt="img">Logout</a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="dropdown mobile-user-menu">
+                        <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="<?= base_url('dashboard/myProfile'); ?>">My Profile</a>
+                            <a class="dropdown-item" href="<?= base_url('dashboard/logActivity'); ?>">Log Activity</a>
+                            <a class="dropdown-item" href="<?= base_url('login/signout'); ?>">Logout</a>
                         </div>
-                    </li>
-                </ul>
-                <div class="dropdown mobile-user-menu">
-                    <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="<?= base_url('dashboard/myProfile'); ?>">My Profile</a>
-                        <a class="dropdown-item" href="<?= base_url('dashboard/logActivity'); ?>">Log Activity</a>
-                        <a class="dropdown-item" href="<?= base_url('login/signout'); ?>">Logout</a>
                     </div>
-                </div>
-            </div>
-            <div class="sidebar" id="sidebar">
+                    <div class="sidebar" id="sidebar">
                 <div class="sidebar-inner slimscroll">
                     <div id="sidebar-menu" class="sidebar-menu">
                         <ul>
@@ -188,5 +188,7 @@
                             <li><a href="<?= base_url('login/signout'); ?>"><img src="<?= base_url('assets/img/icons/logout-2.svg'); ?>" alt="img"><span>Log out</span></a></li>
                         </ul>
                     </div>
+                </div>
+            </div>
                 </div>
             </div>

@@ -102,6 +102,8 @@
         </div>
     </div>
 </div>
+    </div>
+</div>
 <script>
     $('.delAgent').click(function(){
         var id = $(this).data('id');
@@ -110,6 +112,7 @@
             text: "You want to change the status!",
             type: "info",
             showCancelButton: true,
+            showLoaderOnConfirm: true,
             confirmButtonClass: "btn-success",
             confirmButtonText: "Yes, change",
             cancelButtonClass: "btn-primary",

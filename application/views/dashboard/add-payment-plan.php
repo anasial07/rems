@@ -76,7 +76,7 @@
                             <div class="form-group">
                                 <label>Down Payment</label>
                                 <div class="input-groupicon">
-                                    <input oninput="validateNmbr(event)" name="downPay" id="downPay" type="text" placeholder="0">
+                                    <input oninput="validateNmbr(event)" name="downPay" id="downPay" type="text" placeholder="0.0">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/percent.png'); ?>" alt="img" width="16">
                                     </div>
@@ -87,7 +87,7 @@
                             <div class="form-group">
                                 <label>Confirmation</label>
                                 <div class="input-groupicon">
-                                    <input oninput="validateNmbr(event)" name="confirmation" id="confirmation" type="text" placeholder="0">
+                                    <input oninput="validateNmbr(event)" name="confirmation" id="confirmation" type="text" placeholder="0.0">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/percent.png'); ?>" alt="img" width="16">
                                     </div>
@@ -98,7 +98,7 @@
                             <div class="form-group">
                                 <label>Semi Annual</label>
                                 <div class="input-groupicon">
-                                    <input oninput="validateNmbr(event)" name="semiAnnual" id="semiAnnual" type="text" placeholder="0">
+                                    <input oninput="validateNmbr(event)" name="semiAnnual" id="semiAnnual" type="text" placeholder="0.0">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/percent.png'); ?>" alt="img" width="16">
                                     </div>
@@ -109,7 +109,7 @@
                             <div class="form-group">
                                 <label>Possession</label>
                                 <div class="input-groupicon">
-                                    <input oninput="validateNmbr(event)" name="possession" id="possession" type="text" placeholder="0">
+                                    <input oninput="validateNmbr(event)" name="possession" id="possession" type="text" placeholder="0.0">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/percent.png'); ?>" alt="img" width="16">
                                     </div>
@@ -216,6 +216,8 @@
         </div>
     </div>
 </div>
+    </div>
+</div>
 <script>
     $('.payPlanDetail').click(function(){
         var planID = $(this).data('id');
@@ -299,6 +301,7 @@
                 text: "You want to add the payment plan!",
                 type: "info",
                 showCancelButton: true,
+                showLoaderOnConfirm: true,
                 confirmButtonClass: "btn-success",
                 confirmButtonText: "Yes, add it!",
                 cancelButtonClass: "btn-primary",
@@ -399,6 +402,7 @@
             text: "You want to change the status!",
             type: "info",
             showCancelButton: true,
+            showLoaderOnConfirm: true,
             confirmButtonClass: "btn-success",
             confirmButtonText: "Yes, change",
             cancelButtonClass: "btn-primary",

@@ -1,22 +1,31 @@
 <style>
-    .height{ margin-top: -12px; }
+    .height {
+        margin-top: -12px;
+    }
+
     .pulse {
         animation: pulse-animation 2s infinite;
-        border-radius:100%;
+        border-radius: 100%;
     }
+
     @keyframes pulse-animation {
         0% {
             box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.3);
         }
+
         50% {
             box-shadow: 0 0 0 20px rgba(0, 0, 0, 0);
         }
+
         100% {
             box-shadow: 0 0 0 20px rgba(0, 0, 0, 0);
         }
     }
 </style>
-<?php $role=$this->session->userdata('role'); ?>
+<?php
+$role = $this->session->userdata('role');
+$empProfile = ($info[0]->empProfile != 0) ? $info[0]->empProfile : 'default.png';
+?>
 <div class="page-wrapper">
     <div class="content">
         <div class="card">
@@ -25,8 +34,13 @@
                     <div class="profile-head"></div>
                     <div class="profile-top">
                         <div class="profile-content mt-2">
-                            <div class="profile-contentimg" style="height:100px; width:100px;">
-                                <img src="<?= base_url('assets/img/AH.png'); ?>" alt="img">
+                            <div class="profile-contentimg">
+                                <img src="<?= base_url('uploads/profiles/') . $empProfile; ?>" alt="img" id="blah">
+                                <div class="profileupload">
+                                    <input type="file" id="imgInp">
+                                    <input type="hidden" id="defaultProfile" value="<?= $empProfile; ?>">
+                                    <a href="javascript:void(0);"><img src="<?= base_url('assets/img/icons/edit-set.svg'); ?>" alt="img"></a>
+                                </div>
                             </div>
                             <div class="profile-contentname">
                                 <h2>AH Group of Companies</h2>
@@ -57,7 +71,7 @@
                                 <p class="height"><?= $info[0]->locName; ?></p>
                                 <p class="height"><?= $info[0]->departName; ?></p>
                                 <p class="height">
-                                    Active 
+                                    Active
                                     <i class="fa fa-circle text-green pulse" style="font-size:13px;"></i>
                                 </p>
                                 <p class="height"><?= date('d M, Y', strtotime($info[0]->userCreatedAt)); ?></p>
@@ -101,7 +115,7 @@
                 </div>
             </div>
         </div>
-        <?php if($role!='admin'): ?>
+        <?php if ($role != 'master') : ?>
             <div class="card">
                 <div class="card-body">
                     <div class="row">
@@ -119,93 +133,123 @@
     </div>
 </div>
 <script>
-	$('.updateProfile').on('click', function(){
+    $('.updateProfile').on('click', function() {
         var oldPass = $('#oldPass').val();
         var newPass = $('#newPass').val();
-        if(oldPass!="" && newPass!=""){
+        if (oldPass != "" && newPass != "") {
             swal({
+                    title: "Are you sure?",
+                    text: "You want to change the password!",
+                    type: "info",
+                    showCancelButton: true,
+                    showLoaderOnConfirm: true,
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "Yes, change it!",
+                    cancelButtonClass: "btn-primary",
+                    cancelButtonText: "No, cancel!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                function(isConfirm) {
+                    if (isConfirm) {
+                        $.ajax({
+                            url: "<?php echo base_url("dashboard/updateProfile"); ?>",
+                            type: "POST",
+                            data: {
+                                oldPass: oldPass,
+                                newPass: newPass
+                            },
+                            cache: false,
+                            success: function(dataResult) {
+                                if (dataResult == true) {
+                                    swal({
+                                        title: "Congratulation!",
+                                        text: "Password has been changed successfully.",
+                                        type: "success"
+                                    }, function() {
+                                        location.reload();
+                                    });
+                                } else {
+                                    swal("Ops!", "Something went wrong.", "error");
+                                }
+                            }
+                        });
+                    } else {
+                        swal.close()
+                    }
+                });
+        } else {
+            swal("Sorry!", "Please fill all the field.", "info");
+        }
+    });
+    $('.deactivateAccount').on('click', function() {
+        swal({
                 title: "Are you sure?",
-                text: "You want to change the password!",
+                text: "You want to deactivate your account!",
                 type: "info",
                 showCancelButton: true,
-                confirmButtonClass: "btn-success",
-                confirmButtonText: "Yes, change it!",
-                cancelButtonClass: "btn-primary",
+                showLoaderOnConfirm: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, deactivate it!",
+                cancelButtonClass: "btn-success",
                 cancelButtonText: "No, cancel!",
                 closeOnConfirm: false,
                 closeOnCancel: false
             },
-            function(isConfirm){
-                if(isConfirm){
+            function(isConfirm) {
+                if (isConfirm) {
                     $.ajax({
-                        url: "<?php echo base_url("dashboard/updateProfile"); ?>",
+                        url: "<?php echo base_url('login/deactivate_account'); ?>",
                         type: "POST",
-                        data: {
-                            oldPass: oldPass,
-                            newPass: newPass
-                        },
+                        data: {},
+                        dataType: "json",
                         cache: false,
-                        success: function(dataResult){
-                            if(dataResult==true){
+                        success: function(dataResult) {
+                            if (dataResult == true) {
                                 swal({
-                                    title: "Congratulation!", 
-                                    text: "Password has been changed successfully.", 
+                                    title: "Deactivated!",
+                                    text: "After processing your request, it has been confirmed that your account has been successfully deactivated.",
                                     type: "success"
-                                    },function(){ 
-                                        location.reload();
-                                    }
-                                );
-                            }else{
-                                swal("Ops!", "Something went wrong.", "error");
+                                }, function() {
+                                    location.reload();
+                                });
+                            } else {
+                                swal("Oops!", dataResult, "error");
                             }
                         }
                     });
-                }else{
+                } else {
                     swal.close()
                 }
             });
-        }else{
-            swal("Sorry!", "Please fill all the field.", "info");
-        }
-	});
-    $('.deactivateAccount').on('click', function(){
-        swal({
-            title: "Are you sure?",
-            text: "You want to deactivate your account!",
-            type: "info",
-            showCancelButton: true,
-            confirmButtonClass: "btn-danger",
-            confirmButtonText: "Yes, deactivate it!",
-            cancelButtonClass: "btn-success",
-            cancelButtonText: "No, cancel!",
-            closeOnConfirm: false,
-            closeOnCancel: false
-        },
-        function(isConfirm){
-            if(isConfirm){
-                $.ajax({
-                    url: "<?php echo base_url('login/deactivate_account'); ?>",
-                    type: "POST",
-                    data: {}, 
-                    dataType: "json",
-                    cache: false,
-                    success: function(dataResult){
-                        if (dataResult == true) {
-                            swal({
-                                title: "Deactivated!",
-                                text: "After processing your request, it has been confirmed that your account has been successfully deactivated.",
-                                type: "success"
-                            }, function() {
-                                location.reload();
-                            });
-                        } else {
-                            swal("Oops!", dataResult, "error");
-                        }
-                    }
-                });
-            }else{
-                swal.close()
+    });
+    $('#imgInp').on('change', function() {
+        var formData = new FormData();
+        var defaultProfile = $('#defaultProfile').val();
+        var myProfile = $('#imgInp')[0].files[0];
+        formData.append('defaultProfile', defaultProfile);
+        formData.append('myProfile', myProfile);
+        $.ajax({
+            url: "<?php echo base_url('dashboard/updateMyProfile'); ?>",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            success: function(dataResult) {
+                if (dataResult == true) {
+                    swal({
+                        title: "Congratulations!",
+                        text: "Profile has been updated successfully.",
+                        type: "success"
+                    },
+                    function(){ 
+                        location.reload();
+                    });
+                } else {
+                    swal("Oops!", "Something went wrong.", "error");
+                }
             }
         });
-	});
+    });
 </script>

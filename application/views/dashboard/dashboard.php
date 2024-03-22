@@ -8,7 +8,7 @@
                     </div>
                     <div class="dash-widgetcontent">
                         <h5><span class="counters" data-count="<?= $bookingAmount; ?>"><?= $bookingAmount; ?></span></h5>
-                        <h6>Total Booking Amount</h6>
+                        <h6>Booking Amount</h6>
                     </div>
                 </div>
             </div>
@@ -19,7 +19,7 @@
                     </div>
                     <div class="dash-widgetcontent">
                         <h5><span class="counters" data-count="<?= $installAmount; ?>"><?= $installAmount; ?></span></h5>
-                        <h6>Total Installment Amount</h6>
+                        <h6>Instal... Amount</h6>
                     </div>
                 </div>
             </div>

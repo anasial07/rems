@@ -182,6 +182,8 @@
         </div>
     </div>
 </div>
+    </div>
+</div>
 <div class="modal fade" id="teamDetail" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
@@ -257,6 +259,7 @@
                 text: "You want to add the team!",
                 type: "info",
                 showCancelButton: true,
+                showLoaderOnConfirm: true,
                 confirmButtonClass: "btn-success",
                 confirmButtonText: "Yes, add it!",
                 cancelButtonClass: "btn-primary",

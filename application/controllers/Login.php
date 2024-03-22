@@ -62,7 +62,8 @@ class Login extends CI_Controller {
 			$id = $auth->userId;
 			$role = $auth->role;
 			$empName = $auth->empName;
-			$view=$this->session->set_userdata(array('userId' => $id, 'role' => $role, 'username' => $empName));
+			$empCity = $auth->locCode;
+			$view=$this->session->set_userdata(array('userId' => $id, 'role' => $role, 'username' => $empName, 'empCity' => $empCity));
 			$data = array('lastLogin' => date('Y-m-d H:i:s'));
 			$this->login_model->update_last_login($id, $data);
 			redirect('dashboard');

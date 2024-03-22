@@ -60,8 +60,8 @@
                     <tr>
                         <td><?= sprintf("%02d", $sr++); ?></td>
                         <td data-id="<?= $customer->customerId; ?>" data-bs-toggle="modal" data-bs-target="#customerDetail" class="productimgname customerInfo">
-                            <a href="javascript:void(0);" class="product-img">
-                                <img src="<?= base_url('uploads/customers/').$customer->custmPic; ?>" alt="" style="border-radius:5px;">
+                            <a href="javascript:void(0);">
+                                <img width="30" src="<?= base_url('uploads/customers/').$customer->custmPic; ?>" alt="" style="border-radius:5px;">
                             </a>
                             <a href="javascript:void(0);"><?= $customer->custmName; ?></a>
                         </td>
@@ -107,6 +107,8 @@
         </div>
     </div>
 </div>
+    </div>
+</div>
 <div class="modal fade" id="customerDetail" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -150,7 +152,7 @@
                 var empGender = (res[0].custmGender==1) ? 'Male' : 'Female';
                 $('#modalArea').html(`
                     <div class="row">
-                        <div class="col">
+                        <div class="col-9">
                             <table class="table modalTable">
                                 <tr>
                                     <td>Customer Name</td>
@@ -268,6 +270,7 @@
             text: "You want to change the status!",
             type: "info",
             showCancelButton: true,
+            showLoaderOnConfirm: true,
             confirmButtonClass: "btn-success",
             confirmButtonText: "Yes, change",
             cancelButtonClass: "btn-primary",

@@ -399,7 +399,7 @@
                     <?php endif; ?>
 					<div class="input-field">
 						<i class="fas fa-lock"></i>
-						<input autocomplete="off" name="verify_otp" type="text" placeholder="Enter OTP Code" required>
+						<input autofocus="true" autocomplete="off" name="verify_otp" type="text" placeholder="Enter OTP Code" required>
 					</div>
 					<input type="submit" value="Verify" class="solid btnVerify">
 					<p class="social-text">

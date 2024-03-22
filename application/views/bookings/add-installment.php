@@ -63,7 +63,7 @@
                         <?php $paymentMode=array('Cash','Cheque','IBFT','Wire Transfer','Pay Order'); ?>
                         <div class="col-sm-12 col-lg-3">
                             <div class="form-group">
-                                <label>Select Payment Mode</label>
+                                <label>Payment Mode</label>
                                 <select id="paymentMode" class="form-control">
                                     <option selected disabled>Payment Mode</option>
                                     <?php foreach ($paymentMode as $payMode): ?>
@@ -125,16 +125,16 @@
                         </div>
                         <div class="col-sm-12 col-lg-3">
                             <div class="form-group">
-                                <label>Filer Status</label>
+                                <label>ATL Status</label>
                                 <select id="filerStatus" class="form-control">
-                                    <option value="Inactive">Inactive</option>
-                                    <option value="Active">Active</option>
+                                    <option value="NATL">NATL</option>
+                                    <option value="ATL">ATL</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-sm-12 col-lg-3">
                             <div class="form-group">
-                                <label>Tax Percentage</label>
+                                <label>ATL Percentage</label>
                                 <div class="input-groupicon">
                                     <input id="filerPercent" oninput="validateDecimal(event)" type="text" placeholder="0.0">
                                     <div class="addonset">
@@ -250,6 +250,7 @@
                 text: "You want to add the installment!",
                 type: "info",
                 showCancelButton: true,
+                showLoaderOnConfirm: true,
                 confirmButtonClass: "btn-success",
                 confirmButtonText: "Yes, add it!",
                 cancelButtonClass: "btn-primary",

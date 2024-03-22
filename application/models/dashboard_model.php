@@ -1,187 +1,216 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed!');
+<?php defined('BASEPATH') or exit('No direct script access allowed!');
 
 /**
  * undocumented class
  */
-class Dashboard_model extends CI_Model{
-	function __construct(){
+class Dashboard_model extends CI_Model
+{
+	function __construct()
+	{
 		parent::__construct();
 	}
 
 	// ---------------------------- Insert Queries ------------------------------------
 
-	public function add_province($data){
+	public function add_province($data)
+	{
 		$this->db->insert('provinces', $data);
-		if($this->db->affected_rows() > 0){
+		if ($this->db->affected_rows() > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	public function add_City($data){
+	public function add_City($data)
+	{
 		$this->db->insert('locations', $data);
-		if($this->db->affected_rows() > 0){
+		if ($this->db->affected_rows() > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	public function add_Office($data){
+	public function add_Office($data)
+	{
 		$this->db->insert('offices', $data);
-		if($this->db->affected_rows() > 0){
+		if ($this->db->affected_rows() > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	public function add_Department($data){
+	public function add_Department($data)
+	{
 		$this->db->insert('departments', $data);
-		if($this->db->affected_rows() > 0){
+		if ($this->db->affected_rows() > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	public function add_Project($data){
+	public function add_Project($data)
+	{
 		$this->db->insert('projects', $data);
-		if($this->db->affected_rows() > 0){
+		if ($this->db->affected_rows() > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	public function add_category($data){
+	public function add_category($data)
+	{
 		$this->db->insert('categories', $data);
-		if($this->db->affected_rows() > 0){
+		if ($this->db->affected_rows() > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	public function add_subCategory($data){
+	public function add_subCategory($data)
+	{
 		$this->db->insert('sub_categories', $data);
-		if($this->db->affected_rows() > 0){
+		if ($this->db->affected_rows() > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	public function add_type($data){
+	public function add_type($data)
+	{
 		$this->db->insert('types', $data);
-		if($this->db->affected_rows() > 0){
+		if ($this->db->affected_rows() > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	public function add_paymentPlan($data){
+	public function add_paymentPlan($data)
+	{
 		$this->db->insert('payment_plans', $data);
-		if($this->db->affected_rows() > 0){
+		if ($this->db->affected_rows() > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	public function add_designation($data){
+	public function add_designation($data)
+	{
 		$this->db->insert('designations', $data);
-		if($this->db->affected_rows() > 0){
+		if ($this->db->affected_rows() > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	public function add_team($data){
+	public function add_team($data)
+	{
 		$this->db->insert('teams', $data);
-		if($this->db->affected_rows() > 0){
+		if ($this->db->affected_rows() > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	public function addBank($data){
+	public function addBank($data)
+	{
 		$this->db->insert('banks', $data);
-		if($this->db->affected_rows() > 0){
+		if ($this->db->affected_rows() > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	public function add_user($data){
+	public function add_user($data)
+	{
 		$this->db->insert('users', $data);
-		if($this->db->affected_rows() > 0){
+		if ($this->db->affected_rows() > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	public function create_logs($data){
-		$this->db->insert('applicationLogs', $data);
-		if($this->db->affected_rows() > 0){
+	public function create_logs($data)
+	{
+		$this->db->insert('applicationlogs', $data);
+		if ($this->db->affected_rows() > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	public function createPermissions($data){
-		$this->db->insert('userpermissions', $data);
-		if($this->db->affected_rows() > 0){
+	public function createPermissions($data)
+	{
+		$this->db->insert('user_permissions', $data);
+		if ($this->db->affected_rows() > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
 	// ---------------------------- Delete Queries ------------------------------------
 
-	public function deleteDesignation($id){
+	public function deleteDesignation($id)
+	{
 		$result = $this->db->query("UPDATE designations SET `desigStatus` = NOT `desigStatus` WHERE desigId=$id");
 		return $result ? true : false;
 	}
-	public function deleteProvince($id){
+	public function deleteProvince($id)
+	{
 		$result = $this->db->query("UPDATE provinces SET `provStatus` = NOT `provStatus` WHERE provinceId=$id");
 		return $result ? true : false;
 	}
-	public function deleteCity($id){
+	public function deleteCity($id)
+	{
 		$result = $this->db->query("UPDATE locations SET `locStatus` = NOT `locStatus` WHERE locationId=$id");
 		return $result ? true : false;
 	}
-	public function deleteOffice($id){
+	public function deleteOffice($id)
+	{
 		$result = $this->db->query("UPDATE offices SET `officeStatus` = NOT `officeStatus` WHERE officeId=$id");
 		return $result ? true : false;
 	}
-	public function deleteDepart($id){
+	public function deleteDepart($id)
+	{
 		$result = $this->db->query("UPDATE departments SET `departStatus` = NOT `departStatus` WHERE departId=$id");
 		return $result ? true : false;
 	}
-	public function deleteProject($id){
+	public function deleteProject($id)
+	{
 		$result = $this->db->query("UPDATE projects SET `projStatus` = NOT `projStatus` WHERE projectId=$id");
 		return $result ? true : false;
 	}
-	public function deleteCategory($id){
+	public function deleteCategory($id)
+	{
 		$result = $this->db->query("UPDATE categories SET `catStatus` = NOT `catStatus` WHERE catId=$id");
 		return $result ? true : false;
 	}
-	public function deleteSubCategory($id){
+	public function deleteSubCategory($id)
+	{
 		$result = $this->db->query("UPDATE sub_categories SET `subCatStatus` = NOT `subCatStatus` WHERE subCatId=$id");
 		return $result ? true : false;
 	}
-	public function deleteType($id){
+	public function deleteType($id)
+	{
 		$result = $this->db->query("UPDATE types SET `typeStatus` = NOT `typeStatus` WHERE typeId=$id");
 		return $result ? true : false;
 	}
-	public function deletePayPlan($id){
+	public function deletePayPlan($id)
+	{
 		$result = $this->db->query("UPDATE payment_plans SET `planStatus` = NOT `planStatus` WHERE payPlanId=$id");
 		return $result ? true : false;
 	}
 
 	// ---------------------------- Select Queries ------------------------------------
 
-	public function getProvinces($id = null){
+	public function getProvinces($id = null)
+	{
 		$this->db->select('*');
 		$this->db->from('provinces')->order_by('provinceId', 'DESC');
 		$id && $this->db->where('provinceId', $id);
 		return $this->db->get()->result();
 	}
-	public function getCities($id = null){
+	public function getCities($id = null)
+	{
 		$this->db->select('*');
 		$this->db->from('locations');
 		$this->db->join('provinces', 'locations.provinceId = provinces.provinceId', 'left');
@@ -189,12 +218,14 @@ class Dashboard_model extends CI_Model{
 		$id && $this->db->where('locationId', $id);
 		return $this->db->get()->result();
 	}
-	public function getDepartments(){
+	public function getDepartments()
+	{
 		$this->db->select('*');
 		$this->db->from('departments')->order_by('departId', 'DESC');
 		return $this->db->get()->result();
 	}
-	public function getProjects($id = null){
+	public function getProjects($id = null)
+	{
 		$this->db->select('*');
 		$this->db->from('projects');
 		$this->db->join('locations', 'projects.projLocation = locations.locationId', 'left');
@@ -202,7 +233,8 @@ class Dashboard_model extends CI_Model{
 		$id && $this->db->where('projects.projectId', $id);
 		return $this->db->get()->result();
 	}
-	public function getUser($id = null){
+	public function getUser($id = null)
+	{
 		$this->db->select('*');
 		$this->db->from('users');
 		$this->db->join('locations', 'users.locationId = locations.locationId', 'left');
@@ -211,115 +243,139 @@ class Dashboard_model extends CI_Model{
 		$id && $this->db->where(array('users.userId' => $id));
 		return $this->db->get()->result();
 	}
-	public function getPermissions($id){
+	public function getPermissions($id)
+	{
 		$this->db->select('*');
-		$this->db->from('userpermissions');
+		$this->db->from('user_permissions');
 		$this->db->where('userId', $id);
 		return $this->db->get()->row();
 	}
-	public function getDesignations($id = null){
+	public function getDesignations($id = null)
+	{
 		$this->db->select('*');
 		$this->db->from('designations')->order_by('desigId', 'DESC');
 		$id && $this->db->where(array('desigId' => $id));
 		return $this->db->get()->result();
 	}
-	public function totalCustomers(){
+	public function totalCustomers()
+	{
 		return $this->db->from('customers')->count_all_results();
 	}
-	public function totalAgents(){
+	public function totalAgents()
+	{
 		return $this->db->from('agents')->count_all_results();
 	}
-	public function totalBookings(){
+	public function totalBookings()
+	{
 		return $this->db->from('bookings')->count_all_results();
 	}
-	public function totalTeams(){
+	public function totalTeams()
+	{
 		return $this->db->from('teams')->count_all_results();
 	}
-	public function totalBookingAmount(){
-		$query = $this->db->select_sum('bookingAmount')->get('bookings');
+	public function totalBookingAmount()
+	{
+		$query = $this->db->select_sum('bookingAmount')->where('bookVerifyStatus', 1)->get('bookings');
 		$result = $query->row();
 		return $result->bookingAmount;
 	}
-	public function totalInstallmentAmount(){
+	public function totalInstallmentAmount()
+	{
 		$query = $this->db->select_sum('installAmount')->get('installments');
 		$result = $query->row();
 		return $result->installAmount;
 	}
-	public function activeProvinces(){
+	public function activeProvinces()
+	{
 		return $this->db->select('*')->from('provinces')->where('provStatus', 1)->order_by('provName', 'ASC')->get()->result();
 	}
-	public function activeCities(){
+	public function activeCities()
+	{
 		return $this->db->select('*')->from('locations')->where('locStatus', 1)->order_by('locName', 'ASC')->get()->result();
 	}
-	public function activeProjects(){
+	public function activeProjects()
+	{
 		return $this->db->select('*')->from('projects')->where('projStatus', 1)->order_by('projName', 'ASC')->get()->result();
 	}
-	public function activeDepart(){
+	public function activeDepart()
+	{
 		return $this->db->select('*')->from('departments')->where('departStatus', 1)->order_by('departName', 'ASC')->get()->result();
 	}
-	public function activeOffices(){
+	public function activeOffices()
+	{
 		return $this->db->select('*')->from('offices')->where('officeStatus', 1)->order_by('officeName', 'ASC')->get()->result();
 	}
-	public function activeDesignations(){
+	public function activeDesignations()
+	{
 		return $this->db->select('*')->from('designations')->where('desigStatus', 1)->order_by('desigName', 'ASC')->get()->result();
 	}
-	public function activeBanks(){
+	public function activeBanks()
+	{
 		return $this->db->select('*')->from('banks')->where('bankStatus', 1)->order_by('bankName', 'ASC')->get()->result();
 	}
-	public function cityAgents($id){
+	public function cityAgents($id)
+	{
 		$this->db->select('*');
 		$this->db->from('agents');
 		$this->db->where(array('locationId' => $id, 'agentStatus' => 1));
 		return $this->db->get()->result();
 	}
-	public function getPayPlans($id){
+	public function getPayPlans($id)
+	{
 		$this->db->select('*');
 		$this->db->from('payment_plans');
 		$this->db->where(array('projectId' => $id, 'planStatus' => 1));
 		return $this->db->get()->result();
 	}
-	public function getPayPlan($id){
+	public function getPayPlan($id)
+	{
 		$this->db->select('*');
 		$this->db->from('payment_plans');
 		$this->db->where(array('payPlanId' => $id));
 		return $this->db->get()->row();
 	}
-	public function activeCategories($id){
+	public function activeCategories($id)
+	{
 		$this->db->select('*');
 		$this->db->from('categories');
 		$this->db->where(array('projectId' => $id, 'catStatus' => 1));
 		$this->db->order_by('catId', 'DESC');
 		return $this->db->get()->result();
 	}
-	public function activeSubCats($id){
+	public function activeSubCats($id)
+	{
 		$this->db->select('*');
 		$this->db->from('sub_categories');
 		$this->db->where(array('catId' => $id, 'subCatStatus' => 1));
 		$this->db->order_by('subCatId', 'DESC');
 		return $this->db->get()->result();
 	}
-	public function projSubCats($id){
+	public function projSubCats($id)
+	{
 		$this->db->select('*');
 		$this->db->from('sub_categories');
 		$this->db->where(array('catId' => $id, 'subCatStatus' => 1));
 		$this->db->order_by('subCatId', 'DESC');
 		return $this->db->get()->result();
 	}
-	public function activeTypes($id){
+	public function activeTypes($id)
+	{
 		$this->db->select('*');
 		$this->db->from('types');
 		$this->db->where(array('subCatId' => $id, 'typeStatus' => 1));
 		$this->db->order_by('typeId', 'DESC');
 		return $this->db->get()->result();
 	}
-	public function getOffices(){
+	public function getOffices()
+	{
 		$this->db->select('*');
 		$this->db->from('offices');
 		$this->db->join('locations', 'offices.locationId = locations.locationId', 'left');
 		$this->db->order_by('offices.officeId', 'DESC');
 		return $this->db->get()->result();
 	}
-	public function getProfile($id = null){
+	public function getProfile($id = null)
+	{
 		$this->db->select('*');
 		$this->db->from('users');
 		$this->db->join('locations', 'users.locationId = locations.locationId', 'left');
@@ -327,14 +383,16 @@ class Dashboard_model extends CI_Model{
 		$id && $this->db->where('users.userId', $id);
 		return $this->db->get()->result();
 	}
-	public function getCategories(){
+	public function getCategories()
+	{
 		$this->db->select('*');
 		$this->db->from('categories');
 		$this->db->join('projects', 'categories.projectId = projects.projectId', 'left');
 		$this->db->order_by('categories.catId', 'DESC');
 		return $this->db->get()->result();
 	}
-	public function getSubCats(){
+	public function getSubCats()
+	{
 		$this->db->select('*');
 		$this->db->from('sub_categories');
 		$this->db->join('projects', 'sub_categories.projectId = projects.projectId', 'left');
@@ -342,7 +400,8 @@ class Dashboard_model extends CI_Model{
 		$this->db->order_by('sub_categories.subCatId', 'DESC');
 		return $this->db->get()->result();
 	}
-	public function getTypes($id = null){
+	public function getTypes($id = null)
+	{
 		$this->db->select('*');
 		$this->db->from('types');
 		$this->db->join('projects', 'types.projectId = projects.projectId', 'left');
@@ -350,7 +409,8 @@ class Dashboard_model extends CI_Model{
 		$id && $this->db->where('types.typeId', $id);
 		return $this->db->get()->result();
 	}
-	public function getPaymentPlans($id = null){
+	public function getPaymentPlans($id = null)
+	{
 		$this->db->select('*');
 		$this->db->from('payment_plans');
 		$this->db->join('projects', 'payment_plans.projectId = projects.projectId', 'left');
@@ -361,7 +421,8 @@ class Dashboard_model extends CI_Model{
 		$id && $this->db->where('payment_plans.payPlanId', $id);
 		return $this->db->get()->result();
 	}
-	public function getTeams($id = null){
+	public function getTeams($id = null)
+	{
 		$this->db->select('teams.*,
 									CONCAT(agents.agentName) AS teamLead,
 									CONCAT(agents1.agentName) AS bdm,
@@ -380,33 +441,50 @@ class Dashboard_model extends CI_Model{
 		$id && $this->db->where('teams.teamId', $id); // single team
 		return $this->db->get()->result();
 	}
-	public function old_password($password){
+	public function old_password($password)
+	{
 		$userID = $this->session->userdata('userId');
 		$this->db->select('password')->from('users')->where(array('password' => $password, 'userId' => $userID));
 		return $this->db->get()->row();
 	}
-	public function getLogs(){
+	public function getLogs()
+	{
 		$this->db->select('*');
 		$this->db->from('applicationlogs');
 		$this->db->join('users', 'applicationlogs.logAddedBy = users.userId', 'left');
 		$this->db->order_by('logId', 'DESC');
 		return $this->db->get()->result();
 	}
+	public function get_userPermissions()
+	{
+		$id=$this->session->userdata('userId');
+		$this->db->select('userPermissions');
+		$this->db->from('user_permissions');
+		$this->db->where('userID', $id);
+		$query = $this->db->get();
+		if ($query->num_rows() > 0) {
+			return $query->row()->userPermissions;
+		} else {
+			return '';
+		}
+	}
 
 	// -------------------------------Update--------------------------------
 
-	public function update_password($data){
+	public function update_password($data)
+	{
 		$userID = $this->session->userdata('userId');
 		$this->db->where('userId', $userID);
 		$this->db->update('users', $data);
 		return true;
 	}
-	public function update_project($id, $data){
+	public function update_project($id, $data)
+	{
 		$basePrice = $data['projBasePrice'];
 		$this->db->trans_start();
 		$this->db->where('projectId', $id);
 		$this->db->update('projects', $data);
-		if($this->db->trans_status() === false){
+		if ($this->db->trans_status() === false) {
 			$this->db->trans_rollback();
 			return false;
 		}
@@ -423,9 +501,15 @@ class Dashboard_model extends CI_Model{
 		$this->db->trans_complete();
 		return $this->db->trans_status();
 	}
-	public function updatePermissions($data, $id){
+	public function updatePermissions($data, $id)
+	{
 		$this->db->where('userID', $id);
-		$this->db->update('userpermissions', $data);
+		$this->db->update('user_permissions', $data);
 		return true;
+	}
+	public function updateMyProfile($img, $id)
+	{
+		$result = $this->db->query("UPDATE users SET `empProfile` = '$img' WHERE userId=$id");
+		return $result ? true : false;
 	}
 }

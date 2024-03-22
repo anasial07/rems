@@ -1,4 +1,4 @@
-<?php $role=$this->session->userdata('role'); ?>
+<?php $role = $this->session->userdata('role'); ?>
 <div class="page-wrapper px-4 mt-4">
     <div class="page-header">
         <div class="page-title">
@@ -25,73 +25,81 @@
                         </div>
                     </div>
                     <div class="wordset">
-                    <ul>
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="<?= base_url('assets/img/icons/printer.svg'); ?>" alt="img"></a>
-                        </li>
-                    </ul>
+                        <ul>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="<?= base_url('assets/img/icons/printer.svg'); ?>" alt="img"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table datanew">
+                        <thead>
+                            <tr>
+                                <th>Sr</th>
+                                <th>Profile</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Location</th>
+                                <th>Department</th>
+                                <th>Role</th>
+                                <th>Last Login</th>
+                                <th class="text-center">Status</th>
+                                <?php if ($role == 'admin') : ?>
+                                    <th class="text-center">Action</th>
+                                <?php endif; ?>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $sr = 1;
+                            foreach ($users as $user) :
+                                $status = $user->userStatus;
+                                $empProfile = ($user->empProfile != 0) ? $user->empProfile : 'default.png';
+                            ?>
+                                <tr>
+                                    <td><?= sprintf("%02d", $sr++); ?></td>
+                                    <td class="productimgname customerInfo">
+                                        <a href="javascript:void(0);">
+                                            <img width="30" src="<?= base_url('uploads/profiles/') . $empProfile; ?>" alt="" style="border-radius:5px;">
+                                        </a>
+                                        <!-- <a href="javascript:void(0);"><?= $user->empName; ?></a> -->
+                                    </td>
+                                    <td><a class="text-primary" href="<?= base_url('dashboard/addPermissions/') . $user->userId; ?>"><?= $user->empName; ?></a></td>
+                                    <td><?= $user->userEmail; ?></td>
+                                    <td><?= $user->locName; ?></td>
+                                    <td><?= $user->departName; ?></td>
+                                    <td><?= ucfirst($user->role); ?></td>
+                                    <td>
+                                        <?php
+                                        echo ($user->lastLogin != 0) ?
+                                            date('M d, Y g:h A', strtotime($user->lastLogin))
+                                            : "<span class='text-danger'>N/A</span>";
+                                        ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <?php if ($status == 1) { ?>
+                                            <span class="badges bg-lightgreen">Active</span>
+                                        <?php } else { ?>
+                                            <span class="badges bg-lightred">Inactive</span>
+                                        <?php } ?>
+                                    </td>
+                                    <?php if ($role == 'admin') : ?>
+                                        <td class="text-center">
+                                            <a class="me-3" href="">
+                                                <img src="<?= base_url('assets/img/icons/edit.svg'); ?>" alt="img">
+                                            </a>
+                                            <a class="me-3 confirm-text" href="javascript:void(0);">
+                                                <img src="<?= base_url('assets/img/icons/delete.svg'); ?>" alt="img">
+                                            </a>
+                                        </td>
+                                    <?php endif; ?>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        <div class="table-responsive">
-            <table class="table datanew">
-                <thead>
-                    <tr>
-                        <th>Sr</th>
-                        <th>Name</th>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>Location</th>
-                        <th>Department</th>
-                        <th>Role</th>
-                        <th>Last Login</th>
-                        <th class="text-center">Status</th>
-                        <?php if($role=='admin'): ?>
-                            <th class="text-center">Action</th>
-                        <?php endif; ?>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                        $sr=1;
-                        foreach($users as $user):
-                        $status=$user->userStatus;
-                    ?>
-                        <tr>
-                            <td><?= sprintf("%02d", $sr++); ?></td>
-                            <td><a class="text-primary" href="<?= base_url('dashboard/addPermissions/').$user->userId; ?>"><?= $user->empName; ?></a></td>
-                            <td><?= $user->userName; ?></td>
-                            <td><?= $user->userEmail; ?></td>
-                            <td><?= $user->locName; ?></td>
-                            <td><?= $user->departName; ?></td>
-                            <td><?= ucfirst($user->role); ?></td>
-                            <td>
-                                <?php
-                                    echo ($user->lastLogin!=0) ?
-                                        date('M d, Y g:h A', strtotime($user->lastLogin))
-                                    : "<span class='text-danger'>N/A</span>";
-                                ?>
-                            </td>
-                            <td class="text-center">
-                                <?php if($status==1){ ?>
-                                    <span class="badges bg-lightgreen">Active</span>
-                                <?php }else{ ?>
-                                    <span class="badges bg-lightred">Inactive</span>
-                                <?php } ?>
-                            </td>
-                            <?php if($role=='admin'): ?>
-                                <td class="text-center">
-                                    <a class="me-3" href="">
-                                        <img src="<?= base_url('assets/img/icons/edit.svg'); ?>" alt="img">
-                                    </a>
-                                    <a class="me-3 confirm-text" href="javascript:void(0);">
-                                        <img src="<?= base_url('assets/img/icons/delete.svg'); ?>" alt="img">
-                                    </a>
-                                </td>
-                            <?php endif; ?>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
         </div>
     </div>
 </div>
@@ -135,7 +143,7 @@
                             <label>Select Location</label>
                             <select id="userCity" class="form-control">
                                 <option selected disabled>Select Location</option>
-                                <?php foreach($cities as $city): ?>
+                                <?php foreach ($cities as $city) : ?>
                                     <option value="<?= $city->locationId; ?>"><?= $city->locName; ?></option>
                                 <?php endforeach; ?>
                             </select>
@@ -146,7 +154,7 @@
                             <label>Select Department</label>
                             <select id="userDepart" class="form-control">
                                 <option selected disabled>Select Department</option>
-                                <?php foreach($departments as $depart): ?>
+                                <?php foreach ($departments as $depart) : ?>
                                     <option value="<?= $depart->departId; ?>"><?= $depart->departName; ?></option>
                                 <?php endforeach; ?>
                             </select>
@@ -175,7 +183,7 @@
     </div>
 </div>
 <script>
-	$('.addUser').on('click', function(){
+    $('.addUser').on('click', function() {
         var userFullName = $('#userFullName').val();
         var userName = $('#userName').val();
         var userEmailAddr = $('#userEmailAddr').val();
@@ -183,55 +191,55 @@
         var userCity = $('#userCity').val();
         var userDepart = $('#userDepart').val();
         var userRole = $('#userRole').val();
-        if(userFullName!="" && userName!="" && userEmailAddr!="" && userPassword!="" && userCity!="Select Location" && userDepart!="Select Department" && userRole!="Select Role"){
+        if (userFullName != "" && userName != "" && userEmailAddr != "" && userPassword != "" && userCity != "Select Location" && userDepart != "Select Department" && userRole != "Select Role") {
             swal({
-                title: "Are you sure?",
-                text: "You want to add the user!",
-                type: "info",
-                showCancelButton: true,
-                confirmButtonClass: "btn-success",
-                confirmButtonText: "Yes, add it!",
-                cancelButtonClass: "btn-primary",
-                cancelButtonText: "No, cancel!",
-                closeOnConfirm: false,
-                closeOnCancel: false
-            },
-            function(isConfirm){
-                if(isConfirm){
-                    $.ajax({
-                        url: "<?php echo base_url("dashboard/addUser"); ?>",
-                        type: "POST",
-                        data: {
-                            userFullName: userFullName,
-                            userName: userName,
-                            userEmailAddr: userEmailAddr,
-                            userPassword: userPassword,
-                            userCity: userCity,
-                            userDepart: userDepart,
-                            userRole: userRole
-                        },
-                        cache: false,
-                        success: function(dataResult){
-                            if(dataResult==true){
-                                swal({
-                                    title: "Congratulation!", 
-                                    text: "User has been added successfully.", 
-                                    type: "success"
-                                    },function(){ 
+                    title: "Are you sure?",
+                    text: "You want to add the user!",
+                    type: "info",
+                    showCancelButton: true,
+                    showLoaderOnConfirm: true,
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "Yes, add it!",
+                    cancelButtonClass: "btn-primary",
+                    cancelButtonText: "No, cancel!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                function(isConfirm) {
+                    if (isConfirm) {
+                        $.ajax({
+                            url: "<?php echo base_url("dashboard/addUser"); ?>",
+                            type: "POST",
+                            data: {
+                                userFullName: userFullName,
+                                userName: userName,
+                                userEmailAddr: userEmailAddr,
+                                userPassword: userPassword,
+                                userCity: userCity,
+                                userDepart: userDepart,
+                                userRole: userRole
+                            },
+                            cache: false,
+                            success: function(dataResult) {
+                                if (dataResult == true) {
+                                    swal({
+                                        title: "Congratulation!",
+                                        text: "User has been added successfully.",
+                                        type: "success"
+                                    }, function() {
                                         location.reload();
-                                    }
-                                );
-                            }else{
-                                swal("Ops!", "Something went wrong.", "error");
+                                    });
+                                } else {
+                                    swal("Ops!", "Something went wrong.", "error");
+                                }
                             }
-                        }
-                    });
-                }else{
-                    swal.close()
-                }
-            });
-        }else{
+                        });
+                    } else {
+                        swal.close()
+                    }
+                });
+        } else {
             swal("Sorry!", "Please fill all the field.", "info");
         }
-	});
+    });
 </script>

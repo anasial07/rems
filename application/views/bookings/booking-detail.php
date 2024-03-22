@@ -1,7 +1,13 @@
 <style>
     .heading{ font-size:14px; color:#7367F0; font-weight:600; line-height: 35px; padding-left:2.5%!important; }
     .bookingTable tr td{ border:none!important; line-height:0.3; }
-    .custom-xl { height: 52%!important; }
+    .custom-xl { height: 100%!important; }
+    @media screen and (max-width: 1366px) {
+      .hidSm{ display:none; }
+    }
+    @media screen and (min-width: 1440px) {
+      .hidLg{ display:none; }
+    }
 </style>
 <?php $role=$this->session->userdata('role'); ?>
 <div class="page-wrapper">
@@ -13,16 +19,23 @@
                         <h4 style="font-weight:900; color:#8967F0;"><?= $info[0]->membershipNo; ?></h4>
                         <h6 style="margin-top:-6px!important;">Membership#</h6>
                     </div>
-                    <div class="page-btn">
+                    <div class="page-btn text-end">
                         <!-- <button type="button" class="btn btn-rounded btn-danger">Cancellation Request</button> -->
-                        <a target="_blank" href="<?= base_url('booking/generateBookingMemo/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded btn-primary">Booking Memo</button></a>
-                        <a target="_blank" href="<?= base_url('booking/generateWelcomeLetter/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded btn-secondary">Welcome Letter</button></a>
-                        <a target="_blank" href="<?= base_url('booking/generateConfirmationLetter/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded btn-info text-white">Confirmation Letter</button></a>
-                        <a target="_blank" href="<?= base_url('booking/generateBookingForm/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded btn-dark">Booking Form</button></a>
-                        <a target="_blank" href="<?= base_url('booking/generatePaymentPlan/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded btn-success">Payment Plan</button></a>
-                        <?php if($info[0]->fileIssuanceDate==""){ ?>
-                            <a data-id="<?= $info[0]->bookingId; ?>" class="issueFile"><button class="btn btn-rounded btn-danger">Issue File</button></a>
-                        <?php } ?>
+                        <a target="_blank" href="<?= base_url('GeneratePDF/bookingMemo/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded btn-primary">Booking Memo</button></a>
+                        <a target="_blank" href="<?= base_url('GeneratePDF/welcomeLetter/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded btn-secondary">Welcome Letter</button></a>
+                        <a target="_blank" href="<?= base_url('GeneratePDF/confirmationLetter/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded btn-info text-white">Confirmation Letter</button></a>
+                        <div class="btn-group hideLg">
+                            <button type="button" class="btn btn-danger rounded-2" data-bs-toggle="dropdown" aria-expanded="false">
+                              Other <i class="fa fa-angle-down"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a target="_blank" href="<?= base_url('GeneratePDF/bookingForm/').base_convert($info[0]->bookingId, 10, 36); ?>" class="dropdown-item">Booking Form</a></li>
+                                <li><a class="dropdown-item" target="_blank" href="<?= base_url('GeneratePDF/paymentPlan/').base_convert($info[0]->bookingId, 10, 36); ?>">Payment Plan</a></li>
+                            <?php if($info[0]->fileIssuanceDate==""){ ?>
+                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#fileIssueModal">Issue File</a></li>
+                            <?php } ?>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -88,12 +101,12 @@
                     </span>
                     <table class="table bookingTable">
                         <tr>
-                            <td>Special Discount</td>
+                            <td>Discount</td>
                             <td><?= number_format($info[0]->sepDiscount); ?>%</td>
                         </tr>
                         <tr>
                             <td>Features (<?= $info[0]->featuresPercent.'%'; ?>)</td>
-                            <td><?= ($info[0]->featuresPercent==0) ? 'N/A' : $info[0]->features; ?></td>
+                            <td><?= ($info[0]->featuresPercent==0) ? "<span class='text-danger'>N/A</span>" : $info[0]->features; ?></td>
                         </tr>
                         <tr>
                             <td>Sale Price</td>
@@ -108,16 +121,16 @@
             </div>
             <div class="row">
                 <div class="card-body p-0">
-                    <div class="row my-3">
+                    <div class="row my-2">
                         <div class="col py-2">
-                            <h6 data-bs-toggle="offcanvas" data-bs-target="#paySummary" aria-controls="offcanvasTop"><a>View Payment Summary</a></h6>
+                            <h6><a data-bs-toggle="offcanvas" data-bs-target="#paySummary" aria-controls="offcanvasTop">Booking Summary <span style="font-size:11px;" class="text-primary">[view]</span></a></h6>
                             <div class="search-input" style="display:none!important;"></div>
                         </div>
                         <div class="col text-end">
-                            <h6><a target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Print Account Statement" href="<?= base_url('booking/generateAccountStatement/').base_convert($info[0]->bookingId, 10, 36); ?>">
+                            <h6><a target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Print Account Statement" href="<?= base_url('GeneratePDF/accountStatement/').base_convert($info[0]->bookingId, 10, 36); ?>">
                                 Account Statement
                             </a></h6>
-                            <p style="font-size:14px!important;"><?= ($info[0]->fileIssuanceDate=="") ? "The file has not been issued yet." : "The file was issued on <span class='text-danger'>".date('M d, Y',strtotime($info[0]->fileIssuanceDate))."</span> at <span class='text-danger'>".date('g:i:s A',strtotime($info[0]->fileIssuanceDate))."</span>"; ?></p>
+                            <p style="font-size:14px!important;"><?= ($info[0]->fileIssuanceDate=="") ? "The file has not been issued yet" : "The file was issued on <span class='text-danger'>".date('M d, Y',strtotime($info[0]->fileIssuanceDate)); ?></p>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -131,28 +144,36 @@
                                     <th>Payment Mode</th>
                                     <th>Location</th>
                                     <th>Receving Date</th>
-                                    <th>Filer Status</th>
-                                    <th>Tax</th>
+                                    <th>ATL Status</th>
                                     <th class="text-center">Print</th>
                                     <?php if($role=='admin'): ?>
                                         <th class="text-center">Action</th>
                                     <?php endif; ?>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody>  
+                            <?php
+                            $bokRecp=$info[0]->bookingId;
+                            if($bokRecp<10){ $bokRecp = "000".$bokRecp; }
+                    		else if($bokRecp<100){ $bokRecp = "00".$bokRecp; }
+                    		else if($bokRecp<1000){ $bokRecp = "0".$bokRecp; }
+                    		else if($bokRecp<1000){ $bokRecp = $bokRecp; }
+                            ?>
                                 <tr>
                                     <td>
-                                        <?= $info[0]->projCode.'-'.sprintf('%02d',$info[0]->bookingId); ?>
+                                        <?= 'BK-'.$bokRecp; ?>
                                         <p style="font-size:11px; margin-top:-4px!important;">Down Payment</p>
                                     </td>
                                     <td>
                                         <?= number_format($info[0]->bookingAmount); ?>
-                                        <?php if($info[0]->bookingStatus==0){ ?>
-                                            <p class="text-danger" style="font-size:11px; margin-top:-4px!important;">Inactive</p>
+                                        <?php if($info[0]->bookVerifyStatus==0){ ?>
+                                            <p class="text-danger" style="font-size:11px; margin-top:-4px!important;">Not verified</p>
+                                        <?php }else{ ?>
+                                        <p class="text-success" style="font-size:11px; margin-top:-4px!important;">Verified</p>
                                         <?php } ?>
                                     </td>
-                                    <td><?php echo ($info[0]->bookingReferenceNo == 0) ? "N/A" : $info[0]->bookingReferenceNo; ?></td>
-                                    <td><?php echo ($info[0]->bookBankId == 0) ? "N/A" : $info[0]->bankName; ?></td>
+                                    <td><?php echo ($info[0]->bookingReferenceNo == 0) ? "<span class='text-danger'>N/A</span>" : $info[0]->bookingReferenceNo; ?></td>
+                                    <td><?php echo ($info[0]->bookBankId == 0) ? "<span class='text-danger'>N/A</span>" : $info[0]->bankName; ?></td>
                                     <td>
                                         <?php 
                                             if($info[0]->bookingMode == 'Cash'){
@@ -173,15 +194,19 @@
                                     <td><?= $info[0]->locName; ?></td>
                                     <td><?= date('M d, Y',strtotime($info[0]->purchaseDate)); ?></td>
                                     <td>
-                                        <?php if($info[0]->bookFilerStatus == 'Active'){ ?>
-                                            <span class="badges bg-lightgreen">Active</span>
+                                        <?php
+                                        if($info[0]->bookFilerStatus=='ATL'){ ?>
+                                            <span class="badges bg-lightgreen">
+                                                <?= $info[0]->bookFilerStatus." | ".$info[0]->bookFilerPercent."%"; ?>
+                                            </span>
                                         <?php }else{ ?>
-                                            <span class="badges bg-lightred">Inactive</span>
-                                        <?php } ?>
+                                            <span class="badges bg-lightred">
+                                                <?= $info[0]->bookFilerStatus." | ".$info[0]->bookFilerPercent."%"; ?>
+                                            </span>
+                                        <?php }  ?>
                                     </td>
-                                    <td><?= $info[0]->bookFilerPercent; ?>%</td>
                                     <td class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Print Booking Receipt">
-                                        <a target="_blank" href="<?= base_url('booking/generateBookingReceipt/').base_convert($info[0]->bookingId, 10, 36).'?receipt=booking'; ?>"><img src="<?= base_url('assets/img/icons/printer.svg') ?>" alt="img"></a>
+                                        <a target="_blank" href="<?= base_url('GeneratePDF/bookingReceipt/').base_convert($info[0]->bookingId, 10, 36).'?receipt=booking'; ?>"><img src="<?= base_url('assets/img/icons/printer.svg') ?>" alt="img"></a>
                                     </td>
                                     <?php if($role=='admin'): ?>
                                         <td class="text-center">
@@ -196,23 +221,49 @@
                                 </tr>
                                 <?php foreach($installments as $install): ?>
                                 <tr>
-                                    <td><?= $info[0]->projCode.'-'.sprintf('%02d',$install->installmentId); ?></td>
+                                    <td><?php
+                            $instRcp=$install->installmentId;
+                            if($instRcp<10){ $instRcp = "000".$instRcp; }
+                    		else if($instRcp<100){ $instRcp = "00".$instRcp; }
+                    		else if($instRcp<1000){ $instRcp = "0".$instRcp; }
+                    		else if($instRcp<1000){ $instRcp = $instRcp; }
+                                    echo 'INST-'.$instRcp; 
+                                    ?></td>
                                     <td><?= number_format($install->installAmount); ?></td>
-                                    <td><?php echo ($install->installReferenceNo == 0) ? "N/A" : $install->installReferenceNo; ?></td>
-                                    <td><?php echo ($install->installBankId == 0) ? "N/A" : $install->bankName; ?></td>
-                                    <td><?= $install->installPayMode; ?></td>
+                                    <td><?php echo ($install->installReferenceNo == 0) ? "<span class='text-danger'>N/A</span>" : $install->installReferenceNo; ?></td>
+                                    <td><?php echo ($install->installBankId == 0) ? "<span class='text-danger'>N/A</span>" : $install->bankName; ?></td>
+                                    <td><?php
+                                    $instlPyMode=$install->installPayMode;
+                                    if($instlPyMode == 'Cash'){
+                                        $instIcon="cash.png";
+                                    }else if($instlPyMode == 'Cheque'){
+                                        $instIcon="cheque.png";
+                                    }else if($instlPyMode == 'IBFT'){
+                                        $instIcon="ibft.png";
+                                    }else if($instlPyMode == 'Wire Transfer'){
+                                        $instIcon="wiretransfer.png";
+                                    }else if($instlPyMode == 'Pay Order'){
+                                        $instIcon="payOrder.png";
+                                    }
+                                    echo "<img width='20' src='".base_url('assets/img/icons/'.$instIcon)."'> ";
+                                    echo $instlPyMode;
+                                    ?></td>
                                     <td><?= $install->locName; ?></td>
                                     <td><?= date('M d, Y',strtotime($install->installReceivedDate)); ?></td>
                                     <td>
-                                        <?php if($install->installFilerStatus == 'Active'){ ?>
-                                            <span class="badges bg-lightgreen">Active</span>
+                                        <?php
+                                        if($install->installFilerStatus=='ATL'){ ?>
+                                            <span class="badges bg-lightgreen">
+                                                <?= $install->installFilerStatus." | ".$install->installFilerPercent."%"; ?>
+                                            </span>
                                         <?php }else{ ?>
-                                            <span class="badges bg-lightred">Inactive</span>
-                                        <?php } ?>
+                                            <span class="badges bg-lightred">
+                                                <?= $install->installFilerStatus." | ".$install->installFilerPercent."%"; ?>
+                                                </span>
+                                        <?php }  ?>
                                     </td>
-                                    <td><?= $install->installFilerPercent; ?>%</td>
                                     <td class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Print Installment Receipt">
-                                        <a target="_blank" href="<?= base_url('booking/generateBookingReceipt/').base_convert($install->installmentId, 10, 36).'?receipt=installment'; ?>"><img src="<?= base_url('assets/img/icons/printer.svg') ?>" alt="img"></a>
+                                        <a target="_blank" href="<?= base_url('GeneratePDF/bookingReceipt/').base_convert($install->installmentId, 10, 36).'?receipt=installment'; ?>"><img src="<?= base_url('assets/img/icons/printer.svg') ?>" alt="img"></a>
                                     </td>
                                     <?php if($role=='admin'): ?>
                                         <td class="text-center">
@@ -238,9 +289,15 @@
     <div class="offcanvas-body mx-3">
         <div class="card bg-light">
             <div class="row py-2">
+                <div class="col"></div>
                 <div class="col text-center">
-                    <h4 style="font-weight:900; color:#8967F0;"><?= $info[0]->membershipNo; ?></h4>
+                    <h4 style="font-weight:900; color:#8967F0;">
+                        <?= $info[0]->membershipNo; ?>
+                    </h4>
                     Membership#
+                </div>
+                <div class="col text-danger text-end py-3 px-4">
+                    <span style="cursor:pointer;" data-bs-dismiss="offcanvas" aria-label="Close"><i class="fa fa-times"></i> Close</span>
                 </div>
             </div>
         </div>
@@ -248,7 +305,7 @@
             <div class="col-4">
                 <table class="table bookingTable">
                     <tr>
-                        <td colspan="2"><span class="pl-3" style="font-weight:900; color:#8967F0;">Payment Information</span></td>
+                        <td colspan="2"><span class="pl-3" style="font-weight:900; color:#8967F0;">Plan Information</span></td>
                     </tr>
                     <tr>
                         <td>Plan Price</td>
@@ -257,7 +314,7 @@
                     <tr>
                         <td>Type Discount</td>
                         <td>
-                            <?= $info[0]->bookingtypeDiscount; ?>% &middot;
+                            <?= $info[0]->bookingtypeDiscount; ?>% •
                             <span class="text-primary"><?= number_format(($info[0]->bookingBasePrice * $info[0]->marlaSize) * ($info[0]->bookingtypeDiscount/100)); ?></span>
                             <span style="font-size:10px;">Rupees</span>
                         </td>
@@ -273,7 +330,7 @@
                     <tr>
                         <td>Special Discount</td>
                         <td>
-                            <?= $info[0]->sepDiscount; ?>% &middot; 
+                            <?= $info[0]->sepDiscount; ?>% •
                             <span class="text-primary"><?= number_format($info[0]->bokNetPrice * ($info[0]->sepDiscount/100)); ?></span>
                             <span style="font-size:10px;">Rupees</span>
                         </td>
@@ -283,9 +340,9 @@
                         <td><?= number_format($info[0]->exCharges); ?></td>
                     </tr>
                     <tr>
-                        <td>Feature Charges <?= ($info[0]->featuresPercent==0) ? "<span class='text-primary' style='font-size:10px;'>(N/A)</span>" : $info[0]->features; ?></td>
+                        <td>Feature Charges <?= ($info[0]->featuresPercent==0) ? "<span class='text-primary' style='font-size:10px;'>(N/A)</span>" : "<span class='text-primary' style='font-size:10px;'>".$info[0]->features."</span>"; ?></td>
                         <td>
-                            <?= $info[0]->featuresPercent; ?>% &middot;
+                            <?= $info[0]->featuresPercent; ?>% •
                             <span class="text-primary"><?= number_format($info[0]->salePrice * ($info[0]->featuresPercent/100)); ?></span>
                             <span style="font-size:10px;">Rupees</span>
                         </td>
@@ -293,6 +350,38 @@
                     <tr>
                         <td class="fw-bold text-danger">Sale Price</td>
                         <td class="fw-bold text-danger"><?= number_format($info[0]->salePrice); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Down Payment</td>
+                        <td>
+                            <?= sprintf('%02d',$info[0]->downPayment); ?>% •
+                            <span class="text-primary"><?= number_format($info[0]->salePrice * $info[0]->downPayment / 100); ?></span>
+                            <span style="font-size:10px;">Rupees</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Confirmation</td>
+                        <td>
+                            <?= sprintf('%02d',$info[0]->confirmPay); ?>% •
+                            <span class="text-primary"><?= number_format($info[0]->salePrice * $info[0]->confirmPay / 100); ?></span>
+                            <span style="font-size:10px;">Rupees</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Semi-Annual</td>
+                        <td>
+                            <?= sprintf('%02d',$info[0]->semiAnnual); ?>% •
+                            <span class="text-primary"><?= number_format($info[0]->salePrice * $info[0]->semiAnnual / 100); ?></span>
+                            <span style="font-size:10px;">Rupees</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Possession</td>
+                        <td>
+                            <?= sprintf('%02d',$info[0]->possession); ?>% •
+                            <span class="text-primary"><?= number_format($info[0]->salePrice * $info[0]->possession / 100); ?></span>
+                            <span style="font-size:10px;">Rupees</span>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -303,7 +392,7 @@
                     </tr>
                     <tr>
                         <td>Receipt No</td>
-                        <td><?= $info[0]->projCode.'-'.$info[0]->bookingId; ?></td>
+                        <td><?= 'BK-'.$bokRecp; ?></td>
                     </tr>
                     <tr>
                         <td>Booking Amount <span style="font-size:10px;">(Down Payment)</span></td>
@@ -326,6 +415,10 @@
                         <td><?php echo ($info[0]->bankName == 0) ? "<span class='text-danger'>N/A</span>" : $info[0]->bankName; ?></td>
                     </tr>
                     <tr>
+                        <td>Agent Name</td>
+                        <td><?= $info[0]->agentName; ?></td>
+                    </tr>
+                    <tr>
                         <td>Received In</td>
                         <td><?= $info[0]->locName; ?></td>
                     </tr>
@@ -333,19 +426,158 @@
                         <td>Booking Date</td>
                         <td><?= date('d-m-Y l',strtotime($info[0]->purchaseDate)); ?></td>
                     </tr>
+                    <tr>
+                        <td>Booked By</td>
+                        <td><?= $info[0]->empName; ?></td>
+                    </tr>
+                    <tr>
+                        <td>Issuance Date</td>
+                        <td><?= ($info[0]->fileIssuanceDate!='') ? "<span class='text-primary'>".date('d-m-Y l',strtotime($info[0]->fileIssuanceDate))."</span>" : "<span class='text-danger'>Not issued yet</span>"; ?></td>
+                    </tr>
+                    <tr>
+                        <td>Updated at</td>
+                        <td><?= ($info[0]->updatedBooking!=null) ? "<span class='text-primary'>".date('d-m-Y',strtotime($info[0]->updatedBooking))."</span>" : "<span class='text-danger'>Not updated yet</span>"; ?></td>
+                    </tr>
                 </table>
+            </div>
+            <div class="col-4" style="border-left:1px solid #C6C7C2;">
+                <table class="table bookingTable">
+                    <tr>
+                        <td colspan="2"><span class="pl-3" style="font-weight:900; color:#8967F0;">Payment Summary</span></td>
+                    </tr>
+                    <tr>
+                        <td>Amount Received From Booking</td>
+                        <td><?= number_format($info[0]->bookingAmount); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Total Number of Installments</td>
+                        <td>
+                            <?= $info[0]->planYears*12; ?>
+                            <span class="text-primary" style="font-size: 10px;">Installments</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Total Recevied Installments</td>
+                        <td>
+                            <?= sprintf('%02d', $countInstallments); ?>
+                            <span class="text-primary" style="font-size: 10px;">Installments Received</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Total Pending Installments</td>
+                        <td>
+                            <?= sprintf('%02d', ($info[0]->planYears*12) - $countInstallments); ?>
+                            <span class="text-primary" style="font-size: 10px;">Installments Pending</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Amount Received From Installments</td>
+                        <td><?= ($totalInstallAmount==0) ? "<span class='text-danger'>Not received yet</span>" : number_format($totalInstallAmount); ?></td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">Total Amount</td>
+                        <td class="fw-bold"><?= $saleP=number_format($info[0]->salePrice); ?></td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold text-success">Total Received</td>
+                        <td class="fw-bold text-success"><?= $recvAmt=number_format($info[0]->bookingAmount + $totalInstallAmount); ?></td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold text-danger">Total Receivable</td>
+                        <td class="fw-bold text-danger"><?= $dueAmt=number_format($info[0]->salePrice - ($info[0]->bookingAmount + $totalInstallAmount)); ?></td>
+                    </tr>
+                </table>
+                <div class="row mt-5">
+                    <div class="col text-center">
+                        <div id="chartdiv1"></div>
+                        <input type="hidden" value="<?= $saleP; ?>" id="totalAmt">
+                        <input type="hidden" value="<?= $recvAmt; ?>" id="recvAmt">
+                        <input type="hidden" value="<?= $dueAmt; ?>" id="dueAmt">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div id="chartdiv2"></div>
             </div>
         </div>
     </div>
 </div>
+<div class="modal fade" id="fileIssueModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="row">
+                <div class="col">
+                    <h5 class="modal-title">File Issuance Date</h5>
+                    <p style="margin-top:-5px!important;">Enter the date carefully, as it will not be editable later.<br>
+                        <span class="text-danger"><?= $info[0]->membershipNo; ?></span>
+                    </p>
+                </div>
+            </div>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label>Select Issuance Date</label>
+                        <div class="input-groupicon">
+                            <input id="fileIssuanceDate" oninput="validateDate(event)" type="text" value="<?= date('d-m-Y'); ?>" placeholder="DD-MM-YYYY" class="datetimepicker">
+                            <div class="addonset">
+                                <img src="<?= base_url('assets/img/icon/calendar.png'); ?>" width="20" alt="img">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <button type="button" class="btn btn-secondary form-control" data-bs-dismiss="modal">Close</button>
+                </div>
+                <div class="col-6">
+                    <button data-id="<?= $info[0]->bookingId; ?>" type="button" class="btn btn-primary issueFile form-control">Procceed</button>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+<script src="https://www.amcharts.com/lib/4/core.js"></script>
+<script src="https://www.amcharts.com/lib/4/charts.js"></script>
+<script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+<script>
+    var totalAmt=document.getElementById("totalAmt").value;
+    var recvAmt=document.getElementById("recvAmt").value;
+    var dueAmt=document.getElementById("dueAmt").value;
+    am4core.useTheme(am4themes_animated);
+    var chart = am4core.create("chartdiv1", am4charts.PieChart);
+    chart.data = [ {
+      "Title": "Received",
+      "Price": recvAmt
+    }, {
+      "Title": "Due",
+      "Price": dueAmt
+    } ];
+    
+    var pieSeries = chart.series.push(new am4charts.PieSeries());
+    pieSeries.dataFields.value = "Price";
+    pieSeries.dataFields.category = "Title";
+    pieSeries.slices.template.stroke = am4core.color("#fff");
+    pieSeries.slices.template.strokeWidth = 2;
+    pieSeries.slices.template.strokeOpacity = 1;
+    pieSeries.hiddenState.properties.opacity = 1;
+    pieSeries.hiddenState.properties.endAngle = -90;
+    pieSeries.hiddenState.properties.startAngle = -90;
+</script>
 <script>
     $('.issueFile').click(function(){
         var id = $(this).data('id');
+        var issueDate = $('#fileIssuanceDate').val();
         swal({
             title: "Are you sure?",
             text: "You want to issue the file!",
             type: "info",
             showCancelButton: true,
+            showLoaderOnConfirm: true,
             confirmButtonClass: "btn-success",
             confirmButtonText: "Yes, issue",
             cancelButtonClass: "btn-primary",
@@ -359,7 +591,10 @@
                     url: "<?php echo base_url("booking/issueFile/"); ?>" + id,
                     method: 'POST',
                     dataType: 'JSON',
-                    data: {id: id},
+                    data: {
+                        id: id,
+                        issueDate: issueDate
+                    },
                     success: function(res){
                         if(res==true){
                             swal({

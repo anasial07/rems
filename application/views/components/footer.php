@@ -1,4 +1,3 @@
-       </div>
        <script>
             function validate(event){
                 var input = event.target;
@@ -199,10 +198,7 @@
 
         <script src="<?= base_url('assets/plugins/select2/js/select2.min.js'); ?>"></script>
         <script src="<?= base_url('assets/plugins/owlcarousel/owl.carousel.min.js'); ?>"></script>
-        
-
-        <script src="<?= base_url('assets/plugins/apexchart/apexcharts.min.js'); ?>"></script>
-        <script src="<?= base_url('assets/plugins/apexchart/chart-data.js'); ?>"></script>
+         
         <script src="<?= base_url('assets/js/script.js'); ?>"></script>
         
         <script src="<?= base_url('assets/js/moment.min.js'); ?>"></script>

@@ -169,6 +169,8 @@
         </div>
     </div>
 </div>
+    </div>
+</div>
 <script>
 	$('#addCity').on('click', function(){
         var provID = $('#provinceID').val();
@@ -180,6 +182,7 @@
                 text: "You want to add the city!",
                 type: "info",
                 showCancelButton: true,
+                showLoaderOnConfirm: true,
                 confirmButtonClass: "btn-success",
                 confirmButtonText: "Yes, add it!",
                 cancelButtonClass: "btn-primary",
@@ -284,6 +287,7 @@
             text: "You want to change the status!",
             type: "info",
             showCancelButton: true,
+            showLoaderOnConfirm: true,
             confirmButtonClass: "btn-success",
             confirmButtonText: "Yes, change",
             cancelButtonClass: "btn-primary",

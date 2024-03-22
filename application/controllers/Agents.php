@@ -2,14 +2,24 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Agents extends CI_Controller {
+	protected $user_permissions;
 	public function __construct(){
 		parent::__construct();
 		$this->load->model(array('dashboard_model','agent_model'));
+        $this->load->helper('user_permissions');
+        $this->user_permissions = new User_permissions();
 		if(!$this->session->userdata('userId')){
 			redirect('');
+        }
+    }
+    public function permission_denied()
+	{
+		$this->load->view('no-permission');
 	}
-}
 	public function index(){
+		if(!$this->user_permissions->check_permission('viewAgent')){
+			redirect('dashboard/permission_denied');
+		}
 		$data['title'] = 'Dashboard | REMS';
 		$data['body'] = 'agents/view-agents';
 		$data['agents'] = $this->agent_model->getAgents();
@@ -20,6 +30,9 @@ class Agents extends CI_Controller {
 		echo json_encode($data);
 	}
 	public function deleteAgent($id){ // Delete Agent
+		if(!$this->user_permissions->check_permission('deleteAgent')){
+			redirect('dashboard/permission_denied');
+		}
 		$data = $this->agent_model->deleteAgent($id);
 		echo json_encode($data);
 	}
@@ -27,6 +40,9 @@ class Agents extends CI_Controller {
     // -----------------------------------------------------------------
 
 	public function addAgent(){
+		if(!$this->user_permissions->check_permission('createAgent')){
+			redirect('dashboard/permission_denied');
+		}
 		$data['title'] = 'Dashboard | REMS';
 		$data['body'] = 'agents/add-agent';
 		$data['departments'] = $this->dashboard_model->activeDepart();
@@ -37,6 +53,9 @@ class Agents extends CI_Controller {
 		$this->load->view('components/template', $data);
 	}
 	public function saveAgent(){    // Add Agent
+		if(!$this->user_permissions->check_permission('createAgent')){
+			redirect('dashboard/permission_denied');
+		}
         $data = array(
             'agentCode' => $this->input->post('agentCode'),
             'agentName' => ucwords(strtolower($this->input->post('agentName'))),
@@ -51,14 +70,14 @@ class Agents extends CI_Controller {
             'managerId' => $this->input->post('empManger'),
             'addedBy' => $this->session->userdata('userId')
         );
-        $this->form_validation->set_rules('agentCode', 'Agent Code', 'numeric');
-        $this->form_validation->set_rules('agentName', 'Agent Name', 'trim|required|alpha');
+        $this->form_validation->set_rules('agentCode', 'Agent Code', 'trim');
+        $this->form_validation->set_rules('agentName', 'Agent Name', 'required');
         $this->form_validation->set_rules('agentEmail', 'Agent Email', 'trim|valid_email|');
-        $this->form_validation->set_rules('agentPhone', 'Agent Contact', 'trim|required|max_length[12]|numeric|integer');
-        $this->form_validation->set_rules('designationId', 'Select Designation', 'required|numeric');
-        $this->form_validation->set_rules('departId', 'Select Department', 'required|numeric');
-        $this->form_validation->set_rules('locationId', 'Select City', 'required|numeric');
-        $this->form_validation->set_rules('officeId', 'Select Office', 'required|numeric');
+        $this->form_validation->set_rules('agentPhone', 'Agent Contact', 'trim|required|max_length[12]|numeric');
+        $this->form_validation->set_rules('designationId', 'Select Designation', 'required');
+        $this->form_validation->set_rules('departId', 'Select Department', 'required');
+        $this->form_validation->set_rules('locationId', 'Select City', 'required');
+        $this->form_validation->set_rules('officeId', 'Select Office', 'required');
         $this->form_validation->set_rules('doj', 'Date of Joining', 'required');
         if($this->form_validation->run() == TRUE){
             if($this->agent_model->add_agent($data)){
@@ -66,8 +85,6 @@ class Agents extends CI_Controller {
             }else{
                 echo false;
             }
-        }else{
-            echo validation_errors();
         }
     }
 }

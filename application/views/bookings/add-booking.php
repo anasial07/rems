@@ -76,15 +76,18 @@
                         </div>
                         <div class="col-sm-12 col-lg-6">
                             <div class="form-group">
-                                <label>Select Agent</label>
+                                <label>Select Agent Name</label>
                                 <select id="agentID" class="form-control">
-                                    <option selected disabled>Select Agent</option>
+                                    <option selected disabled>Select Agent Name</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-sm-12 col-lg-3">
                             <div class="form-group">
-                                <label>Special Discount</label>
+                                <label>
+                                    Discount
+                                    <span class="text-muted" style="font-size:10px;">(Optional)</span>
+                                </label>
                                 <div class="input-groupicon">
                                     <input oninput="validateDecimal(event)" id="sepDiscount" type="text" placeholder="0.0">
                                     <div class="addonset">
@@ -166,7 +169,10 @@
                         </div>
                         <div class="col-sm-12 col-lg-6">
                             <div class="form-group">
-                                <label>Extra Land Charges</label>
+                                <label>
+                                    Extra Land Charges
+                                    <span class="text-muted" style="font-size:10px;">(Optional)</span>
+                                </label>
                                 <div class="input-groupicon">
                                     <input oninput="validateNmbr(event)" id="exCharges" type="text" placeholder="0.0">
                                     <div class="addonset">
@@ -188,16 +194,16 @@
                         </div>
                         <div class="col-sm-12 col-lg-3">
                             <div class="form-group">
-                                <label>Filer Status</label>
+                                <label>ATL Status</label>
                                 <select id="filerStatus" class="form-control">
-                                    <option value="Inactive">Inactive</option>
-                                    <option value="Active">Active</option>
+                                    <option value="NATL">NATL</option>
+                                    <option value="ATL">ATL</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-sm-12 col-lg-3">
                             <div class="form-group">
-                                <label>Tax Percentage</label>
+                                <label>ATL Percentage</label>
                                 <div class="input-groupicon">
                                     <input oninput="validateDecimal(event)" id="filerPercent" type="text" placeholder="0.0">
                                     <div class="addonset">
@@ -355,6 +361,7 @@
                 text: "You want to add the booking!",
                 type: "info",
                 showCancelButton: true,
+                showLoaderOnConfirm: true,
                 confirmButtonClass: "btn-success",
                 confirmButtonText: "Yes, add it!",
                 cancelButtonClass: "btn-primary",
@@ -617,7 +624,6 @@
     $('input[name="feature-charges[]"]').change(function () {
         var checkedCheckboxes = $('input[name="feature-charges[]"]:checked');
         var featurePercent = checkedCheckboxes.length === 3 ? 25 : checkedCheckboxes.length * 10;
-
         $('.showFeatures').text(featurePercent);
         $('#featuresPercent').val(featurePercent);
     })

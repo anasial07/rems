@@ -61,36 +61,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-12">
+                        <div class="col-12">
                             <div class="form-group">
-                                <label>Website Address</label>
-                                <div class="input-groupicon">
-                                    <input id="webAddress" type="text" placeholder="eg: www.ahgroup-pk.com" value="<?= $projInfo[0]->webAddress; ?>">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-12">
-                            <div class="form-group">
-                                <label>E-mail Address</label>
-                                <div class="input-groupicon">
-                                    <input id="mailAddress" type="text" placeholder="eg: info@ahgroup-pk.com" value="<?= $projInfo[0]->mailAddress; ?>">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-12">
-                            <div class="form-group">
-                                <label>Complete Address</label>
-                                <div class="input-groupicon">
-                                    <input id="projAddress" type="text" placeholder="Project Address" value="<?= $projInfo[0]->projAddress; ?>">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-12">
-                            <div class="form-group" style="padding:0 4% 0 4%;">
                                 <input type="file" id="projLogo" onchange="selected()" style="display:none;">
                                 <label>Project Logo</label>
                                 <label for="projLogo">
-                                    <div class="row" style="height:40px!important; border:1px solid #DCE0E4; border-radius:5px; cursor:pointer;">
+                                    <div class="mx-1 row" style="height:40px!important; border:1px solid #DCE0E4; border-radius:5px; cursor:pointer;">
                                         <div class="col pt-2 text-muted">
                                             <span id="logoSel">Browse an image to upload</span>
                                         </div>
@@ -135,7 +111,7 @@
                                 if($projInfo[0]->updatedProj==0){
                                     echo "<span class='text-danger'>Not updated yet.</span>";
                                 }else{
-                                    echo "<span class='text-danger'>".date('d M, Y g:i:s A',strtotime($projInfo[0]->updatedProj))."</span>";
+                                    echo "<span class='text-danger'>".date('d M, Y',strtotime($projInfo[0]->updatedProj))."</span>";
                                 }
                             ?><br>
                             <a href="" class="text-muted"><i class="fas fa-recycle"></i>&emsp;Click here to view project logs activity</a>
@@ -169,6 +145,7 @@
                 text: "You want to update the project detail!",
                 type: "info",
                 showCancelButton: true,
+                showLoaderOnConfirm: true,
                 confirmButtonClass: "btn-success",
                 confirmButtonText: "Yes, update",
                 cancelButtonClass: "btn-primary",

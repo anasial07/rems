@@ -1,4 +1,4 @@
-<?php $role=$this->session->userdata('role'); ?>
+<?php $rights=explode(',',$userPermissions); ?>
 <div class="page-wrapper px-4 mt-4">
     <div class="row">
         <div class="col">
@@ -33,12 +33,14 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-6 col-sm-6">
+                        <div class="col">
                             <a href="javascript:history.go(-1);" class="btn form-control btn-cancel">Back</a>
                         </div>
-                        <div class="col-lg-6 col-sm-6">
+                        <?php if(in_array('createDesignation',$rights)): ?>
+                        <div class="col">
                             <a class="btn form-control btn-submit me-2" id="addDesignation">Add Designation</a>
                         </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -74,7 +76,7 @@
                             <th>Code</th>
                             <th>Designation</th>
                             <th class="text-center">Status</th>
-                            <?php if($role=='admin'): ?>
+                            <?php if(in_array('deleteDesignation', $rights) || in_array('editDesignation', $rights)): ?>
                                 <th class="text-center">Action</th>
                             <?php endif; ?>
                         </tr>
@@ -85,10 +87,15 @@
                             foreach($designations as $designation):
                             $status=$designation->desigStatus;
                         ?>
-                        <tr>
+                        <tr <?php if($status==0){ ?> style="background:#F7E4E7;" <?php } ?>>
                             <td><?= sprintf("%02d", $sr++); ?></td>
                             <td><?= $designation->desigCode; ?></td>
-                            <td><?= $designation->desigName; ?></td>
+                            <td>
+                                <?php 
+                                    echo $designation->desigName;
+                                    if($status==0){ echo "<p class='text-muted' style='font-size:10px;'>Deleted</p>"; }
+                                ?>
+                            </td>
                             <td class="text-center">
                                 <?php if($status==1){ ?>
                                     <span class="badges bg-lightgreen">Active</span>
@@ -96,11 +103,13 @@
                                     <span class="badges bg-lightred">Inactive</span>
                                 <?php } ?>
                             </td>
-                            <?php if($role=='admin'): ?>
+                            <?php if(in_array('deleteDesignation', $rights) || in_array('editDesignation', $rights)): ?>
                                 <td class="text-center">
+                                <?php if(in_array('editDesignation', $rights)): ?>
                                     <a class="me-3 editDes" data-id="<?= $designation->desigId; ?>" data-bs-toggle="offcanvas" href="#editCanvas">
                                         <img src="<?= base_url('assets/img/icons/edit.svg'); ?>" alt="img">
                                     </a>
+                                <?php endif; if(in_array('deleteDesignation', $rights)): ?>
                                     <a class="me-3 confirm-text delDes" data-id="<?= $designation->desigId; ?>">
                                         <?php if($status==1){ ?>
                                             <img src="<?= base_url('assets/img/icons/delete.svg'); ?>" alt="img">
@@ -108,6 +117,7 @@
                                             <img src="<?= base_url('assets/img/icon/recycle.png'); ?>" width="20">
                                         <?php } ?>
                                     </a>
+                                <?php endif; ?>
                                 </td>
                             <?php endif; ?>
                         </tr>
@@ -116,6 +126,8 @@
                 </table>
             </div>
         </div>
+    </div>
+</div>
     </div>
 </div>
 <script>
@@ -128,12 +140,13 @@
                 text: "You want to add the designation!",
                 type: "info",
                 showCancelButton: true,
+                showLoaderOnConfirm: true,
                 confirmButtonClass: "btn-success",
                 confirmButtonText: "Yes, add it!",
                 cancelButtonClass: "btn-primary",
                 cancelButtonText: "No, cancel!",
                 closeOnConfirm: false,
-                closeOnCancel: false
+                closeOnCancel: false,
             }, function(isConfirm){
                 if(isConfirm){
                     $.ajax({
@@ -218,6 +231,7 @@
             text: "You want to change the status!",
             type: "info",
             showCancelButton: true,
+            showLoaderOnConfirm: true,
             confirmButtonClass: "btn-success",
             confirmButtonText: "Yes, change",
             cancelButtonClass: "btn-primary",

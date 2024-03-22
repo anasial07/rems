@@ -27,7 +27,8 @@ class Login_model extends CI_Model{
 	public function verifyCode($email, $inputCode){
 		$this->db->select('*');
 		$this->db->from('users');
-		$this->db->where(array('userEmail' => $email, 'otp' => $inputCode));
+		$this->db->join('locations', 'users.locationId = locations.locationId', 'left');
+		$this->db->where(array('users.userEmail' => $email, 'users.otp' => $inputCode));
 		return $this->db->get()->row();
 	}
 	public function forgot_password($email){

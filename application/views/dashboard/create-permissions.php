@@ -243,6 +243,30 @@
                                                 <span class="checkmark"></span>
                                             </label>
                                         </li>
+                                        <li>
+                                            <label class="inputcheck">Booking Detail
+                                                <input <?= in_array("bookingDetail", $myRights) ? 'checked' : ''; ?> type="checkbox" value="bookingDetail" name="user-permission[]">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </li>
+                                        <li>
+                                            <label class="inputcheck">Verify Booking
+                                                <input <?= in_array("verifyBooking", $myRights) ? 'checked' : ''; ?> type="checkbox" value="verifyBooking" name="user-permission[]">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </li>
+                                        <li class="mt-1">
+                                            <label class="inputcheck">Issue File
+                                                <input <?= in_array("issueFile", $myRights) ? 'checked' : ''; ?> type="checkbox" value="issueFile" name="user-permission[]">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </li>
+                                        <li class="mt-1">
+                                            <label class="inputcheck">Booking Summary
+                                                <input <?= in_array("bookingSummary", $myRights) ? 'checked' : ''; ?> type="checkbox" value="bookingSummary" name="user-permission[]">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
@@ -271,6 +295,61 @@
                                         <li>
                                             <label class="inputcheck">Delete
                                                 <input <?= in_array("deleteInstallments", $myRights) ? 'checked' : ''; ?> type="checkbox" value="deleteInstallments" name="user-permission[]">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <h4><img width="15" src="<?= base_url('assets/img/icon/pdf.png'); ?>"> Booking Letters</h4>
+                                <div class="input-checkset">
+                                    <ul>
+                                        <li class="mt-1">
+                                            <label class="inputcheck">Booking Memo
+                                                <input <?= in_array("bookingMemo", $myRights) ? 'checked' : ''; ?> type="checkbox" value="bookingMemo" name="user-permission[]">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </li>
+                                        <li class="mt-1">
+                                            <label class="inputcheck">Welcome Letter
+                                                <input <?= in_array("welcomeLetter", $myRights) ? 'checked' : ''; ?> type="checkbox" value="welcomeLetter" name="user-permission[]">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </li>
+                                        <li class="mt-1">
+                                            <label class="inputcheck">Confirmation Letter
+                                                <input <?= in_array("confirmLetter", $myRights) ? 'checked' : ''; ?> type="checkbox" value="confirmLetter" name="user-permission[]">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </li>
+                                        <li class="mt-1">
+                                            <label class="inputcheck">Booking Form
+                                                <input <?= in_array("bookingForm", $myRights) ? 'checked' : ''; ?> type="checkbox" value="bookingForm" name="user-permission[]">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </li>
+                                        <li class="mt-1">
+                                            <label class="inputcheck">Payment Plan
+                                                <input <?= in_array("paymentPlan", $myRights) ? 'checked' : ''; ?> type="checkbox" value="paymentPlan" name="user-permission[]">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </li>
+                                        <li class="mt-1">
+                                            <label class="inputcheck">Booking Receipt
+                                                <input <?= in_array("bookingReceipt", $myRights) ? 'checked' : ''; ?> type="checkbox" value="bookingReceipt" name="user-permission[]">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </li>
+                                        <li class="mt-1">
+                                            <label class="inputcheck">Installment Receipt
+                                                <input <?= in_array("installmentReceipt", $myRights) ? 'checked' : ''; ?> type="checkbox" value="installmentReceipt" name="user-permission[]">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </li>
+                                        <li class="mt-1">
+                                            <label class="inputcheck">Account Statement
+                                                <input <?= in_array("accountStatement", $myRights) ? 'checked' : ''; ?> type="checkbox" value="accountStatement" name="user-permission[]">
                                                 <span class="checkmark"></span>
                                             </label>
                                         </li>
@@ -308,67 +387,6 @@
                                         <li>
                                             <label class="inputcheck">Create Permissions
                                                 <input <?= in_array("createPermission", $myRights) ? 'checked' : ''; ?> type="checkbox" value="createPermission" name="user-permission[]">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li>
-                                <h4 class="py-4"><img width="15" src="<?= base_url('assets/img/icon/pdf.png'); ?>"> Booking Letters</h4>
-                                <div class="input-checkset">
-                                    <ul>
-                                        <li>
-                                            <label class="inputcheck">Booking Memo
-                                                <input <?= in_array("bookingMemo", $myRights) ? 'checked' : ''; ?> type="checkbox" value="bookingMemo" name="user-permission[]">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </li>
-                                        <li>
-                                            <label class="inputcheck">Welcome Letter
-                                                <input <?= in_array("welcomeLetter", $myRights) ? 'checked' : ''; ?> type="checkbox" value="welcomeLetter" name="user-permission[]">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </li>
-                                        <li>
-                                            <label class="inputcheck">Confirmation Letter
-                                                <input <?= in_array("confirmLetter", $myRights) ? 'checked' : ''; ?> type="checkbox" value="confirmLetter" name="user-permission[]">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </li>
-                                        <li>
-                                            <label class="inputcheck">Booking Form
-                                                <input <?= in_array("bookingForm", $myRights) ? 'checked' : ''; ?> type="checkbox" value="bookingForm" name="user-permission[]">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </li>
-                                        <li>
-                                            <label class="inputcheck">Payment Plan
-                                                <input <?= in_array("paymentPlan", $myRights) ? 'checked' : ''; ?> type="checkbox" value="paymentPlan" name="user-permission[]">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </li>
-                                        <li class="mt-4">
-                                            <label class="inputcheck">Issue File
-                                                <input <?= in_array("issueFile", $myRights) ? 'checked' : ''; ?> type="checkbox" value="issueFile" name="user-permission[]">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </li>
-                                        <li class="mt-4">
-                                            <label class="inputcheck">Booking Receipt
-                                                <input <?= in_array("bookingReceipt", $myRights) ? 'checked' : ''; ?> type="checkbox" value="bookingReceipt" name="user-permission[]">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </li>
-                                        <li class="mt-4">
-                                            <label class="inputcheck">Installment Receipt
-                                                <input <?= in_array("installmentReceipt", $myRights) ? 'checked' : ''; ?> type="checkbox" value="installmentReceipt" name="user-permission[]">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </li>
-                                        <li class="mt-4">
-                                            <label class="inputcheck">Account Statement
-                                                <input <?= in_array("accountStatement", $myRights) ? 'checked' : ''; ?> type="checkbox" value="accountStatement" name="user-permission[]">
                                                 <span class="checkmark"></span>
                                             </label>
                                         </li>
@@ -427,6 +445,7 @@
             text: "You want to create permissions for this user!",
             type: "info",
             showCancelButton: true,
+            showLoaderOnConfirm: true,
             confirmButtonClass: "btn-success",
             confirmButtonText: "Yes, create it!",
             cancelButtonClass: "btn-primary",

@@ -16,7 +16,7 @@
                     <div class="row">
                         <div class="col-sm-6 col-lg-3">
                             <div class="form-group">
-                                <label>Employee Code</label>
+                                <label>Employee Code <span style="font-size:10px;" class="text-muted">(Optional)</span></label>
                                 <div class="input-groupicon">
                                     <input oninput="validateMix(event)" id="empCode" name="empCode" type="text" placeholder="Enter Employee Code">
                                 </div>
@@ -40,7 +40,7 @@
                         </div>
                         <div class="col-sm-6 col-lg-3">
                             <div class="form-group">
-                                <label>Employee Email</label>
+                                <label>Employee Email <span style="font-size:10px;" class="text-muted">(Optional)</span></label>
                                 <div class="input-groupicon">
                                     <input oninput="validateEmail(event)" id="empEmail" name="empEmail" type="text" placeholder="Enter Employee Email">
                                 </div>
@@ -92,8 +92,8 @@
                         </div>
                         <div class="col-sm-12 col-lg-3">
                             <div class="form-group">
-                                <label>Select Team</label>
-                                <select id="empTeam" name="empTeam" class="form-control">
+                                <label>Select Team <span style="font-size:10px;" class="text-muted">(Optional)</span></label>
+                                <select disabled id="empTeam" name="empTeam" class="form-control">
                                     <option selected disabled>Select Team</option>
                                     <?php foreach($teams as $team): ?>
                                         <option value="<?= $team->teamId; ?>"><?= $team->teamName; ?></option>
@@ -103,8 +103,8 @@
                         </div>
                         <div class="col-sm-12 col-lg-3">
                             <div class="form-group">
-                                <label>Report to</label>
-                                <select id="reporto" name="reporto" class="form-control">
+                                <label>Report to <span style="font-size:10px;" class="text-muted">(Optional)</span></label>
+                                <select disabled id="reporto" name="reporto" class="form-control">
                                     <option selected disabled>Report to</option>
                                     <?php foreach($designations as $designation): ?>
                                         <option value="<?= $designation->desigId; ?>"><?= $designation->desigCode." - ".$designation->desigName; ?></option>
@@ -114,8 +114,8 @@
                         </div>
                         <div class="col-sm-12 col-lg-3">
                             <div class="form-group">
-                                <label>Select Manager</label>
-                                <select id="empManger" name="empManger" class="form-control">
+                                <label>Select Manager <span style="font-size:10px;" class="text-muted">(Optional)</span></label>
+                                <select disabled id="empManger" name="empManger" class="form-control">
                                     <option selected disabled>Select Manager</option>
                                 </select>
                             </div>
@@ -179,6 +179,7 @@
                 text: "You want to add the agent!",
                 type: "info",
                 showCancelButton: true,
+                showLoaderOnConfirm: true,
                 confirmButtonClass: "btn-success",
                 confirmButtonText: "Yes, add it!",
                 cancelButtonClass: "btn-primary",
