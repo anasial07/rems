@@ -27,6 +27,23 @@ class Booking_model extends CI_Model{
 		$id && $this->db->where('bookings.bookingId', $id);
 		return $this->db->get()->result();
 	}
+	public function individualInstallments(){
+	    $id=$this->session->userdata('userId');
+		$this->db->select('*');
+		$this->db->from('installments');
+		$this->db->join('bookings', 'installments.bookingId = bookings.bookingId', 'left');
+		$id && $this->db->where('installments.installAddedBy', $id);
+		return $this->db->get()->result();
+	}
+	public function recentBookings(){
+		$this->db->select('*');
+		$this->db->from('bookings');
+		$this->db->join('locations', 'bookings.cityID = locations.locationId', 'left');
+		$this->db->join('users', 'bookings.bookAddedBy = users.userId', 'left');
+		$this->db->order_by('bookings.bookingId', 'DESC');
+        $this->db->limit(4);
+		return $this->db->get()->result();
+	}
 	public function filterCustomers($id){
 		$this->db->select('customers.*');
 		$this->db->from('customers');

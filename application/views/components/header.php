@@ -31,7 +31,10 @@
                 .cursor{ cursor: pointer; }
             </style>
         </head>
-        <?php $role=$this->session->userdata('role'); ?>
+        <?php 
+            $role=$this->session->userdata('role');
+            $rights=explode(',',$userPermissions);
+        ?>
     <body>
         <!-- <div id="global-loader">
             <div class="whirly-loader"> </div>
@@ -48,49 +51,52 @@
                     <a id="toggle_btn" href="javascript:void(0);">
                     </a>
                 </div>
-                    <a id="mobile_btn" class="mobile_btn" href="#sidebar">
+                <a id="mobile_btn" class="mobile_btn" href="#sidebar">
                         <span class="bar-icon">
                             <span></span>
                             <span></span>
                             <span></span>
                         </span>
                     </a>
-                    <ul class="nav user-menu">
-                        <!-- <li class="nav-item dropdown has-arrow flag-nav">-->
-                        <!--    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="javascript:void(0);" role="button">-->
-                        <!--        Reports-->
-                        <!--    </a>-->
-                        <!--    <div class="dropdown-menu dropdown-menu-right">-->
-                        <!--        <a href="javascript:void(0);" class="dropdown-item">-->
-                        <!--            <img src="<?= base_url('assets/img/icon/agent.png'); ?>" height="16"> Agent Reoprt-->
-                        <!--        </a>-->
-                        <!--        <a href="javascript:void(0);" class="dropdown-item">-->
-                        <!--            <img src="<?= base_url('assets/img/icon/calendarReport.png'); ?>" height="16"> Monthly Report-->
-                        <!--        </a>-->
-                        <!--        <a href="javascript:void(0);" class="dropdown-item">-->
-                        <!--            <img src="<?= base_url('assets/img/icon/KYC.png'); ?>" height="16"> KYC-->
-                        <!--        </a>-->
-                        <!--        <a href="javascript:void(0);" class="dropdown-item">-->
-                        <!--            <img src="<?= base_url('assets/img/icon/report.png'); ?>" height="16"> Report-->
-                        <!--        </a>-->
-                        <!--    </div>-->
-                        <!--</li>-->
-                        <li class="nav-item dropdown flag-nav">
-                            <a href="javascript:void(0);">
-                                Login as: <?= ucwords($role)."&nbsp;<i class='fa fa-angle-right'></i>&nbsp;".$this->session->userdata('empCity'); ?>
-                             </a>
-                        </li>
-                        <?php
-                        if($role='admin'){
-                            $today=date('d-m-Y');
-                            $notiBook=$this->db->from('bookings')->where('purchaseDate', $today)->get()->num_rows();
-                        ?>
-                        <li class="nav-item dropdown mt-1">
-                            <a href="javascript:void(0);" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
-                                <img src="<?= base_url('assets/img/icons/notification-bing.svg'); ?>" alt="img"> <span class="badge rounded-pill"><?= $notiBook; ?></span>
-                            </a>
-                            <?php if($notiBook>0){ ?>
-                            <div class="dropdown-menu notifications">
+                <ul class="nav user-menu">
+                    <!-- <li class="nav-item dropdown has-arrow flag-nav">-->
+                    <!--    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="javascript:void(0);" role="button">-->
+                    <!--        Reports-->
+                    <!--    </a>-->
+                    <!--    <div class="dropdown-menu dropdown-menu-right">-->
+                    <!--        <a href="javascript:void(0);" class="dropdown-item">-->
+                    <!--            <img src="<?= base_url('assets/img/icon/agent.png'); ?>" height="16"> Agent Reoprt-->
+                    <!--        </a>-->
+                    <!--        <a href="javascript:void(0);" class="dropdown-item">-->
+                    <!--            <img src="<?= base_url('assets/img/icon/calendarReport.png'); ?>" height="16"> Monthly Report-->
+                    <!--        </a>-->
+                    <!--        <a href="javascript:void(0);" class="dropdown-item">-->
+                    <!--            <img src="<?= base_url('assets/img/icon/KYC.png'); ?>" height="16"> KYC-->
+                    <!--        </a>-->
+                    <!--        <a href="javascript:void(0);" class="dropdown-item">-->
+                    <!--            <img src="<?= base_url('assets/img/icon/report.png'); ?>" height="16"> Report-->
+                    <!--        </a>-->
+                    <!--    </div>-->
+                    <!--</li>-->
+                    <li class="nav-item dropdown flag-nav">
+                        <a href="javascript:void(0);">
+                            Login as: 
+                            <?php
+                                echo ucwords($role); 
+                                if($role!='master'){ echo "&nbsp;<i class='fa fa-angle-right'></i>&nbsp;".$this->session->userdata('empCity'); } ?>
+                         </a>
+                    </li>
+                    <?php
+                    if(in_array('viewNotification', $rights)):
+                        $today=date('d-m-Y');
+                        $notiBook=$this->db->from('bookings')->where('purchaseDate', $today)->get()->num_rows();
+                    ?>
+                    <li class="nav-item dropdown mt-1">
+                        <a href="javascript:void(0);" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+                            <img src="<?= base_url('assets/img/icons/notification-bing.svg'); ?>" alt="img"> <span class="badge rounded-pill"><?= $notiBook; ?></span>
+                        </a>
+                        <?php if($notiBook>0){ ?>
+                        <div class="dropdown-menu notifications">
                             <div class="topnav-dropdown-header">
                                 <span class="notification-title">Today's booking notifications</span>
                             </div>
@@ -119,76 +125,119 @@
                                     <?php endforeach; ?>
                                 </ul>
                             </div>
+                            <?php if(in_array('viewBooking', $rights)): ?>
                             <div class="topnav-dropdown-footer">
                                 <a href="<?= base_url('booking'); ?>">View all Bookings</a>
                             </div>
-                            <?php } ?>
-                        </li>
-                        <?php } ?>
-                        <li class="nav-item dropdown has-arrow main-drop">
-                            <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
-                                <span class="user-img"><img src="<?= base_url('assets/img/favicon.png'); ?>" alt="">
-                                <span class="status online"></span></span>
-                            </a>
-                            <div class="dropdown-menu menu-drop-user">
-                                <div class="profilename">
-                                    <hr class="m-0">
-                                    <a class="dropdown-item" href="<?= base_url('dashboard/myProfile'); ?>"> <i class="me-2" data-feather="user"></i> My Profile</a>
-                                    <hr class="m-0">
-                                    <a class="dropdown-item" href="<?= base_url('dashboard/logActivity'); ?>"><i class="me-2" data-feather="settings"></i>Log Activity</a>
-                                    <a class="dropdown-item logout pb-0" href="<?= base_url('login/signout'); ?>"><img src="<?= base_url('assets/img/icons/log-out.svg'); ?>" class="me-2" alt="img">Logout</a>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                    <div class="dropdown mobile-user-menu">
-                        <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="<?= base_url('dashboard/myProfile'); ?>">My Profile</a>
-                            <a class="dropdown-item" href="<?= base_url('dashboard/logActivity'); ?>">Log Activity</a>
-                            <a class="dropdown-item" href="<?= base_url('login/signout'); ?>">Logout</a>
+                            <?php endif; ?>
                         </div>
-                    </div>
-                    <div class="sidebar" id="sidebar">
-                <div class="sidebar-inner slimscroll">
-                    <div id="sidebar-menu" class="sidebar-menu">
-                        <ul>
-                            <li class="active">
-                                <a href="<?= base_url('dashboard'); ?>"><img src="<?= base_url('assets/img/icons/dashboard.svg'); ?>" alt="img"><span>Dashboard</span></a>
-                            </li>
-                            <li class="submenu">
-                                <a><img src="<?= base_url('assets/img/icons/purchase1.svg'); ?>" alt="img"><span>Setup Forms</span> <span class="menu-arrow"></span></a>
-                                <ul>
-                                    <li><a href="<?= base_url('dashboard/addDesignation'); ?>">Designations</a></li>
-                                    <li><a href="<?= base_url('dashboard/provinces'); ?>">Geolocation</a></li>
-                                    <li><a href="<?= base_url('dashboard/addProject'); ?>">Projects</a></li>
-                                    <li><a href="<?= base_url('dashboard/paymentPlan'); ?>">Payment Plans</a></li>
-                                    <!-- <li><a href="<?= base_url('dashboard/addOffers'); ?>">Offers</a></li> -->
-                                </ul>
-                            </li>
-                            <li><a href="<?= base_url('agents'); ?>"><img src="<?= base_url('assets/img/icons/users1.svg'); ?>" alt="img"><span>Agents</span></a></li>
-                            <!-- <li><a href="<?= base_url('dashboard/addTeam'); ?>"><img src="<?= base_url('assets/img/icons/users1.svg'); ?>" alt="img"><span>Teams</span></a></li> -->
-                            <li><a href="<?= base_url('customers'); ?>"><img src="<?= base_url('assets/img/icons/users1.svg'); ?>" alt="img"><span>Customers</span></a></li>
-                            <li>
-                                <a href="<?= base_url('booking'); ?>"><img src="<?= base_url('assets/img/icons/places.svg'); ?>" alt="img">
-                                    <span>Bookings</span>&emsp;&emsp;
-                                    <span style="font-size:13px!important;">
-                                        <?php
-                                            $this->db->select('COUNT(*) as total_records')->from('bookings');
-                                            $result = $this->db->get()->row();
-                                            if($result->total_records>0){
-                                                echo sprintf('%02d', $result->total_records);
-                                            }
-                                        ?>
-                                    </span>
-                                </a>
-                            </li>
-                            <li><a href="<?= base_url('booking/addInstallment'); ?>"><img src="<?= base_url('assets/img/icons/expense1.svg'); ?>" alt="img"><span>Insallments</span></a></li>
-                            <li><a href="<?= base_url('dashboard/viewUsers'); ?>"><img src="<?= base_url('assets/img/icons/users1.svg'); ?>" alt="img"><span>Users Management</span></a></li>
-                            <li><a href="<?= base_url('login/signout'); ?>"><img src="<?= base_url('assets/img/icons/logout-2.svg'); ?>" alt="img"><span>Log out</span></a></li>
-                        </ul>
+                        <?php } ?>
+                    </li>
+                    <?php endif; ?>
+                    <li class="nav-item dropdown has-arrow main-drop">
+                        <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
+                            <span class="user-img"><img src="<?= base_url('assets/img/favicon.png'); ?>" alt="">
+                            <span class="status online"></span></span>
+                        </a>
+                        <div class="dropdown-menu menu-drop-user">
+                            <div class="profilename">
+                                <hr class="m-0">
+                                <a class="dropdown-item" href="<?= base_url('dashboard/myProfile'); ?>"> <i class="me-2" data-feather="user"></i> My Profile</a>
+                                <hr class="m-0">
+                                <?php if(in_array('viewLogs', $rights)): ?>
+                                <a class="dropdown-item" href="<?= base_url('dashboard/logActivity'); ?>"><i class="me-2" data-feather="settings"></i>Log Activity</a>
+                                <?php endif; ?>
+                                <a class="dropdown-item" href="<?= base_url('dashboard/guideline'); ?>"><i class="me-2" data-feather="file-text"></i>REMS Guideline</a>
+                                <a class="dropdown-item logout pb-0" href="<?= base_url('login/signout'); ?>"><img src="<?= base_url('assets/img/icons/log-out.svg'); ?>" class="me-2" alt="img">Logout</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <div class="dropdown mobile-user-menu">
+                    <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="<?= base_url('dashboard/myProfile'); ?>">My Profile</a>
+                        <?php if(in_array('viewLogs', $rights)): ?>
+                        <a class="dropdown-item" href="<?= base_url('dashboard/logActivity'); ?>">Log Activity</a>
+                        <?php endif; ?>
+                        <a class="dropdown-item" href="<?= base_url('dashboard/guideline'); ?>">REMS Guideline</a>
+                        <a class="dropdown-item" href="<?= base_url('login/signout'); ?>">Logout</a>
                     </div>
                 </div>
-            </div>
+                <div class="sidebar" id="sidebar">
+                    <div class="sidebar-inner slimscroll">
+                        <div id="sidebar-menu" class="sidebar-menu">
+                            <ul>
+                                <li class="active">
+                                    <a href="<?= base_url('dashboard'); ?>"><img src="<?= base_url('assets/img/icons/dashboard.svg'); ?>" alt="img"><span>Dashboard</span></a>
+                                </li>
+                                <?php if(
+                                in_array('createDesignation',$rights) ||
+                                in_array('viewDesignation',$rights) ||
+                                in_array('createGeolocation',$rights) ||
+                                in_array('viewGeolocation',$rights) ||
+                                in_array('createProject',$rights) ||
+                                in_array('viewProject',$rights) ||
+                                in_array('createPayplan',$rights) ||
+                                in_array('viewPayplan',$rights)
+                                ): ?>
+                                <li class="submenu">
+                                    <a><img src="<?= base_url('assets/img/icons/purchase1.svg'); ?>" alt="img"><span>Setup Forms</span> <span class="menu-arrow"></span></a>
+                                    <ul>
+                                    <?php if(in_array('createDesignation',$rights) || in_array('viewDesignation',$rights)): ?>
+                                        <li><a href="<?= base_url('dashboard/addDesignation'); ?>">Designations</a></li>
+                                    <?php endif; if(in_array('createGeolocation',$rights) || in_array('viewGeolocation',$rights)): ?>
+                                        <li><a href="<?= base_url('dashboard/provinces'); ?>">Geolocation</a></li>
+                                    <?php endif; if(in_array('createProject',$rights) || in_array('viewProject',$rights)): ?>
+                                        <li><a href="<?= base_url('dashboard/addProject'); ?>">Projects</a></li>
+                                    <?php endif; if(in_array('createPayplan',$rights) || in_array('viewPayplan',$rights)): ?>
+                                        <li><a href="<?= base_url('dashboard/paymentPlan'); ?>">Payment Plans</a></li>
+                                    <?php endif; ?>
+                                        <!-- <li><a href="<?= base_url('dashboard/addOffers'); ?>">Offers</a></li> -->
+                                    </ul>
+                                </li>
+                                <?php endif; ?>
+                                
+                                <?php if(in_array('createAgent',$rights) || in_array('viewAgent',$rights)): ?>
+                                <li><a href="<?= base_url('agents'); ?>"><img src="<?= base_url('assets/img/icons/users1.svg'); ?>" alt="img"><span>Agents</span></a></li>
+                                <?php endif; ?>
+                                
+                                <!-- <li><a href="<?= base_url('dashboard/addTeam'); ?>"><img src="<?= base_url('assets/img/icons/users1.svg'); ?>" alt="img"><span>Teams</span></a></li> -->
+                                
+                                <?php if(in_array('createCustomer',$rights) || in_array('viewCustomer',$rights)): ?>
+                                <li><a href="<?= base_url('customers'); ?>"><img src="<?= base_url('assets/img/icons/users1.svg'); ?>" alt="img"><span>Customers</span></a></li>
+                                <?php endif; ?>
+                                
+                                <?php if(in_array('createBooking',$rights) || in_array('viewBooking',$rights)): ?>
+                                <li>
+                                    <a href="<?= base_url('booking'); ?>"><img src="<?= base_url('assets/img/icons/places.svg'); ?>" alt="img">
+                                        <span>Bookings</span>&emsp;&emsp;
+                                        <span style="font-size:13px!important;">
+                                            <?php
+                                                $this->db->select('COUNT(*) as total_records')->from('bookings');
+                                                $result = $this->db->get()->row();
+                                                if($result->total_records>0){
+                                                    echo sprintf('%02d', $result->total_records);
+                                                }
+                                            ?>
+                                        </span>
+                                    </a>
+                                </li>
+                                <?php endif; ?>
+                                
+                                <?php if(in_array('createInstallments',$rights) || in_array('viewInstallments',$rights)): ?>
+                                <li><a href="<?= base_url('booking/viewInstallment'); ?>"><img src="<?= base_url('assets/img/icons/expense1.svg'); ?>" alt="img"><span>Insallments</span></a></li>
+                                <?php endif; ?>
+                                
+                                <?php if(in_array('createUser',$rights) || in_array('viewUser',$rights)): ?>
+                                <li><a href="<?= base_url('dashboard/viewUsers'); ?>"><img src="<?= base_url('assets/img/icons/users1.svg'); ?>" alt="img"><span>Users Management</span></a></li>
+                                <?php endif; ?>
+                                
+                                <li><a href="<?= base_url('dashboard/guideline'); ?>"><img src="<?= base_url('assets/img/icons/transcation.svg'); ?>" alt="img"><span>REMS Guideline</span></a></li>
+                                
+                                <li><a href="<?= base_url('login/signout'); ?>"><img src="<?= base_url('assets/img/icons/logout-2.svg'); ?>" alt="img"><span>Log out</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>

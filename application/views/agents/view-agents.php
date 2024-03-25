@@ -2,15 +2,26 @@
     .product-details{ height:90px!important; cursor: pointer; }
     .product-details img{ width:38px!important; }
 </style>
-<?php $role=$this->session->userdata('role'); ?>
+<?php $rights=explode(',',$userPermissions); ?>
 <div class="page-wrapper px-4 mt-4">
-    <div class="page-header">
-        <div class="page-title">
-            <h4>Agents List</h4>
-            <h6>Add & Manage your Agents</h6>
-        </div>
-        <div class="page-btn">
-            <a href="<?= base_url('agents/addAgent'); ?>" class="btn btn-added"><img src="assets/img/icons/plus.svg" alt="img">Add New Agent</a>
+    <div class="row">
+        <div class="page-header">
+            <div class="col">
+                <div class="page-title">
+                    <h4>Agents List</h4>
+                    <h6>Add & Manage your Agents</h6>
+                </div>
+            </div>
+            <div class="col text-end">
+                <!--<a href="<?= base_url(''); ?>">-->
+                <!--    <button class="btn btn-danger">Agent Report</button>-->
+                <!--</a>-->
+                <?php if(in_array('createAgent',$rights)): ?>
+                <a href="<?= base_url('agents/addAgent'); ?>">
+                    <button class="btn btn-primary">Add New Agent</button>
+                </a>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
     <div class="row px-3">
@@ -50,9 +61,9 @@
                         <th>City</th>
                         <th>Joined</th>
                         <th class="text-center">Status</th>
-                        <?php if($role=='admin'){ ?>
+                        <?php if(in_array('editAgent', $rights) || in_array('deleteAgent', $rights)): ?>
                             <th class="text-center">Action</th>
-                        <?php } ?>
+                        <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,9 +72,12 @@
                     foreach($agents as $agent):
                     $status=$agent->agentStatus;
                 ?>
-                    <tr>
+                    <tr <?php if($status==0){ ?> style="background:#F7E4E7;" <?php } ?>>
                         <td><?= sprintf("%02d", $sr++); ?></td>
-                        <td><?= $agent->agentCode." &middot; ".$agent->agentName; ?></td>
+                        <td><?php
+                            echo $agent->agentCode." &middot; ".$agent->agentName;
+                            if($status==0){ echo "<p class='text-muted' style='font-size:10px;'>Deleted</p>"; }
+                            ?></td>
                         <td>
                             <?php echo ($agent->teamId != "") ? $agent->teamName : "<span class='text-danger'>N/A</span>"; ?>
                         </td>
@@ -80,18 +94,21 @@
                                 <span class="badges bg-lightred">Inactive</span>
                             <?php } ?>
                         </td>
-                        <?php if($role=='admin'):?>
+                        <?php if(in_array('editAgent', $rights) || in_array('deleteAgent', $rights)): ?>
                             <td class="text-center">
                                 <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
                                     <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                                 </a>
                                 <ul class="dropdown-menu">
+                                    <?php if(in_array('editAgent', $rights)): ?>
                                     <li>
                                         <a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Agent</a>
                                     </li>
+                                    <?php endif; if(in_array('deleteAgent', $rights)): ?>
                                     <li class="delAgent" data-id="<?= $agent->agentId; ?>">
                                         <a class="dropdown-item confirm-text"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img"><?= $val; ?> Agent</a>
                                     </li>
+                                    <?php endif; ?>
                                 </ul>
                             </td>
                         <?php endif; ?>

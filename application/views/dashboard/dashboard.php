@@ -1,3 +1,14 @@
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+    .widget {
+        border-radius: 0.75rem;
+        background-color: #fff;
+        padding: 1rem;
+    }
+    .widget canvas {
+        min-height: 20.3rem;
+    }
+</style>
 <div class="page-wrapper">
     <div class="content">
         <div class="row">
@@ -90,7 +101,44 @@
                 </div>
             </div>
         </div>
-        <div class="text-center mt-1 p-3 bg-white rounded" style="border:1px solid #EBEBEB;">
+        <div class="row">
+            <div class="col-lg-9 col-md-7 col-sm-12 mb-2">
+                <div class="widget">
+                    <?php
+                    $instMonths="";
+                    $instSum="";
+                    foreach ($month_year as $values) {
+                        $instMonths.=$values['month_year'].",";
+                        $instSum.=$values['total_amount'] .",";
+                    }
+                    ?>
+                    <input id="instMonths" type="hidden" value="<?= $instMonths; ?>">
+                    <input id="instSum" type="hidden" value="<?= $instSum; ?>">
+                    <canvas id="dashInstChart"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-5 col-sm-12">
+                <?php foreach($recentBookings as $recent): ?>
+                <div class="card m-0 mb-1">
+                    <div class="card-body py-2">
+                        <strong><?= $recent->membershipNo; ?></strong>
+                        <p class="text-muted" style="font-size:10px;">
+                            <?= date('d M, Y - l',strtotime($recent->purchaseDate)); ?>
+                            <label class="float-end text-danger"><?= $recent->locCode; ?></label>
+                        </p>
+                        <p class="text-muted" style="font-size:10px; margin-top:-21px;">Added by: <span class="text-primary"><?= $recent->userName; ?></span></p>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+                <div class="card m-0 mb-1 py-2 text-white" style="background:#FF9F43;">
+                    <div class="card-body py-2">
+                        <strong>Recently Added Bookings</strong>
+                        <p style="margin-top:-6px; font-size:11px;">See the newest bookings here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-3 p-3 bg-white rounded" style="border:1px solid #EBEBEB;">
             <div class="row">
                 <div class="col">
                     <h4>Have a nice day! <span style="font-weight: bold; color:#FE9F43;"><?= $this->session->userdata('username'); ?></span></h4>
@@ -100,3 +148,71 @@
         </div>
     </div>
 </div>
+<script>
+    const ctx = document.getElementById("dashInstChart");
+    const instMonths = document.getElementById("instMonths").value;
+    const instSum = document.getElementById("instSum").value;
+    Chart.defaults.color = "#272626";
+    new Chart(ctx, {
+        type: "line",
+        data: {
+        labels: instMonths.split(','),
+        datasets: [
+            {
+            label: "",
+            data: instSum.split(','),
+            backgroundColor: "black",
+            borderColor: "coral",
+            borderRadius: 6,
+            cubicInterpolationMode: 'monotone',
+            fill: false,
+            borderSkipped: false,
+            },
+        ],
+        },
+        options: {
+        interaction: {
+            intersect: false,
+            mode: 'index'
+        },
+        elements: {
+            point:{
+                radius: 0
+            }
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+            display: false,
+            },
+            title: {
+            display: true,
+            text: "Installment Analytics",
+            padding: {bottom: 24},
+            font: {
+                size: 16,
+                weight: "bold",
+            },
+            },
+            tooltip: {
+            backgroundColor: "#FF9F43",
+            bodyColor: "#272626",
+            yAlign: "bottom",
+            cornerRadius: 4,
+            titleColor: "#272626",
+            usePointStyle: true,
+            callbacks: {
+                label: function(context) {
+                    if (context.parsed.y !== null) {
+                    const label = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'PKR' }).format(context.parsed.y);
+                    return label;
+                    }
+                    return null;
+                }
+            }
+            },
+        },
+        },
+    });
+</script>

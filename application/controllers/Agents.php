@@ -23,6 +23,7 @@ class Agents extends CI_Controller {
 		$data['title'] = 'Dashboard | REMS';
 		$data['body'] = 'agents/view-agents';
 		$data['agents'] = $this->agent_model->getAgents();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function getManagers($id){	// Get Managers
@@ -50,6 +51,7 @@ class Agents extends CI_Controller {
 		$data['offices'] = $this->dashboard_model->activeOffices();
 		$data['designations'] = $this->dashboard_model->activeDesignations();
 		$data['teams'] = $this->agent_model->activeTeams();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function saveAgent(){    // Add Agent
@@ -65,7 +67,7 @@ class Agents extends CI_Controller {
             'departId' => $this->input->post('departId'),
             'locationId' => $this->input->post('locationId'),
             'officeId' => $this->input->post('officeId'),
-            'doj' => $this->input->post('doj'),
+            'doj' => date('Y-m-d',strtotime($this->input->post('doj'))),
             'teamId' => $this->input->post('empTeam'),
             'managerId' => $this->input->post('empManger'),
             'addedBy' => $this->session->userdata('userId')

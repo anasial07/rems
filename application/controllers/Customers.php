@@ -23,6 +23,7 @@ class Customers extends CI_Controller {
 		$data['title'] = 'Dashboard | REMS';
 		$data['body'] = 'customers/view-customers';
 		$data['customers'] = $this->customer_model->getCustomers();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function addCustomer(){
@@ -32,6 +33,7 @@ class Customers extends CI_Controller {
 		$data['title'] = 'Dashboard | REMS';
 		$data['body'] = 'customers/add-customer';
 		$data['cities'] = $this->dashboard_model->activeCities();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function customerInfo($id){	// Get Customer Full Details (View in Model)
@@ -43,6 +45,9 @@ class Customers extends CI_Controller {
 		echo json_encode($data);
 	}
 	public function deleteCustomer($id){ // Delete Customer
+		if(!$this->user_permissions->check_permission('deleteCustomer')){
+			redirect('dashboard/permission_denied');
+		}
 		$data = $this->customer_model->deleteCustomer($id);
 		echo json_encode($data);
 	}
@@ -70,7 +75,7 @@ class Customers extends CI_Controller {
 			'custmName' => ucwords(strtolower($this->input->post('custName'))),
 			'fatherName' => ucwords(strtolower($this->input->post('custFather'))),
 			'custmEmail' => strtolower($this->input->post('custEmail')),
-			'custmDOB' => $this->input->post('custDOB'),
+			'custmDOB' => date('Y-m-d',strtotime($this->input->post('custDOB'))),
 			'primaryPhone' => $this->input->post('custPrimary'),
 			'secondaryPhone' => $this->input->post('custSecondary'),
 			'cityId' => $this->input->post('custCity'),

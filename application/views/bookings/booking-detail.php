@@ -2,14 +2,9 @@
     .heading{ font-size:14px; color:#7367F0; font-weight:600; line-height: 35px; padding-left:2.5%!important; }
     .bookingTable tr td{ border:none!important; line-height:0.3; }
     .custom-xl { height: 100%!important; }
-    @media screen and (max-width: 1366px) {
-      .hidSm{ display:none; }
-    }
-    @media screen and (min-width: 1440px) {
-      .hidLg{ display:none; }
-    }
+    .deinied{ font-size:12px!important; }
 </style>
-<?php $role=$this->session->userdata('role'); ?>
+<?php $rights=explode(',',$userPermissions); ?>
 <div class="page-wrapper">
     <div class="content">
         <div class="card px-3 py-1">
@@ -21,21 +16,33 @@
                     </div>
                     <div class="page-btn text-end">
                         <!-- <button type="button" class="btn btn-rounded btn-danger">Cancellation Request</button> -->
+                        <?php if(in_array('bookingMemo',$rights)): ?>
                         <a target="_blank" href="<?= base_url('GeneratePDF/bookingMemo/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded btn-primary">Booking Memo</button></a>
+                        <?php endif; if(in_array('welcomeLetter', $rights)): ?>
                         <a target="_blank" href="<?= base_url('GeneratePDF/welcomeLetter/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded btn-secondary">Welcome Letter</button></a>
+                        <?php endif; if(in_array('confirmLetter', $rights)): ?>
                         <a target="_blank" href="<?= base_url('GeneratePDF/confirmationLetter/').base_convert($info[0]->bookingId, 10, 36); ?>"><button class="btn btn-rounded btn-info text-white">Confirmation Letter</button></a>
-                        <div class="btn-group hideLg">
+                        <?php endif; 
+                        if(in_array('bookingForm', $rights) || 
+                        in_array('paymentPlan', $rights) || 
+                        in_array('issueFile', $rights)): ?>
+                        <div class="btn-group">
                             <button type="button" class="btn btn-danger rounded-2" data-bs-toggle="dropdown" aria-expanded="false">
                               Other <i class="fa fa-angle-down"></i>
                             </button>
                             <ul class="dropdown-menu">
+                            <?php if(in_array('bookingForm', $rights)): ?>
                                 <li><a target="_blank" href="<?= base_url('GeneratePDF/bookingForm/').base_convert($info[0]->bookingId, 10, 36); ?>" class="dropdown-item">Booking Form</a></li>
+                            <?php endif; if(in_array('paymentPlan', $rights)): ?>
                                 <li><a class="dropdown-item" target="_blank" href="<?= base_url('GeneratePDF/paymentPlan/').base_convert($info[0]->bookingId, 10, 36); ?>">Payment Plan</a></li>
-                            <?php if($info[0]->fileIssuanceDate==""){ ?>
+                            <?php endif; if(in_array('issueFile', $rights)):
+                                if($info[0]->fileIssuanceDate==""){ ?>
                                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#fileIssueModal">Issue File</a></li>
-                            <?php } ?>
+                            <?php }
+                                endif; ?>
                             </ul>
                         </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -123,14 +130,19 @@
                 <div class="card-body p-0">
                     <div class="row my-2">
                         <div class="col py-2">
+                            <?php if(in_array('bookingSummary',$rights)): ?>
                             <h6><a data-bs-toggle="offcanvas" data-bs-target="#paySummary" aria-controls="offcanvasTop">Booking Summary <span style="font-size:11px;" class="text-primary">[view]</span></a></h6>
+                            <?php endif; ?>
                             <div class="search-input" style="display:none!important;"></div>
                         </div>
                         <div class="col text-end">
+                            <?php if(in_array('accountStatement',$rights)): ?>
                             <h6><a target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Print Account Statement" href="<?= base_url('GeneratePDF/accountStatement/').base_convert($info[0]->bookingId, 10, 36); ?>">
                                 Account Statement
                             </a></h6>
+                            <?php endif; if(in_array('issueFile',$rights)): ?>
                             <p style="font-size:14px!important;"><?= ($info[0]->fileIssuanceDate=="") ? "The file has not been issued yet" : "The file was issued on <span class='text-danger'>".date('M d, Y',strtotime($info[0]->fileIssuanceDate)); ?></p>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -146,9 +158,7 @@
                                     <th>Receving Date</th>
                                     <th>ATL Status</th>
                                     <th class="text-center">Print</th>
-                                    <?php if($role=='admin'): ?>
-                                        <th class="text-center">Action</th>
-                                    <?php endif; ?>
+                                    <th class="text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>  
@@ -205,19 +215,21 @@
                                             </span>
                                         <?php }  ?>
                                     </td>
-                                    <td class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Print Booking Receipt">
-                                        <a target="_blank" href="<?= base_url('GeneratePDF/bookingReceipt/').base_convert($info[0]->bookingId, 10, 36).'?receipt=booking'; ?>"><img src="<?= base_url('assets/img/icons/printer.svg') ?>" alt="img"></a>
+                                    <td class="text-center">
+                                    <?php if(in_array('bookingReceipt', $rights)){ ?>
+                                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="Print Booking Receipt" target="_blank" href="<?= base_url('GeneratePDF/bookingReceipt/').base_convert($info[0]->bookingId, 10, 36).'?receipt=booking'; ?>"><img src="<?= base_url('assets/img/icons/printer.svg') ?>" alt="img"></a>
+                                    <?php }else{ echo '<span class="text-danger deinied">Denied</span>'; } ?>
                                     </td>
-                                    <?php if($role=='admin'): ?>
-                                        <td class="text-center">
+                                    <td class="text-center">
+                                    <?php if(in_array('editBooking', $rights)){ ?>
                                             <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
                                                 <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                                             </a>
                                             <ul class="dropdown-menu">
                                                 <li><a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Booking</a></li>
                                             </ul>
-                                        </td>
-                                    <?php endif; ?>
+                                    <?php }else{ echo '<span class="text-danger deinied">Denied</span>'; } ?>
+                                    </td>
                                 </tr>
                                 <?php foreach($installments as $install): ?>
                                 <tr>
@@ -262,19 +274,21 @@
                                                 </span>
                                         <?php }  ?>
                                     </td>
-                                    <td class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Print Installment Receipt">
-                                        <a target="_blank" href="<?= base_url('GeneratePDF/bookingReceipt/').base_convert($install->installmentId, 10, 36).'?receipt=installment'; ?>"><img src="<?= base_url('assets/img/icons/printer.svg') ?>" alt="img"></a>
+                                    <td class="text-center">
+                                    <?php if(in_array('installmentReceipt', $rights)){ ?>
+                                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="Print Installment Receipt" target="_blank" href="<?= base_url('GeneratePDF/bookingReceipt/').base_convert($install->installmentId, 10, 36).'?receipt=installment'; ?>"><img src="<?= base_url('assets/img/icons/printer.svg') ?>" alt="img"></a>
+                                    <?php }else{ echo '<span class="text-danger deinied">Denied</span>'; } ?>
                                     </td>
-                                    <?php if($role=='admin'): ?>
-                                        <td class="text-center">
-                                            <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
-                                                <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                            </a>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Installment</a></li>
-                                            </ul>
-                                        </td>
-                                    <?php endif; ?>
+                                    <td class="text-center">
+                                    <?php if(in_array('editInstallments', $rights)){ ?>
+                                        <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
+                                            <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Installment</a></li>
+                                        </ul>
+                                    <?php }else{ echo '<span class="text-danger deinied">Denied</span>'; } ?>
+                                    </td>
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -285,6 +299,7 @@
         </div>
     </div>
 </div>
+<?php if(in_array('bookingSummary',$rights)): ?>
 <div class="offcanvas offcanvas-top custom-xl" tabindex="-1" id="paySummary" aria-labelledby="offcanvasTopLabel">
     <div class="offcanvas-body mx-3">
         <div class="card bg-light">
@@ -504,6 +519,7 @@
         </div>
     </div>
 </div>
+<?php endif; if(in_array('issueFile',$rights)): ?>
 <div class="modal fade" id="fileIssueModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -541,6 +557,7 @@
         </div>
     </div>
 </div>
+<?php endif; ?>
 <script src="https://www.amcharts.com/lib/4/core.js"></script>
 <script src="https://www.amcharts.com/lib/4/charts.js"></script>
 <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>

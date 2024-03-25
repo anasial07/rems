@@ -1,10 +1,10 @@
 <?php
+    $myRights = array();
     if (!empty($permissions->userPermissions)) {
         $userPermissions = $permissions->userPermissions;
         $myRights = explode(",", $userPermissions);
-    } else {
-        $myRights = array();
     }
+    $rights=explode(',',$userPermissions);
 ?>
 <div class="page-wrapper">
     <div class="content">
@@ -45,12 +45,12 @@
                                                 <span class="checkmark"></span>
                                             </label>
                                         </li>
-                                        <li>
-                                            <label class="inputcheck">Edit
-                                                <input <?= in_array("editDesignation", $myRights) ? 'checked' : ''; ?> type="checkbox" value="editDesignation" name="user-permission[]">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </li>
+                                        <!--<li>-->
+                                        <!--    <label class="inputcheck">Edit-->
+                                        <!--        <input <?= in_array("editDesignation", $myRights) ? 'checked' : ''; ?> type="checkbox" value="editDesignation" name="user-permission[]">-->
+                                        <!--        <span class="checkmark"></span>-->
+                                        <!--    </label>-->
+                                        <!--</li>-->
                                         <li>
                                             <label class="inputcheck">Delete
                                                 <input <?= in_array("deleteDesignation", $myRights) ? 'checked' : ''; ?> type="checkbox" value="deleteDesignation" name="user-permission[]">
@@ -76,12 +76,12 @@
                                                 <span class="checkmark"></span>
                                             </label>
                                         </li>
-                                        <li>
-                                            <label class="inputcheck">Edit
-                                                <input <?= in_array("editGeolocation", $myRights) ? 'checked' : ''; ?> type="checkbox" value="editGeolocation" name="user-permission[]">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </li>
+                                        <!--<li>-->
+                                        <!--    <label class="inputcheck">Edit-->
+                                        <!--        <input <?= in_array("editGeolocation", $myRights) ? 'checked' : ''; ?> type="checkbox" value="editGeolocation" name="user-permission[]">-->
+                                        <!--        <span class="checkmark"></span>-->
+                                        <!--    </label>-->
+                                        <!--</li>-->
                                         <li>
                                             <label class="inputcheck">Delete
                                                 <input <?= in_array("deleteGeolocation", $myRights) ? 'checked' : ''; ?> type="checkbox" value="deleteGeolocation" name="user-permission[]">
@@ -138,12 +138,12 @@
                                                 <span class="checkmark"></span>
                                             </label>
                                         </li>
-                                        <li>
-                                            <label class="inputcheck">Edit
-                                                <input <?= in_array("editPayplan", $myRights) ? 'checked' : ''; ?> type="checkbox" value="editPayplan" name="user-permission[]">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </li>
+                                        <!--<li>-->
+                                        <!--    <label class="inputcheck">Edit-->
+                                        <!--        <input <?= in_array("editPayplan", $myRights) ? 'checked' : ''; ?> type="checkbox" value="editPayplan" name="user-permission[]">-->
+                                        <!--        <span class="checkmark"></span>-->
+                                        <!--    </label>-->
+                                        <!--</li>-->
                                         <li>
                                             <label class="inputcheck">Delete
                                                 <input <?= in_array("deletePayplan", $myRights) ? 'checked' : ''; ?> type="checkbox" value="deletePayplan" name="user-permission[]">
@@ -169,12 +169,12 @@
                                                 <span class="checkmark"></span>
                                             </label>
                                         </li>
-                                        <li>
-                                            <label class="inputcheck">Edit
-                                                <input <?= in_array("editAgent", $myRights) ? 'checked' : ''; ?> type="checkbox" value="editAgent" name="user-permission[]">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </li>
+                                        <!--<li>-->
+                                        <!--    <label class="inputcheck">Edit-->
+                                        <!--        <input <?= in_array("editAgent", $myRights) ? 'checked' : ''; ?> type="checkbox" value="editAgent" name="user-permission[]">-->
+                                        <!--        <span class="checkmark"></span>-->
+                                        <!--    </label>-->
+                                        <!--</li>-->
                                         <li>
                                             <label class="inputcheck">Delete
                                                 <input <?= in_array("deleteAgent", $myRights) ? 'checked' : ''; ?> type="checkbox" value="deleteAgent" name="user-permission[]">
@@ -200,12 +200,12 @@
                                                 <span class="checkmark"></span>
                                             </label>
                                         </li>
-                                        <li>
-                                            <label class="inputcheck">Edit
-                                                <input <?= in_array("editCustomer", $myRights) ? 'checked' : ''; ?> type="checkbox" value="editCustomer" name="user-permission[]">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </li>
+                                        <!--<li>-->
+                                        <!--    <label class="inputcheck">Edit-->
+                                        <!--        <input <?= in_array("editCustomer", $myRights) ? 'checked' : ''; ?> type="checkbox" value="editCustomer" name="user-permission[]">-->
+                                        <!--        <span class="checkmark"></span>-->
+                                        <!--    </label>-->
+                                        <!--</li>-->
                                         <li>
                                             <label class="inputcheck">Delete
                                                 <input <?= in_array("deleteCustomer", $myRights) ? 'checked' : ''; ?> type="checkbox" value="deleteCustomer" name="user-permission[]">
@@ -231,12 +231,12 @@
                                                 <span class="checkmark"></span>
                                             </label>
                                         </li>
-                                        <li>
-                                            <label class="inputcheck">Edit
-                                                <input <?= in_array("editBooking", $myRights) ? 'checked' : ''; ?> type="checkbox" value="editBooking" name="user-permission[]">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </li>
+                                        <!--<li>-->
+                                        <!--    <label class="inputcheck">Edit-->
+                                        <!--        <input <?= in_array("editBooking", $myRights) ? 'checked' : ''; ?> type="checkbox" value="editBooking" name="user-permission[]">-->
+                                        <!--        <span class="checkmark"></span>-->
+                                        <!--    </label>-->
+                                        <!--</li>-->
                                         <li>
                                             <label class="inputcheck">Delete
                                                 <input <?= in_array("deleteBooking", $myRights) ? 'checked' : ''; ?> type="checkbox" value="deleteBooking" name="user-permission[]">
@@ -267,6 +267,18 @@
                                                 <span class="checkmark"></span>
                                             </label>
                                         </li>
+                                        <li class="mt-1">
+                                            <label class="inputcheck">Booking Receipt
+                                                <input <?= in_array("bookingReceipt", $myRights) ? 'checked' : ''; ?> type="checkbox" value="bookingReceipt" name="user-permission[]">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </li>
+                                        <li class="mt-1">
+                                            <label class="inputcheck">Account Statement
+                                                <input <?= in_array("accountStatement", $myRights) ? 'checked' : ''; ?> type="checkbox" value="accountStatement" name="user-permission[]">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
@@ -286,15 +298,21 @@
                                                 <span class="checkmark"></span>
                                             </label>
                                         </li>
+                                        <!--<li>-->
+                                        <!--    <label class="inputcheck">Edit-->
+                                        <!--        <input <?= in_array("editInstallments", $myRights) ? 'checked' : ''; ?> type="checkbox" value="editInstallments" name="user-permission[]">-->
+                                        <!--        <span class="checkmark"></span>-->
+                                        <!--    </label>-->
+                                        <!--</li>-->
                                         <li>
-                                            <label class="inputcheck">Edit
-                                                <input <?= in_array("editInstallments", $myRights) ? 'checked' : ''; ?> type="checkbox" value="editInstallments" name="user-permission[]">
+                                            <label class="inputcheck">Delete
+                                                <input <?= in_array("deleteInstallments", $myRights) ? 'checked' : ''; ?> type="checkbox" value="deleteInstallments" name="user-permission[]">
                                                 <span class="checkmark"></span>
                                             </label>
                                         </li>
                                         <li>
-                                            <label class="inputcheck">Delete
-                                                <input <?= in_array("deleteInstallments", $myRights) ? 'checked' : ''; ?> type="checkbox" value="deleteInstallments" name="user-permission[]">
+                                            <label class="inputcheck">Installment Receipt
+                                                <input <?= in_array("installmentReceipt", $myRights) ? 'checked' : ''; ?> type="checkbox" value="installmentReceipt" name="user-permission[]">
                                                 <span class="checkmark"></span>
                                             </label>
                                         </li>
@@ -335,24 +353,6 @@
                                                 <span class="checkmark"></span>
                                             </label>
                                         </li>
-                                        <li class="mt-1">
-                                            <label class="inputcheck">Booking Receipt
-                                                <input <?= in_array("bookingReceipt", $myRights) ? 'checked' : ''; ?> type="checkbox" value="bookingReceipt" name="user-permission[]">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </li>
-                                        <li class="mt-1">
-                                            <label class="inputcheck">Installment Receipt
-                                                <input <?= in_array("installmentReceipt", $myRights) ? 'checked' : ''; ?> type="checkbox" value="installmentReceipt" name="user-permission[]">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </li>
-                                        <li class="mt-1">
-                                            <label class="inputcheck">Account Statement
-                                                <input <?= in_array("accountStatement", $myRights) ? 'checked' : ''; ?> type="checkbox" value="accountStatement" name="user-permission[]">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </li>
                                     </ul>
                                 </div>
                             </li>
@@ -372,12 +372,12 @@
                                                 <span class="checkmark"></span>
                                             </label>
                                         </li>
-                                        <li>
-                                            <label class="inputcheck">Edit
-                                                <input <?= in_array("editUser", $myRights) ? 'checked' : ''; ?> type="checkbox" value="editUser" name="user-permission[]">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </li>
+                                        <!--<li>-->
+                                        <!--    <label class="inputcheck">Edit-->
+                                        <!--        <input <?= in_array("editUser", $myRights) ? 'checked' : ''; ?> type="checkbox" value="editUser" name="user-permission[]">-->
+                                        <!--        <span class="checkmark"></span>-->
+                                        <!--    </label>-->
+                                        <!--</li>-->
                                         <li>
                                             <label class="inputcheck">Delete
                                                 <input <?= in_array("deleteUser", $myRights) ? 'checked' : ''; ?> type="checkbox" value="deleteUser" name="user-permission[]">

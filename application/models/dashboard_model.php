@@ -131,7 +131,7 @@ class Dashboard_model extends CI_Model
 	}
 	public function create_logs($data)
 	{
-		$this->db->insert('applicationlogs', $data);
+		$this->db->insert('application_logs', $data);
 		if ($this->db->affected_rows() > 0) {
 			return true;
 		} else {
@@ -199,6 +199,11 @@ class Dashboard_model extends CI_Model
 		$result = $this->db->query("UPDATE payment_plans SET `planStatus` = NOT `planStatus` WHERE payPlanId=$id");
 		return $result ? true : false;
 	}
+	public function deleteUser($id)
+	{
+		$result = $this->db->query("UPDATE users SET `userStatus` = NOT `userStatus` WHERE userId=$id");
+		return $result ? true : false;
+	}
 
 	// ---------------------------- Select Queries ------------------------------------
 
@@ -235,11 +240,12 @@ class Dashboard_model extends CI_Model
 	}
 	public function getUser($id = null)
 	{
+		$userID = $this->session->userdata('userId');
 		$this->db->select('*');
 		$this->db->from('users');
 		$this->db->join('locations', 'users.locationId = locations.locationId', 'left');
 		$this->db->join('departments', 'users.departmentId = departments.departId', 'left');
-		$this->db->where(array('users.role !=' => 'master'));
+		$this->db->where(array('users.role !=' => 'master', 'users.userId !=' => $userID));
 		$id && $this->db->where(array('users.userId' => $id));
 		return $this->db->get()->result();
 	}
@@ -320,11 +326,11 @@ class Dashboard_model extends CI_Model
 		$this->db->where(array('locationId' => $id, 'agentStatus' => 1));
 		return $this->db->get()->result();
 	}
-	public function getPayPlans($id)
+	public function getPayPlans()
 	{
 		$this->db->select('*');
 		$this->db->from('payment_plans');
-		$this->db->where(array('projectId' => $id, 'planStatus' => 1));
+		$this->db->where(array('planStatus' => 1));
 		return $this->db->get()->result();
 	}
 	public function getPayPlan($id)
@@ -413,10 +419,10 @@ class Dashboard_model extends CI_Model
 	{
 		$this->db->select('*');
 		$this->db->from('payment_plans');
-		$this->db->join('projects', 'payment_plans.projectId = projects.projectId', 'left');
-		$this->db->join('categories', 'payment_plans.catId = categories.catId', 'left');
-		$this->db->join('sub_categories', 'payment_plans.subCatId = sub_categories.subCatId', 'left');
-		$this->db->join('types', 'payment_plans.typeId = types.typeId', 'left');
+		// $this->db->join('projects', 'payment_plans.projectId = projects.projectId', 'left');
+		// $this->db->join('categories', 'payment_plans.catId = categories.catId', 'left');
+		// $this->db->join('sub_categories', 'payment_plans.subCatId = sub_categories.subCatId', 'left');
+		// $this->db->join('types', 'payment_plans.typeId = types.typeId', 'left');
 		$this->db->order_by('payment_plans.payPlanId', 'DESC');
 		$id && $this->db->where('payment_plans.payPlanId', $id);
 		return $this->db->get()->result();
@@ -450,8 +456,8 @@ class Dashboard_model extends CI_Model
 	public function getLogs()
 	{
 		$this->db->select('*');
-		$this->db->from('applicationlogs');
-		$this->db->join('users', 'applicationlogs.logAddedBy = users.userId', 'left');
+		$this->db->from('application_logs');
+		$this->db->join('users', 'application_logs.logAddedBy = users.userId', 'left');
 		$this->db->order_by('logId', 'DESC');
 		return $this->db->get()->result();
 	}
@@ -511,5 +517,22 @@ class Dashboard_model extends CI_Model
 	{
 		$result = $this->db->query("UPDATE users SET `empProfile` = '$img' WHERE userId=$id");
 		return $result ? true : false;
+	}
+
+
+
+
+
+	
+	
+	// 	------------------------- Chart Data ---------------------------
+	public function dashInstChart() {
+		$query = $this->db->select('DATE_FORMAT(installReceivedDate, "%b %Y") AS month_year, SUM(installAmount) AS total_amount')
+				->where("installReceivedDate >= DATE_SUB((SELECT MAX(installReceivedDate) FROM installments), INTERVAL 12 MONTH)", NULL, FALSE)
+				->group_by('DATE_FORMAT(installReceivedDate, "%m %Y")')
+				->order_by('installReceivedDate', 'ASC')
+				->get('installments');
+		return $query->result_array();
+
 	}
 }

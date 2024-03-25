@@ -113,28 +113,6 @@
             padding: 0.7rem 0;
             font-size: 1rem;
         }
-        .social-media {
-            display: flex;
-            justify-content: center;
-        }
-        .social-icon {
-            height: 46px;
-            width: 46px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 0.45rem;
-            color: #333;
-            border-radius: 50%;
-            border: 1px solid #333;
-            text-decoration: none;
-            font-size: 1.1rem;
-            transition: 0.3s;
-        }
-        .social-icon:hover {
-            color: #F86F03;
-            border-color: #F86F03;
-        }
         .btn {
             width: 150px;
             background-color: #F86F03;
@@ -404,21 +382,7 @@
 					<input type="submit" value="Verify" class="solid btnVerify">
 					<p class="social-text">
                         <center>We have sent you a 6-digit OTP to your email<br><strong style="color:#FA7B08;"><?= $this->session->userdata('email'); ?></strong></center>
-                    </p><br><br>
-					<div class="social-media">
-						<a href="#" class="social-icon">
-							<i class="fab fa-facebook-f"></i>
-						</a>
-						<a href="#" class="social-icon">
-							<i class="fab fa-twitter"></i>
-						</a>
-						<a href="#" class="social-icon">
-							<i class="fab fa-google"></i>
-						</a>
-						<a href="#" class="social-icon">
-							<i class="fab fa-linkedin-in"></i>
-						</a>
-					</div>
+                    </p>
 				</form>
 				<div class="sign-up-form">
                     <span id="mailImg"></span>
@@ -429,20 +393,6 @@
 					</div>
 					<input onclick="forgot()" type="submit" id="forgotBtn" class="forgotBtn" value="Submit Request"/>
 					<p class="social-text" id="responseMsg">Enter your email and we will send you a new<br>password on your email</p>
-					<br><div class="social-media">
-						<a href="#" class="social-icon">
-							<i class="fab fa-facebook-f"></i>
-						</a>
-						<a href="#" class="social-icon">
-							<i class="fab fa-twitter"></i>
-						</a>
-						<a href="#" class="social-icon">
-							<i class="fab fa-google"></i>
-						</a>
-						<a href="#" class="social-icon">
-							<i class="fab fa-linkedin-in"></i>
-						</a>
-					</div>
 				</div>
 			</div>
 		</div>

@@ -7,7 +7,7 @@ class Dashboard extends CI_Controller
 	public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('dashboard_model', 'agent_model'));
+        $this->load->model(array('dashboard_model', 'agent_model', 'booking_model'));
         $this->load->helper('user_permissions');
         $this->user_permissions = new User_permissions();
         if (!$this->session->userdata('userId')) {
@@ -20,6 +20,13 @@ class Dashboard extends CI_Controller
 	{
 		$this->load->view('no-permission');
 	}
+	public function guideline()
+	{
+		$data['title'] = 'Dashboard | REMS';
+		$data['body'] = 'rems-guideline';
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
+		$this->load->view('components/template', $data);
+	}
 	public function index()
 	{
 		$data['title'] = 'Dashboard | REMS';
@@ -30,6 +37,9 @@ class Dashboard extends CI_Controller
 		$data['totalTeams'] = $this->dashboard_model->totalTeams();
 		$data['bookingAmount'] = $this->dashboard_model->totalBookingAmount();
 		$data['installAmount'] = $this->dashboard_model->totalInstallmentAmount();
+		$data['month_year'] = $this->dashboard_model->dashInstChart();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
+		$data['recentBookings'] = $this->booking_model->recentBookings();
 		$this->load->view('components/template', $data);
 	}
 	public function provinces()
@@ -48,13 +58,11 @@ class Dashboard extends CI_Controller
 		if(!$this->user_permissions->check_permission('viewGeolocation')){
 			redirect('dashboard/permission_denied');
 		}
-		if(!$this->user_permissions->check_permission('viewGeolocation')){
-			redirect('dashboard/permission_denied');
-		}
 		$data['title'] = 'Dashboard | REMS';
 		$data['body'] = 'dashboard/add-city';
 		$data['provinces'] = $this->dashboard_model->activeProvinces();
 		$data['cities'] = $this->dashboard_model->getCities();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function offices()
@@ -66,6 +74,7 @@ class Dashboard extends CI_Controller
 		$data['body'] = 'dashboard/add-office';
 		$data['cities'] = $this->dashboard_model->activeCities();
 		$data['offices'] = $this->dashboard_model->getOffices();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function departments()
@@ -76,6 +85,7 @@ class Dashboard extends CI_Controller
 		$data['title'] = 'Dashboard | REMS';
 		$data['body'] = 'dashboard/add-department';
 		$data['departments'] = $this->dashboard_model->getDepartments();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function addProject()
@@ -87,6 +97,7 @@ class Dashboard extends CI_Controller
 		$data['body'] = 'dashboard/add-projects';
 		$data['cities'] = $this->dashboard_model->activeCities();
 		$data['projects'] = $this->dashboard_model->getProjects();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function addCategories()
@@ -98,6 +109,7 @@ class Dashboard extends CI_Controller
 		$data['body'] = 'dashboard/add-categories';
 		$data['projects'] = $this->dashboard_model->activeProjects();
 		$data['categories'] = $this->dashboard_model->getCategories();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function addSubCategories()
@@ -109,6 +121,7 @@ class Dashboard extends CI_Controller
 		$data['body'] = 'dashboard/add-sub-category';
 		$data['projects'] = $this->dashboard_model->activeProjects();
 		$data['subCats'] = $this->dashboard_model->getSubCats();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function addTypes()
@@ -120,6 +133,7 @@ class Dashboard extends CI_Controller
 		$data['body'] = 'dashboard/add-types';
 		$data['projects'] = $this->dashboard_model->activeProjects();
 		$data['types'] = $this->dashboard_model->getTypes();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function myProfile()
@@ -128,6 +142,7 @@ class Dashboard extends CI_Controller
 		$data['body'] = 'dashboard/my-profile';
 		$userID = $this->session->userdata('userId');
 		$data['info'] = $this->dashboard_model->getProfile($userID);
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function paymentPlan()
@@ -139,6 +154,7 @@ class Dashboard extends CI_Controller
 		$data['body'] = 'dashboard/add-payment-plan';
 		$data['projects'] = $this->dashboard_model->activeProjects();
 		$data['payPlans'] = $this->dashboard_model->getPaymentPlans();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function addTeam()
@@ -178,6 +194,7 @@ class Dashboard extends CI_Controller
 		$data['users'] = $this->dashboard_model->getUser();
 		$data['cities'] = $this->dashboard_model->activeCities();
 		$data['departments'] = $this->dashboard_model->activeDepart();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function logActivity()
@@ -188,17 +205,19 @@ class Dashboard extends CI_Controller
 		$data['title'] = 'Dashboard | REMS';
 		$data['body'] = 'dashboard/view-logs';
 		$data['allLogs'] = $this->dashboard_model->getLogs();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function addPermissions($id)
 	{
-		// if(!$this->user_permissions->check_permission('createPermission')){
-		// 	redirect('dashboard/permission_denied');
-		// }
+		if(!$this->user_permissions->check_permission('createPermission')){
+			redirect('dashboard/permission_denied');
+		}
 		$data['title'] = 'Dashboard | REMS';
 		$data['body'] = 'dashboard/create-permissions';
 		$data['users'] = $this->dashboard_model->getUser($id);
 		$data['permissions'] = $this->dashboard_model->getPermissions($id);
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function projectDetail($progId)
@@ -317,7 +336,7 @@ class Dashboard extends CI_Controller
 		if(!$this->user_permissions->check_permission('deleteGeolocation')){
 			redirect('dashboard/permission_denied');
 		}
-		$data = $this->dashboard_model->getCities($id);
+		$data = $this->dashboard_model->deleteOffice($id);
 		echo json_encode($data);
 	}
 	public function deleteDepart($id)
@@ -366,6 +385,13 @@ class Dashboard extends CI_Controller
 			redirect('dashboard/permission_denied');
 		}
 		$data = $this->dashboard_model->deletePayPlan($id);
+		echo json_encode($data);
+	}
+	public function deleteUser($id){	// Delete User
+		if(!$this->user_permissions->check_permission('deleteUser')){
+			redirect('dashboard/permission_denied');
+		}
+		$data = $this->dashboard_model->deleteUser($id);
 		echo json_encode($data);
 	}
 	// ----------------------------Edit-----------------------------------
@@ -454,7 +480,7 @@ class Dashboard extends CI_Controller
 		}
 		$data = array(
 			'departCode' => strtoupper($this->input->post('departCode')),
-			'departName' => ucwords($this->input->post('departName')),
+			'departName' => ucwords(strtolower($this->input->post('departName'))),
 			'addedBy' => $this->session->userdata('userId')
 		);
 		$this->form_validation->set_rules('departCode', 'Department Code', 'required');
@@ -563,7 +589,7 @@ class Dashboard extends CI_Controller
 		$projID = $this->input->post('projectId');
 		$catId = $this->input->post('catId');
 		$subCatId = $this->input->post('subCatId');
-		$typeName = ucfirst($this->input->post('typeName'));
+		$typeName = ucfirst(strtolower($this->input->post('typeName')));
 		$marlaSize = $this->input->post('marlaSize');
 		$dimenssion = $this->input->post('dimenssion');
 		$base_price = $this->input->post('base_price');
@@ -630,11 +656,11 @@ class Dashboard extends CI_Controller
 		$semiAnl = !empty($this->input->post('semiAnnual')) ? $this->input->post('semiAnnual') : 0;
 		$posses = !empty($this->input->post('possession')) ? $this->input->post('possession') : 0;
 		$data = array(
-			'projectId' => $this->input->post('projectId'),
-			'catId' => $this->input->post('catId'),
-			'subCatId' => $this->input->post('subCatId'),
-			'typeId' => $this->input->post('typeId'),
-			'planName' => ucwords($this->input->post('planName')),
+			// 'projectId' => $this->input->post('projectId'),
+			// 'catId' => $this->input->post('catId'),
+			// 'subCatId' => $this->input->post('subCatId'),
+			// 'typeId' => $this->input->post('typeId'),
+			'planName' => ucwords(strtolower($this->input->post('planName'))),
 			'planYears' => $this->input->post('planYears'),
 			'downPayment' => $downPay,
 			'confirmPay' => $conf,
@@ -642,10 +668,10 @@ class Dashboard extends CI_Controller
 			'possession' => $posses,
 			'addedBy' => $this->session->userdata('userId')
 		);
-		$this->form_validation->set_rules('projectId', 'Select Project', 'required');
-		$this->form_validation->set_rules('catId', 'Select Category', 'required');
-		$this->form_validation->set_rules('subCatId', 'Select Sub-Category', 'required');
-		$this->form_validation->set_rules('typeId', 'Select Type', 'required');
+		// $this->form_validation->set_rules('projectId', 'Select Project', 'required');
+		// $this->form_validation->set_rules('catId', 'Select Category', 'required');
+		// $this->form_validation->set_rules('subCatId', 'Select Sub-Category', 'required');
+		// $this->form_validation->set_rules('typeId', 'Select Type', 'required');
 		$this->form_validation->set_rules('planName', 'Plan Name', 'required');
 		$this->form_validation->set_rules('planYears', 'Plan Years', 'required');
 		$this->form_validation->set_rules('downPayment', 'Down Payment', 'required');

@@ -98,9 +98,9 @@
                         </div>
                         <div class="col-sm-12 col-lg-3">
                             <div class="form-group">
-                                <label>Amount Paid/Down Payment</label>
+                                <label>Amount Paid</label>
                                 <div class="input-groupicon">
-                                    <input oninput="validateNmbr(event)" id="paidAmount" type="text" placeholder="0.0">
+                                    <input oninput="validateNmbr(event)" id="paidAmount" type="text" placeholder="Down Payment">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/rs.png'); ?>" alt="img" width="22">
                                     </div>
@@ -164,6 +164,9 @@
                                 <label>Select Payment Plan</label>
                                 <select id="payPlanID" class="form-control">
                                     <option selected disabled>Select Payment Plan</option>
+                                    <?php foreach($payPlans as $payPlan): ?>
+                                        <option value="<?= $payPlan->payPlanId; ?>"><?= $payPlan->planName; ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
@@ -437,7 +440,7 @@
                 $.each(res, function(index, data){
                     $('#catID').append('<option value="' + data.catId + '">' + data.catName + '</option>');
                 });
-                getPaymentPlans(projID);
+                // getPaymentPlans(projID);
                 projectInfo(projID);
             }
         });

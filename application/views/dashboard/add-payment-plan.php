@@ -1,7 +1,7 @@
 <style>
     .product-details{ height:90px!important; cursor: pointer; }
 </style>
-<?php $role=$this->session->userdata('role'); ?>
+<?php $rights=explode(',',$userPermissions); ?>
 <div class="page-wrapper px-4 mt-4">
     <div class="row">
         <div class="col">
@@ -14,11 +14,12 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-6 col-sm-12">
+        <?php if(in_array('createPayplan',$rights)): ?>
+        <div class="col">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-sm-6 col-12">
+                        <!-- <div class="col-sm-6 col-12">
                             <div class="form-group">
                                 <label>Select Project</label>
                                 <select id="projID" name="projID" class="form-control">
@@ -52,7 +53,7 @@
                                     <option selected disabled>Select Type</option>
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-lg-6 col-sm-12">
                             <div class="form-group">
                                 <label>Plan Name</label>
@@ -72,7 +73,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-3 col-12">
+                        <div class="col-sm-12 col-lg-6">
                             <div class="form-group">
                                 <label>Down Payment</label>
                                 <div class="input-groupicon">
@@ -83,7 +84,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-3 col-12">
+                        <div class="col-sm-12 col-lg-6">
                             <div class="form-group">
                                 <label>Confirmation</label>
                                 <div class="input-groupicon">
@@ -94,7 +95,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-3 col-12">
+                        <div class="col-sm-12 col-lg-6">
                             <div class="form-group">
                                 <label>Semi Annual</label>
                                 <div class="input-groupicon">
@@ -105,7 +106,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-3 col-12">
+                        <div class="col-sm-12 col-lg-6">
                             <div class="form-group">
                                 <label>Possession</label>
                                 <div class="input-groupicon">
@@ -128,7 +129,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-6 col-sm-12">
+        <?php endif; ?>
+        <div class="col">
             <div class="card">
                 <div class="card-body">
                     <div class="table-top">
@@ -165,7 +167,9 @@
                             <th>Semi Annual</th>
                             <th>Possession</th> -->
                             <th>Status</th>
+                            <?php if(in_array('editPayplan', $rights) || in_array('deletePayplan', $rights)): ?>
                             <th>Action</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -173,11 +177,16 @@
                             foreach($payPlans as $payPlan):
                             $status=$payPlan->planStatus;
                         ?>
-                        <tr>
+                        <tr <?php if($status==0){ ?> style="background:#F7E4E7;" <?php } ?>>
                             <!-- <td class="text-start"><?= $payPlan->projCode; ?></td> -->
                             <!-- <td class="text-start"><?= $payPlan->subCatName; ?></td> -->
                             <!-- <td class="text-start"><?= $payPlan->marlaSize; ?> Marla</td> -->
-                            <td class="text-start"><?= $payPlan->planName; ?></td>
+                            <td class="text-start">
+                                <?php
+                                    echo $payPlan->planName;
+                                    if($status==0){ echo "<p class='text-muted' style='font-size:10px;'>Deleted</p>"; }
+                                ?>
+                            </td>
                             <td class="text-start"><?= $payPlan->planYears; ?></td>
                             <!-- <td class="text-danger"><?= $payPlan->downPayment; ?>%</td>
                             <td class="text-danger"><?= $payPlan->confirmPay; ?>%</td>
@@ -190,6 +199,7 @@
                                     <span class="badges bg-lightred">Inactive</span>
                                 <?php } ?>
                             </td>
+                            <?php if(in_array('editPayplan', $rights) || in_array('deletePayplan', $rights)): ?>
                             <td>
                                 <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
                                     <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
@@ -198,24 +208,24 @@
                                     <li>
                                         <a data-id="<?= $payPlan->payPlanId; ?>" data-bs-toggle="offcanvas" href="#editCanvas" class="dropdown-item payPlanDetail"><img src="<?= base_url('assets/img/icons/eye1.svg'); ?>" class="me-2" alt="img">View Detail</a>
                                     </li>
-                                    <?php if($role=='admin'): ?>
+                                        <?php if(in_array('editPayplan', $rights)): ?>
                                         <li>
                                             <a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Plan</a>
                                         </li>
+                                        <?php endif; if(in_array('deletePayplan', $rights)): ?>
                                         <li class="delPayPlan" data-id="<?= $payPlan->payPlanId; ?>">
                                             <a class="dropdown-item confirm-text"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img"><?= $val; ?> Plan</a>
                                         </li>
                                     <?php endif; ?>
                                 </ul>
                             </td>
+                            <?php endif; ?>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
         </div>
-    </div>
-</div>
     </div>
 </div>
 <script>
@@ -239,20 +249,8 @@
                 $('#canvasBody').html(`
                     <table class="table">
                         <tr>
-                            <td>Project Name</td>
-                            <td>${res[0].projName}</td>
-                        </tr>
-                        <tr>
-                            <td>Project Category</td>
-                            <td>${res[0].catName}</td>
-                        </tr>
-                        <tr>
-                            <td>Sub-Category</td>
-                            <td>${res[0].subCatName}</td>
-                        </tr>
-                        <tr>
-                            <td>Project Type</td>
-                            <td>${res[0].typeName}</td>
+                            <td>Plan Name</td>
+                            <td>${res[0].planName}</td>
                         </tr>
                         <tr>
                             <td>Plan Year(s)</td>
@@ -284,18 +282,17 @@
         });
     });
     $('#addPaymentPlan').on('click', function(){
-        var projID = $('#projID').val();
-        var categoryID = $('#categoryID').val();
-        var subCatID = $('#subCatID').val();
-        var typeID = $('#typeID').val();
+        // var projID = $('#projID').val();
+        // var categoryID = $('#categoryID').val();
+        // var subCatID = $('#subCatID').val();
+        // var typeID = $('#typeID').val();
         var planName = $('#planName').val();
         var planYear = $('#planYear').val();
         var downPay = $('#downPay').val();
         var confirmation = $('#confirmation').val();
         var semiAnnual = $('#semiAnnual').val();
         var possession = $('#possession').val();
-        if(projID!="Select Project" && categoryID!="Select Category" && subCatID!="Select Sub-Catego" && typeID!="Select Type" && planName!=""
-         && planYear!="" && downPay!="" && confirmation!="" && semiAnnual!="" && possession!=""){
+        if(planName!="" && planYear!="" && downPay!="" && confirmation!="" && semiAnnual!="" && possession!=""){
             swal({
                 title: "Are you sure?",
                 text: "You want to add the payment plan!",
@@ -315,10 +312,10 @@
                         url: "<?php echo base_url("dashboard/addPaymentPlan"); ?>",
                         type: "POST",
                         data: {
-                            projectId: projID,
-                            catId: categoryID,
-                            subCatId: subCatID,
-                            typeId: typeID,
+                            // projectId: projID,
+                            // catId: categoryID,
+                            // subCatId: subCatID,
+                            // typeId: typeID,
                             planName: planName,
                             planYears: planYear,
                             downPayment: downPay,

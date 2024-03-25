@@ -24,6 +24,17 @@ class Booking extends CI_Controller {
 		$data['title'] = 'Dashboard | REMS';
 		$data['body'] = 'bookings/view-bookings';
 		$data['bookings'] = $this->booking_model->getBookings();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
+		$this->load->view('components/template', $data);
+	}
+	public function viewInstallment(){
+		if(!$this->user_permissions->check_permission('viewInstallments')){
+			redirect('dashboard/permission_denied');
+		}
+		$data['title'] = 'Dashboard | REMS';
+		$data['body'] = 'bookings/view-installments';
+		$data['installments'] = $this->booking_model->individualInstallments();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function addInstallment(){
@@ -35,6 +46,7 @@ class Booking extends CI_Controller {
 		$data['projects'] = $this->dashboard_model->activeProjects();
 		$data['banks'] = $this->dashboard_model->activeBanks();
 		$data['cities'] = $this->dashboard_model->activeCities();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function bookingDetail($id){	// Get Complete Info of Booking
@@ -48,6 +60,7 @@ class Booking extends CI_Controller {
 		$data['installments'] = $this->booking_model->getInstallments($bookingID);
 		$data['totalInstallAmount'] = $this->booking_model->totalInstallmentAmount($bookingID);
 		$data['countInstallments'] = $this->booking_model->count_all_installments($bookingID);
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function getCustomers($id){	// Get Customers Against Project ID
@@ -93,6 +106,8 @@ class Booking extends CI_Controller {
 		$data['projects'] = $this->dashboard_model->activeProjects();
 		$data['cities'] = $this->dashboard_model->activeCities();
 		$data['banks'] = $this->dashboard_model->activeBanks();
+		$data['payPlans'] = $this->dashboard_model->getPayPlans();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function saveBooking(){	// Add New Booking
@@ -105,7 +120,7 @@ class Booking extends CI_Controller {
 		$typeSize=$this->input->post('typeSize');
 		$typeSizeCheck=$typeSize;
 		$custmID=$this->input->post('customerID');
-		$purchaseDate = $this->input->post('purchaseDate');
+		$purchaseDate = date('Y-m-d',strtotime($this->input->post('purchaseDate')));
 		$typeAmount = $this->input->post('typeAmount');
 		$sepDiscount = ($this->input->post('sepDiscount')=="") ? 0 : $this->input->post('sepDiscount');
 		$exCharges = ($this->input->post('exCharges')=="") ? 0 : $this->input->post('exCharges');
@@ -173,7 +188,7 @@ class Booking extends CI_Controller {
 			'exCharges' => $exCharges,
 			'bokNetPrice' => $typeAmount,
 			'salePrice' => $salePrice,
-			'purchaseDate' => $this->input->post('purchaseDate'),
+			'purchaseDate' => $purchaseDate,
 			'bookFilerStatus' => $this->input->post('filerStatus'),
 			'bookFilerPercent' => $filerPercent,
 			'featuresPercent' => $featuresPercent,
@@ -222,7 +237,7 @@ class Booking extends CI_Controller {
 			'installBankId' => $bankName,
 			'installReferenceNo' => $refrence,
 			'installReceivedIn' => $this->input->post('recvCity'),
-			'installReceivedDate' => $this->input->post('recvDate'),
+			'installReceivedDate' => date('Y-m-d',strtotime($this->input->post('recvDate'))),
 			'InstallFilerStatus' => $this->input->post('filerStatus'),
 			'installFilerPercent' => $this->input->post('filerPercent'),
 			'installAddedBy' => $this->session->userdata('userId')

@@ -173,7 +173,7 @@
         var doj = $('#empDOJ').val();
         var empTeam = $('#empTeam').val();
         var empManger = $('#empManger').val();
-        if(agentCode!=="" && agentName!=="" && agentPhone!="" && designationId!=="Select Designation" && departId!=="Select Department" && locationId!=="Select City" && officeId!=="Select Office" && doj!==""){
+        if(agentName!=="" && agentPhone!="" && designationId!=="Select Designation" && departId!=="Select Department" && locationId!=="Select City" && officeId!=="Select Office" && doj!==""){
             swal({
                 title: "Are you sure?",
                 text: "You want to add the agent!",

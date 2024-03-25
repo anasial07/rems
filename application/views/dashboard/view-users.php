@@ -1,13 +1,15 @@
-<?php $role = $this->session->userdata('role'); ?>
+<?php $rights=explode(',',$userPermissions); ?>
 <div class="page-wrapper px-4 mt-4">
     <div class="page-header">
         <div class="page-title">
             <h4>Users List</h4>
             <h6>Add & Manage your Users</h6>
         </div>
+        <?php if(in_array('createUser', $rights)): ?>
         <div class="page-btn">
             <a data-bs-toggle="modal" data-bs-target="#addNewUser" class="btn btn-added"><img src="<?= base_url('assets/img/icons/plus.svg') ?>" alt="img">Add New User</a>
         </div>
+        <?php endif; ?>
     </div>
     <div class="row px-3">
         <div class="card">
@@ -43,9 +45,9 @@
                                 <th>Location</th>
                                 <th>Department</th>
                                 <th>Role</th>
-                                <th>Last Login</th>
                                 <th class="text-center">Status</th>
-                                <?php if ($role == 'admin') : ?>
+                                <?php if(in_array('editUser', $rights) || 
+                                in_array('deleteUser', $rights)): ?>
                                     <th class="text-center">Action</th>
                                 <?php endif; ?>
                             </tr>
@@ -55,28 +57,28 @@
                             $sr = 1;
                             foreach ($users as $user) :
                                 $status = $user->userStatus;
+                                $verify = ($status==1) ? 'Inactive' : 'Active'; 
                                 $empProfile = ($user->empProfile != 0) ? $user->empProfile : 'default.png';
                             ?>
-                                <tr>
+                                <tr <?php if($status==0){ ?> style="background:#F7E4E7;" <?php } ?>>
                                     <td><?= sprintf("%02d", $sr++); ?></td>
                                     <td class="productimgname customerInfo">
                                         <a href="javascript:void(0);">
                                             <img width="30" src="<?= base_url('uploads/profiles/') . $empProfile; ?>" alt="" style="border-radius:5px;">
                                         </a>
-                                        <!-- <a href="javascript:void(0);"><?= $user->empName; ?></a> -->
                                     </td>
-                                    <td><a class="text-primary" href="<?= base_url('dashboard/addPermissions/') . $user->userId; ?>"><?= $user->empName; ?></a></td>
+                                    <td>
+                                        <a <?php if(in_array('createPermission', $rights)){ ?> class="text-primary" href="<?= base_url('dashboard/addPermissions/') . $user->userId; ?>" <?php } ?>>
+                                            <?php
+                                                echo $user->empName;
+                                                if($status==0){ echo "<p class='text-muted' style='font-size:10px;'>Deleted</p>"; }    
+                                            ?>
+                                            </a>
+                                        </td>
                                     <td><?= $user->userEmail; ?></td>
                                     <td><?= $user->locName; ?></td>
                                     <td><?= $user->departName; ?></td>
-                                    <td><?= ucfirst($user->role); ?></td>
-                                    <td>
-                                        <?php
-                                        echo ($user->lastLogin != 0) ?
-                                            date('M d, Y g:h A', strtotime($user->lastLogin))
-                                            : "<span class='text-danger'>N/A</span>";
-                                        ?>
-                                    </td>
+                                    <td class="text-danger"><?= ucfirst($user->role); ?></td>
                                     <td class="text-center">
                                         <?php if ($status == 1) { ?>
                                             <span class="badges bg-lightgreen">Active</span>
@@ -84,14 +86,23 @@
                                             <span class="badges bg-lightred">Inactive</span>
                                         <?php } ?>
                                     </td>
-                                    <?php if ($role == 'admin') : ?>
+                                    <?php if(in_array('editUser', $rights) || 
+                                    in_array('deleteUser', $rights)): ?>
                                         <td class="text-center">
-                                            <a class="me-3" href="">
-                                                <img src="<?= base_url('assets/img/icons/edit.svg'); ?>" alt="img">
+                                            <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
+                                                <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                                             </a>
-                                            <a class="me-3 confirm-text" href="javascript:void(0);">
-                                                <img src="<?= base_url('assets/img/icons/delete.svg'); ?>" alt="img">
-                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <?php if(in_array('deleteUser', $rights)): ?>
+                                                <li class="deleteUser" data-id="<?= $user->userId; ?>">
+                                                    <a class="dropdown-item"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img"><?= $verify; ?> User</a>
+                                                </li>
+                                                <?php endif; if(in_array('editUser', $rights)): ?>
+                                                <li>
+                                                    <a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit User</a>
+                                                </li>
+                                                <?php endif; ?>
+                                            </ul>
                                         </td>
                                     <?php endif; ?>
                                 </tr>
@@ -241,5 +252,40 @@
         } else {
             swal("Sorry!", "Please fill all the field.", "info");
         }
+    });
+    $('.deleteUser').click(function() {
+        var id = $(this).data('id');
+        swal({
+            title: "Are you sure?",
+            text: "You want to change the status!",
+            type: "info",
+            showCancelButton: true,
+            showLoaderOnConfirm: true,
+            confirmButtonClass: "btn-success",
+            confirmButtonText: "Yes, change",
+            cancelButtonClass: "btn-primary",
+            cancelButtonText: "No, cancel",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+        function(isConfirm) {
+            if (isConfirm) {
+                $.ajax({
+                    url: "<?php echo base_url("dashboard/deleteUser/"); ?>" + id,
+                    method: 'POST',
+                    dataType: 'JSON',
+                    data: { id: id },
+                    success: function(res) {
+                        if (res == true) {
+                            window.location.reload();
+                        } else {
+                            swal("Ops", "Something went wrong", "info");
+                        }
+                    }
+                });
+            } else {
+                swal.close()
+            }
+        });
     });
 </script>

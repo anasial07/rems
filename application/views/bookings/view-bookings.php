@@ -1,17 +1,15 @@
-<style>
-    .product-details{ height:90px!important; cursor: pointer; }
-    .product-details img{ width:38px!important; }
-</style>
-<?php $role=$this->session->userdata('role'); ?>
+<?php $rights=explode(',',$userPermissions); ?>
 <div class="page-wrapper px-4 mt-4">
     <div class="page-header mx-1">
         <div class="page-title">
             <h4>Booking List</h4>
             <h6>Add & Manage your Bookings</h6>
         </div>
+        <?php if(in_array('createBooking',$rights)): ?>
         <div class="page-btn">
             <a href="<?= base_url('booking/addBooking'); ?>" class="btn btn-added"><img src="<?= base_url('assets/img/icons/plus.svg'); ?>" alt="img">Add New Booking</a>
         </div>
+        <?php endif; ?>
     </div>
     <div class="row px-3">
         <div class="card">
@@ -47,7 +45,12 @@
                                 <th>Category</th>
                                 <th>Purchased</th>
                                 <th class="text-center">Verification</th>
+                                <?php if(in_array('bookingDetail', $rights) ||
+                                in_array('editBooking', $rights) ||
+                                in_array('deleteBooking', $rights) ||
+                                in_array('verifyBooking', $rights)): ?>
                                 <th class="text-center">Action</th>
+                                <?php endif; ?>
                             </tr>
                         </thead>
                         <tbody>
@@ -59,7 +62,7 @@
                             else{ $val="Recover"; }
                             $verifyStatus=$booking->bookVerifyStatus;
                         ?>
-                        <tr>
+                        <tr <?php if($status==0){ ?> style="background:#F7E4E7;" <?php } ?>>
                             <td><?= sprintf("%02d", $sr++); ?></td>
                             <td>
                                 <?= $booking->membershipNo; ?>
@@ -81,23 +84,31 @@
                                     <span class="badges bg-lightred">Pending</span>
                                 <?php }  ?>
                             </td>
+                            <?php if(in_array('bookingDetail', $rights) ||
+                                in_array('editBooking', $rights) ||
+                                in_array('deleteBooking', $rights) ||
+                                in_array('verifyBooking', $rights)): ?>
                             <td class="text-center">
                                 <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
                                     <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="<?= base_url('booking/bookingDetail/').base_convert($booking->bookingId, 10, 36); ?>" class="dropdown-item"><img src="<?= base_url('assets/img/icons/eye1.svg'); ?>" class="me-2" alt="img">View Booking</a></li>
-                                    <?php if($role=='admin'): ?>
+                                    <?php if(in_array('bookingDetail', $rights)): ?>
+                                        <li><a href="<?= base_url('booking/bookingDetail/').base_convert($booking->bookingId, 10, 36); ?>" class="dropdown-item"><img src="<?= base_url('assets/img/icons/eye1.svg'); ?>" class="me-2" alt="img">View Booking</a></li>
+                                    <?php endif; if(in_array('editBooking', $rights)): ?>
                                         <li><a href="<?= base_url('booking/updateBooking/').base_convert($booking->bookingId, 10, 36); ?>" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Booking</a></li>
+                                    <?php endif; if(in_array('deleteBooking', $rights)): ?>
                                         <li class="delBooking" data-id="<?= $booking->bookingId; ?>">
                                             <a class="dropdown-item confirm-text"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img"><?= $val; ?> Booking</a>
                                         </li>
+                                    <?php endif; if(in_array('verifyBooking', $rights)): ?>
                                         <li class="approved" data-id="<?= $booking->bookingId; ?>">
                                             <a class="dropdown-item confirm-text"><img src="<?= base_url('assets/img/icons/dollar-square.svg'); ?>" class="me-2" alt="img"><?php echo $veriStatus; ?> Booking</a>
                                         </li>
                                     <?php endif; ?>
                                 </ul>
                             </td>
+                            <?php endif; ?>
                         </tr>
                         <?php endforeach; ?>
                         </tbody>
