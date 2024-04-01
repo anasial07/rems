@@ -5,7 +5,7 @@ class GeneratePDF extends CI_Controller {
 	protected $user_permissions;
 	public function __construct(){
 		parent::__construct();
-		$this->load->model(array('dashboard_model','booking_model'));
+		$this->load->model(array('dashboard_model','booking_model','agent_model'));
         $this->load->helper('user_permissions');
         $this->user_permissions = new User_permissions();
 		$this->load->library('pdf');
@@ -714,9 +714,10 @@ class GeneratePDF extends CI_Controller {
 		$currentRemianing=$downPayment - $bookingAmount;   // Remaining Amount 
 		$balance=$salePrice - $bookingAmount;	   // Total Remianing Amount (Balance)
 
-		$date = DateTime::createFromFormat('d-m-Y', $info[0]->purchaseDate);
-		$date->modify('+1 month');
-		$compareMonth1 = $date->format('Y-m');
+// 		$date = DateTime::createFromFormat('d-m-Y', $info[0]->purchaseDate);
+// 		$date->modify('+1 month');
+// 		$compareMonth1 = $date->format('Y-m');
+		$compareMonth1 = date('Y-m-d', strtotime($info[0]->purchaseDate . ' +1 month'));
 		$confirmMonth = date('M, Y',strtotime($compareMonth1));
 
 		$installments=$this->booking_model->getInstallments($bookingID);
@@ -745,7 +746,7 @@ class GeneratePDF extends CI_Controller {
 		$pdf->Cell(40, 6, "Phone");
 		$pdf->Cell(87, 6, $info[0]->primaryPhone);
 		$pdf->Cell(35, 6, 'Plan Name');
-		$pdf->Cell(35, 6, $info[0]->planName, 0, 1);
+		$pdf->Cell(35, 6, $info[0]->planYears." Year", 0, 1);
 		$pdf->Cell(40, 6, "Father's Name");
 		$pdf->Cell(87, 6, $info[0]->fatherName);
 		$pdf->Cell(35, 6, 'Payment Plan');
@@ -786,7 +787,7 @@ class GeneratePDF extends CI_Controller {
 		$pdf->Cell(40, 6, 'Features ('.$info[0]->featuresPercent.'%)', 0, 0, '', true);
 		$pdf->Cell(87, 6, ($info[0]->featuresPercent==0) ? 'N/A' : $info[0]->features, 0, 0, '', true);
 		$pdf->Cell(35, 6, 'Booking Date', 0, 0, '', true);
-		$pdf->Cell(35, 6, date('F d, Y',strtotime($info[0]->purchaseDate)), 0, 1, '', true);
+		$pdf->Cell(35, 6, date('d M, Y',strtotime($info[0]->purchaseDate)), 0, 1, '', true);
 		$pdf->Cell(40, 6, 'Sale Price', 0, 0, '', true);
 		$pdf->Cell(87, 6, number_format($salePrice), 0, 0, '', true);
 		$pdf->Cell(35, 6, '', 0, 0, '', true);
@@ -1413,4 +1414,76 @@ class GeneratePDF extends CI_Controller {
 		$pdf->Output($filename, 'I');
 		// $pdf->Output();
 	}
+	
+	public function agantReport(){
+		if(!$this->user_permissions->check_permission('agentReport')){
+			redirect('dashboard/permission_denied');
+		}
+		$agents = $this->agent_model->getAgents();
+        $pdf = new Pdf();
+		$pdf->SetCreator(PDF_CREATOR);
+		$pdf->SetAuthor('Muhammad Anas');
+		$pdf->SetTitle('Agent Report');
+		$pdf->SetSubject('Agent Report');
+		$pdf->SetKeywords('Agent Report');
+		$pdf->SetMargins(7, 7, 7, 7);
+		$pdf->SetAutoPageBreak(TRUE, $bottom = 0);
+        $pdf->AddPage('A4');
+        $pdf->SetFont('','B', 16);
+        
+        $pdf->Cell(196,6,'Agent Report',0,1);
+        $pdf->SetFont('','', 12);
+        // $pdf->Cell(98,6,$this->session->userdata('username'),0,1,'R');
+        $pdf->SetFont('','', 10);
+        $pdf->Cell(196,5,'Representative Summary',0,1);
+        // $pdf->Cell(98,-2,date('d M, Y g:i:s A'),0,1,'R');
+		$pdf->Ln(3);
+
+		$pdf->SetFillColor(0, 0, 0);
+		$pdf->SetTextColor(255, 255, 255);
+        $pdf->SetFont('','B', 11);
+		$pdf->Cell(10, 6, 'Sr', 1, 0, 'C', true);
+		$pdf->Cell(40, 6, 'Region', 1, 0, '', true);
+		$pdf->Cell(56, 6, 'Agent Name', 1, 0, '', true);
+		$pdf->Cell(30, 6, 'Bookings', 1, 0, 'C', true);
+		$pdf->Cell(30, 6, 'Active', 1, 0, 'C', true);
+		$pdf->Cell(30, 6, 'Inactive', 1, 1, 'C', true);
+		$pdf->SetTextColor(0, 0, 0);
+        $pdf->SetFont('','', 11);
+		
+		$sr=1;
+		$totalBookings=0;
+        $totalActive=0;
+        $totalInactive=0;
+		foreach($agents as $agent):
+		    $getBookings = $this->agent_model->totalAgentBookings($agent->agentId);
+		    $agentBookings=sprintf('%02d',$getBookings['total_bookings']);
+		    $activeBookings=sprintf('%02d',$getBookings['activeBookings']);
+		    $inactiveBookings=sprintf('%02d',$getBookings['inactiveBookings']);
+		    
+		    $totalBookings+=$agentBookings;
+		    $totalActive+=$activeBookings;
+		    $totalInactive+=$inactiveBookings;
+		    
+    		$pdf->Cell(10, 6, sprintf('%02d',$sr++), 1, 0, 'C');
+    		$pdf->Cell(40, 6, $agent->locName, 1);
+    		$pdf->Cell(56, 6, $agent->agentName, 1);
+    		$pdf->Cell(30, 6, $agentBookings, 1, 0, 'C');
+    		$pdf->Cell(30, 6, $activeBookings, 1, 0, 'C');
+    		$pdf->Cell(30, 6, $inactiveBookings, 1, 1, 'C');
+		endforeach;
+        $pdf->SetFont('','B', 11);
+		$pdf->SetFillColor(193, 193, 193);
+		$pdf->Cell(106, 6, 'Grand Total', 1, 0, 'C', true);
+		$pdf->Cell(30, 6, sprintf('%02d',$totalBookings), 1, 0, 'C', true);
+		$pdf->Cell(30, 6, sprintf('%02d',$totalActive), 1, 0, 'C', true);
+		$pdf->Cell(30, 6, sprintf('%02d',$totalInactive), 1, 1, 'C', true);
+		
+		$pdf->Ln(8);
+        $pdf->SetFont('','', 10);
+        $pdf->Cell(196,2,$this->session->userdata('username'),0,1,'R');
+        $pdf->Cell(196,2,date('d M, Y g:i:s A'),0,1,'R');
+        
+        $pdf->Output("Agent Report.pdf", 'I');
+    }
 }

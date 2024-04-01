@@ -2,7 +2,7 @@
     .product-details{ height:90px!important; cursor: pointer; }
     .product-details img{ width:38px!important; }
 </style>
-<?php $role=$this->session->userdata('role'); ?>
+<?php $rights=explode(',',$userPermissions); ?>
 <div class="page-wrapper px-4 mt-4">
     <div class="row">
         <div class="col">
@@ -51,6 +51,7 @@
         </div>
     </div>
     <div class="row">
+        <?php if(in_array('createProject',$rights)): ?>
         <div class="col-5">
             <div class="card mt-4">
                 <div class="card-body">
@@ -94,6 +95,7 @@
                 </div>
             </div>
         </div>
+        <?php endif; ?>
         <div class="col-7">
             <div class="card mt-4">
                 <div class="card-body">
@@ -126,7 +128,7 @@
                                 <th>Category</th>
                                 <th>Sub-Category</th>
                                 <th class="text-center">Status</th>
-                                <?php if($role=='admin'): ?>
+                                <?php if(in_array('editProject', $rights) || in_array('deleteProject', $rights)): ?>
                                     <th class="text-center">Action</th>
                                 <?php endif; ?>
                             </tr>
@@ -137,11 +139,14 @@
                                 foreach($subCats as $subCat):
                                 $status=$subCat->subCatStatus;
                             ?>
-                            <tr>
+                            <tr <?php if($status==0){ ?> style="background:#F7E4E7;" <?php } ?>>
                                 <td><?= sprintf("%02d", $sr++); ?></td>
                                 <td><?= $subCat->projCode; ?></td>
                                 <td><?= $subCat->catName; ?></td>
-                                <td><?= $subCat->subCatName; ?></td>
+                                <td><?php
+                                    echo $subCat->subCatName;
+                                    if($status==0){ echo "<p class='text-muted' style='font-size:10px;'>Deleted</p>"; }
+                                ?></td>
                                 <td class="text-center">
                                     <?php if($status==1){ $val="Delete"; ?>
                                         <span class="badges bg-lightgreen">Active</span>
@@ -149,18 +154,21 @@
                                         <span class="badges bg-lightred">Inactive</span>
                                     <?php } ?>
                                 </td>
-                                <?php if($role=='admin'): ?>
+                                <?php if(in_array('editProject', $rights) || in_array('deleteProject', $rights)): ?>
                                     <td class="text-center">
                                         <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
                                             <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                                         </a>
                                         <ul class="dropdown-menu">
+                                        <?php if(in_array('editProject', $rights)): ?>
                                             <li>
                                                 <a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Sub-Category</a>
                                             </li>
+                                        <?php endif; if(in_array('deleteProject', $rights)): ?>
                                             <li class="delSubCat" data-id="<?= $subCat->subCatId; ?>">
                                                 <a class="dropdown-item confirm-text"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img"><?=  $val; ?> Sub-Category</a>
                                             </li>
+                                        <?php endif; ?>
                                         </ul>
                                     </td>
                                 <?php endif; ?>

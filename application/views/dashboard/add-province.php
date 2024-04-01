@@ -51,7 +51,8 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-6">
+        <?php if(in_array('createGeolocation',$rights)): ?>
+        <div class="col">
             <div class="card mt-4">
                 <div class="card-body">
                     <div class="row">
@@ -73,11 +74,9 @@
                         </div>
                     </div>
                     <div class="row">
-                        <?php if(in_array('createGeolocation',$rights)): ?>
                         <div class="col">
                             <a class="btn form-control btn-submit me-2" id="addProvince">Add Province</a>
                         </div>
-                        <?php endif; ?>
                         <div class="col">
                             <a href="javascript:history.go(-1);" class="btn form-control btn-cancel">Back</a>
                         </div>
@@ -85,7 +84,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-6">
+        <?php endif; ?>
+        <div class="col">
             <div class="card mt-4">
                 <div class="card-body">
                     <div class="table-top">

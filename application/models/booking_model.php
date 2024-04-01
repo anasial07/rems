@@ -27,6 +27,34 @@ class Booking_model extends CI_Model{
 		$id && $this->db->where('bookings.bookingId', $id);
 		return $this->db->get()->result();
 	}
+	public function individualInstallments(){
+	    $id=$this->session->userdata('userId');
+	    $role=$this->session->userdata('role');
+		$this->db->select('*');
+		$this->db->from('installments');
+		$this->db->join('bookings', 'installments.bookingId = bookings.bookingId', 'left');
+		$this->db->join('users', 'installments.installAddedBy = users.userId', 'left');
+		$this->db->join('customers', 'bookings.customerID = customers.customerId', 'left');
+		if($role!='master'){
+		    $id && $this->db->where('installments.installAddedBy', $id);
+		}
+		$this->db->order_by('installments.installmentId', 'DESC');
+		return $this->db->get()->result();
+	}
+	public function totalBookings($id) {
+        $this->db->where('customerID', $id);
+        $query = $this->db->get('bookings');
+        return $query->num_rows();
+    }
+	public function recentBookings(){
+		$this->db->select('*');
+		$this->db->from('bookings');
+		$this->db->join('locations', 'bookings.cityID = locations.locationId', 'left');
+		$this->db->join('users', 'bookings.bookAddedBy = users.userId', 'left');
+		$this->db->order_by('bookings.bookingId', 'DESC');
+        $this->db->limit(4);
+		return $this->db->get()->result();
+	}
 	public function filterCustomers($id){
 		$this->db->select('customers.*');
 		$this->db->from('customers');

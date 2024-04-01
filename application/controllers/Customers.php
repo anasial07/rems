@@ -5,7 +5,7 @@ class Customers extends CI_Controller {
 	protected $user_permissions;
 	public function __construct(){
 		parent::__construct();
-		$this->load->model(array('dashboard_model','customer_model'));
+		$this->load->model(array('dashboard_model','customer_model','booking_model'));
         $this->load->helper('user_permissions');
         $this->user_permissions = new User_permissions();
 		if(!$this->session->userdata('userId')){
@@ -23,6 +23,7 @@ class Customers extends CI_Controller {
 		$data['title'] = 'Dashboard | REMS';
 		$data['body'] = 'customers/view-customers';
 		$data['customers'] = $this->customer_model->getCustomers();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function addCustomer(){
@@ -32,6 +33,7 @@ class Customers extends CI_Controller {
 		$data['title'] = 'Dashboard | REMS';
 		$data['body'] = 'customers/add-customer';
 		$data['cities'] = $this->dashboard_model->activeCities();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function customerInfo($id){	// Get Customer Full Details (View in Model)
@@ -43,6 +45,9 @@ class Customers extends CI_Controller {
 		echo json_encode($data);
 	}
 	public function deleteCustomer($id){ // Delete Customer
+		if(!$this->user_permissions->check_permission('deleteCustomer')){
+			redirect('dashboard/permission_denied');
+		}
 		$data = $this->customer_model->deleteCustomer($id);
 		echo json_encode($data);
 	}
@@ -65,12 +70,13 @@ class Customers extends CI_Controller {
 		}else{
 			($custmGender==1) ? $image = 'male.jpg' : $image = 'female.jpg';
 		}
+		$custmDOB = !empty($this->input->post('custDOB')) ? date('Y-m-d',strtotime($this->input->post('custDOB'))) : '';
 		$data = array(
 			'custmCNIC' => $this->input->post('custCNIC'),
 			'custmName' => ucwords(strtolower($this->input->post('custName'))),
 			'fatherName' => ucwords(strtolower($this->input->post('custFather'))),
 			'custmEmail' => strtolower($this->input->post('custEmail')),
-			'custmDOB' => $this->input->post('custDOB'),
+			'custmDOB' => $custmDOB,
 			'primaryPhone' => $this->input->post('custPrimary'),
 			'secondaryPhone' => $this->input->post('custSecondary'),
 			'cityId' => $this->input->post('custCity'),

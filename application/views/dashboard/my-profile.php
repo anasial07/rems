@@ -69,7 +69,9 @@ $empProfile = ($info[0]->empProfile != 0) ? $info[0]->empProfile : 'default.png'
                                 <p class="height"><?= $info[0]->userEmail; ?></p>
                                 <p class="height"><?= ucfirst($role); ?></p>
                                 <p class="height"><?= $info[0]->locName; ?></p>
-                                <p class="height"><?= $info[0]->departName; ?></p>
+                                <p class="height">
+                                    <?= ($info[0]->departName==0) ? 'Master' : $info[0]->departName; ?>
+                                </p>
                                 <p class="height">
                                     Active
                                     <i class="fa fa-circle text-green pulse" style="font-size:13px;"></i>

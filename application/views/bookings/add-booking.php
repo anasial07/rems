@@ -98,16 +98,16 @@
                         </div>
                         <div class="col-sm-12 col-lg-3">
                             <div class="form-group">
-                                <label>Amount Paid/Down Payment</label>
+                                <label>Amount Paid</label>
                                 <div class="input-groupicon">
-                                    <input oninput="validateNmbr(event)" id="paidAmount" type="text" placeholder="0.0">
+                                    <input oninput="validateNmbr(event)" id="paidAmount" type="text" placeholder="Down Payment">
                                     <div class="addonset">
                                         <img src="<?= base_url('assets/img/icon/rs.png'); ?>" alt="img" width="22">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <?php $paymentMode=array('Cash','Cheque','IBFT','Wire Transfer','Pay Order'); ?>
+                        <?php $paymentMode=array('Cash','Cheque','IBFT','Wire Transfer','Pay Order','Adjustment'); ?>
                         <div class="col-sm-12 col-lg-6">
                             <div class="form-group">
                                 <label>Select Payment Mode</label>
@@ -147,6 +147,13 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row" id="adjustmentDiv" style="display:none;">
+                        <div class="col">
+                            <div class="form-group">
+                                <textarea id="adjustInfo" class="form-control" placeholder="Please provide the adjustment details you desire"></textarea>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-sm-12 col-lg-6">
                             <div class="form-group">
@@ -164,6 +171,9 @@
                                 <label>Select Payment Plan</label>
                                 <select id="payPlanID" class="form-control">
                                     <option selected disabled>Select Payment Plan</option>
+                                    <?php foreach($payPlans as $payPlan): ?>
+                                        <option value="<?= $payPlan->payPlanId; ?>"><?= $payPlan->planName; ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
@@ -213,7 +223,10 @@
                             </div>
                         </div>
                         <div class="col-sm-12 col-lg-6">
-                            <label>Features</label>
+                            <label>
+                                Features
+                                <span class="text-muted" style="font-size:10px;">(Optional)</span>
+                            </label>
                             <div class="row mt-3">
                                 <div class="col-4">
                                     <input id="cornerFeature" value="Corner" name="feature-charges[]" type="checkbox">
@@ -338,6 +351,7 @@
         var paymentMode = $('#paymentMode').val();
         var referenceNo = $('#referenceNo').val();
         var bank_name = $('#bank_name').val();
+        var adjustInfo = $('#adjustInfo').val();
         var receivedIn = $('#receivedIn').val();
         var payPlanID = $('#payPlanID').val();
         var exCharges = $('#exCharges').val();
@@ -386,6 +400,7 @@
                             paymentMode: paymentMode,
                             referenceNo: referenceNo,
                             bank_name: bank_name,
+                            adjustInfo: adjustInfo,
                             receivedIn: receivedIn,
                             payPlanID: payPlanID,
                             exCharges: exCharges,
@@ -437,7 +452,7 @@
                 $.each(res, function(index, data){
                     $('#catID').append('<option value="' + data.catId + '">' + data.catName + '</option>');
                 });
-                getPaymentPlans(projID);
+                // getPaymentPlans(projID);
                 projectInfo(projID);
             }
         });

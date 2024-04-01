@@ -2,7 +2,7 @@
     .product-details{ height:90px!important; cursor: pointer; }
     .product-details img{ width:38px!important; }
 </style>
-<?php $role=$this->session->userdata('role'); ?>
+<?php $rights=explode(',',$userPermissions); ?>
 <div class="page-wrapper px-4 mt-4">
     <div class="row">
         <div class="col">
@@ -51,7 +51,8 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-6">
+        <?php if(in_array('createGeolocation',$rights)): ?>
+        <div class="col">
             <div class="card mt-4">
                 <div class="card-body">
                     <div class="row">
@@ -84,17 +85,18 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-6 col-sm-6">
+                        <div class="col">
                             <a class="btn form-control btn-submit me-2" id="addCity">Add City</a>
                         </div>
-                        <div class="col-lg-6 col-sm-6">
+                        <div class="col">
                             <a href="javascript:history.go(-1);" class="btn form-control btn-cancel">Back</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-6">
+        <?php endif; ?>
+        <div class="col">
             <div class="card mt-4">
                 <div class="card-body">
                     <div class="table-top">
@@ -125,9 +127,9 @@
                             <th>Code</th>
                             <th>City</th>
                             <th class="text-center">Status</th>
-                            <?php if($role=='admin'){ ?>
+                            <?php if(in_array('editGeolocation', $rights) || in_array('deleteGeolocation', $rights)): ?>
                                 <th class="text-center">Action</th>
-                            <?php } ?>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -136,10 +138,13 @@
                             foreach($cities as $city):
                             $status=$city->locStatus;
                         ?>
-                        <tr>
+                        <tr <?php if($status==0){ ?> style="background:#F7E4E7;" <?php } ?>>
                             <td><?= sprintf("%02d", $sr++); ?></td>
                             <td><?= $city->locCode; ?></td>
-                            <td><?= $city->locName; ?></td>
+                            <td><?php
+                                echo $city->locName;
+                                if($status==0){ echo "<p class='text-muted' style='font-size:10px;'>Deleted</p>"; }
+                                ?></td>
                             <td class="text-center">
                                 <?php if($status==1){ ?>
                                     <span class="badges bg-lightgreen">Active</span>
@@ -147,11 +152,13 @@
                                     <span class="badges bg-lightred">Inactive</span>
                                 <?php } ?>
                             </td>
-                            <?php if($role=='admin'):?>
+                            <?php if(in_array('editGeolocation', $rights) || in_array('deleteGeolocation', $rights)): ?>
                                 <td class="text-center">
+                                <?php if(in_array('editGeolocation', $rights)): ?>
                                     <a class="me-3 editCity" data-id="<?= $city->locationId; ?>" data-bs-toggle="offcanvas" href="#editCanvas">
                                         <img src="<?= base_url('assets/img/icons/edit.svg'); ?>" alt="img">
                                     </a>
+                                <?php endif; if(in_array('deleteGeolocation', $rights)): ?>
                                     <a class="me-3 confirm-text delCity" data-id="<?= $city->locationId; ?>">
                                         <?php if($status==1){ ?>
                                             <img src="<?= base_url('assets/img/icons/delete.svg'); ?>" alt="img">
@@ -159,6 +166,7 @@
                                             <img src="<?= base_url('assets/img/icon/recycle.png'); ?>" width="20">
                                         <?php } ?>
                                     </a>
+                                <?php endif; ?>
                                 </td>
                             <?php endif; ?>
                         </tr>

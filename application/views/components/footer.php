@@ -41,15 +41,24 @@
                 let atCount = (input.value.match(/@/g) || []).length;
                 let dotCount = (input.value.match(/\./g) || []).length;
                 if(atCount > 1){ input.value = input.value.replace(/@/, ''); }
-                if(dotCount > 1){ input.value = input.value.replace(/\./, ''); }
+                if(dotCount > 2){ input.value = input.value.replace(/\./, ''); }
             }
-            
             $('#paymentMode').change(function(){
                 var mode = $(this).val();
-                if(mode == 'Cash'){
+                if(mode == 'Cash' || mode == 'Adjustment'){
                     $('#refBank').slideUp();
+                    $('#adjustmentDiv').slideUp();
                 }else{
                     $('#refBank').slideDown();
+                }
+            });
+            $('#paymentMode').change(function(){
+                var mode = $(this).val();
+                if(mode == 'Adjustment'){
+                    $('#adjustmentDiv').slideDown();
+                    $('#refBank').slideUp();
+                }else{
+                    $('#adjustmentDiv').slideUp();
                 }
             });
         </script>
@@ -62,7 +71,9 @@
                     </div>
                 </div>
             </div>
-            <div class="offcanvas-body" id="canvasBody"></div>
+            <div class="offcanvas-body">
+                <div id="canvasBody"></div>
+            </div>
         </div>
         <div class="modal fade" id="addNewBank" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-md" role="document">
@@ -121,6 +132,7 @@
                         text: "You want to add the bank!",
                         type: "info",
                         showCancelButton: true,
+                        showLoaderOnConfirm: true,
                         confirmButtonClass: "btn-success",
                         confirmButtonText: "Yes, add it!",
                         cancelButtonClass: "btn-primary",
@@ -186,7 +198,7 @@
             if(status!="OFF"){ 
                 // swal.close(); 
             }else{
-              swal("Connection Error", "Please stop working. You have lost your internet connection.", "error");
+              swal("Connection Error", "Please stop working. You have lost your internet connection.", "error"); 
             }
         }
         </script>

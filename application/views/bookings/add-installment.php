@@ -60,7 +60,7 @@
                                 </div>
                             </div>
                         </div>
-                        <?php $paymentMode=array('Cash','Cheque','IBFT','Wire Transfer','Pay Order'); ?>
+                        <?php $paymentMode=array('Cash','Cheque','IBFT','Wire Transfer','Pay Order','Adjustment'); ?>
                         <div class="col-sm-12 col-lg-3">
                             <div class="form-group">
                                 <label>Payment Mode</label>
@@ -97,6 +97,13 @@
                                 <div class="input-groupicon">
                                     <input id="refrncNo" oninput="validateNmbr(event)" type="text" placeholder="Reference Number">
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="adjustmentDiv" style="display:none;">
+                        <div class="col">
+                            <div class="form-group">
+                                <textarea id="adjustInfo" class="form-control" placeholder="Please provide the adjustment details you desire"></textarea>
                             </div>
                         </div>
                     </div>
@@ -239,6 +246,7 @@
         var recvAmount = $('#recvAmount').val();
         var paymentMode = $('#paymentMode').val();
         var bank_name = $('#bank_name').val();
+        var adjustInfo = $('#adjustInfo').val();
         var refrncNo = $('#refrncNo').val();
         var recvCity = $('#recvCity').val();
         var recvDate = $('#recvDate').val();
@@ -268,6 +276,7 @@
                             recvAmount: recvAmount,
                             paymentMode: paymentMode,
                             bank_name: bank_name,
+                            adjustInfo: adjustInfo,
                             refrncNo: refrncNo,
                             recvCity: recvCity,
                             recvDate: recvDate,

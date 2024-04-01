@@ -3,16 +3,10 @@
         height: 90px !important;
         cursor: pointer;
     }
-
-    .product-details img {
-        width: 38px !important;
-    }
-
-    .lineH {
-        MARGIN-TOP: -15PX;
-    }
+    .product-details img { width: 38px !important; }
+    .lineH { margin-top: -15px; }
 </style>
-<?php $role = $this->session->userdata('role'); ?>
+<?php $rights=explode(',',$userPermissions); ?>
 <div class="page-wrapper px-4 mt-4">
     <div class="row">
         <div class="col">
@@ -61,7 +55,8 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-6">
+        <?php if(in_array('createProject',$rights)): ?>
+        <div class="col">
             <div class="card mt-4">
                 <div class="card-body">
                     <div class="row">
@@ -92,7 +87,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-lg-3">
+                        <div class="col-sm-6 col-lg-6">
                             <div class="form-group">
                                 <label>Project Area</label>
                                 <div class="input-groupicon">
@@ -100,9 +95,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-lg-3">
+                        <div class="col-sm-6 col-lg-6">
                             <div class="form-group">
-                                <label>Base Price</label>
+                                <label>
+                                    Base Price
+                                    <span class="text-danger" style="font-size:11px!important;">(Per Marla Price)</span>
+                                </label>
                                 <div class="input-groupicon">
                                     <input oninput="validateNmbr(event)" class="projectData" name="projBasePrice" id="basePrice" type="text" placeholder="0.0">
                                     <div class="addonset">
@@ -111,23 +109,14 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="page-header">
-                                <div class="page-title">
-                                    <h6>Setup Details for Letterhead Excellence</h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-12">
+                        <div class="col-sm-12 col-lg-6">
                             <div class="form-group">
                                 <input type="file" name="projLogo" id="projLogo" onchange="selected()" style="display:none;">
                                 <label>Project Logo</label>
                                 <label for="projLogo">
                                     <div class="row mx-1" style="height:40px!important; border:1px solid #DCE0E4; border-radius:5px; cursor:pointer;">
                                         <div class="col pt-2 text-muted">
-                                            <span id="logoSel">Browse an image to upload</span>
+                                            <span id="logoSel">Browse & Upload</span>
                                         </div>
                                         <div class="col-3 text-end">
                                             <img id="logoCloud" src="<?= base_url('assets/img/icons/upload.svg'); ?>" width="36" alt="img">
@@ -149,7 +138,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-6">
+        <?php endif; ?>
+        <div class="col">
             <div class="card mt-4">
                 <div class="card-body">
                     <div class="table-top">
@@ -180,7 +170,9 @@
                                     <th>Code</th>
                                     <th>Name</th>
                                     <th class="text-center">Status</th>
+                                    <?php if(in_array('editProject', $rights) || in_array('deleteProject', $rights)): ?>
                                     <th class="text-center">Action</th>
+                                    <?php endif; ?>
                                 </tr>
                             </thead>
                             <tbody>
@@ -189,10 +181,13 @@
                                 foreach ($projects as $project) :
                                     $status = $project->projStatus;
                                 ?>
-                                    <tr>
+                                    <tr <?php if($status==0){ ?> style="background:#F7E4E7;" <?php } ?>>
                                         <td><?= sprintf("%02d", $sr++); ?></td>
                                         <td><?= $project->projCode; ?></td>
-                                        <td><?= $project->projName; ?></td>
+                                        <td><?php
+                                            echo $project->projName;
+                                            if($status==0){ echo "<p class='text-muted' style='font-size:10px;'>Deleted</p>"; }
+                                        ?></td>
                                         <td class="text-center">
                                             <?php if ($status == 1) {
                                                 $val = "Delete"; ?>
@@ -202,6 +197,7 @@
                                                 <span class="badges bg-lightred">Inactive</span>
                                             <?php } ?>
                                         </td>
+                                    <?php if(in_array('editProject', $rights) || in_array('deleteProject', $rights)): ?>
                                         <td class="text-center">
                                             <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
                                                 <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
@@ -210,16 +206,18 @@
                                                 <li data-id="<?= $project->projectId; ?>" class="viewProject" data-bs-toggle="offcanvas" href="#editCanvas">
                                                     <a class="dropdown-item"><img src="<?= base_url('assets/img/icons/eye1.svg'); ?>" class="me-2" alt="img">View Detail</a>
                                                 </li>
-                                                <?php if ($role == 'admin') : ?>
+                                        <?php if(in_array('editProject', $rights)): ?>
                                                     <li>
                                                         <a href="<?= base_url('dashboard/editProject/') . $project->projectId; ?>" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Project</a>
                                                     </li>
+                                        <?php endif; if(in_array('deleteProject', $rights)): ?>
                                                     <li class="delProj" data-id="<?= $project->projectId; ?>">
                                                         <a class="dropdown-item confirm-text"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img"><?= $val; ?> Project</a>
                                                     </li>
                                                 <?php endif; ?>
                                             </ul>
                                         </td>
+                                        <?php endif; ?>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>

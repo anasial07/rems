@@ -29,7 +29,7 @@
                             </div>
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
-                                    <label>Father's Name</label>
+                                    <label>Father's/Husband Name</label>
                                     <input oninput="validate(event)" id="custFather" name="custFather" type="text" placeholder="Enter Father's name">
                                 </div>
                             </div>

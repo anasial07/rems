@@ -23,7 +23,13 @@ class Agents extends CI_Controller {
 		$data['title'] = 'Dashboard | REMS';
 		$data['body'] = 'agents/view-agents';
 		$data['agents'] = $this->agent_model->getAgents();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
+	}
+	public function agentInfo($id){	// Agent Report
+		$data['info'] = $this->agent_model->getAgents($id);
+	    $data['bookings'] = $this->agent_model->totalAgentBookings($id);
+		echo json_encode($data);
 	}
 	public function getManagers($id){	// Get Managers
 		$data = $this->agent_model->activeManagers($id);
@@ -50,6 +56,7 @@ class Agents extends CI_Controller {
 		$data['offices'] = $this->dashboard_model->activeOffices();
 		$data['designations'] = $this->dashboard_model->activeDesignations();
 		$data['teams'] = $this->agent_model->activeTeams();
+		$data['userPermissions'] = $this->dashboard_model->get_userPermissions();
 		$this->load->view('components/template', $data);
 	}
 	public function saveAgent(){    // Add Agent
@@ -65,14 +72,14 @@ class Agents extends CI_Controller {
             'departId' => $this->input->post('departId'),
             'locationId' => $this->input->post('locationId'),
             'officeId' => $this->input->post('officeId'),
-            'doj' => $this->input->post('doj'),
+            'doj' => date('Y-m-d',strtotime($this->input->post('doj'))),
             'teamId' => $this->input->post('empTeam'),
             'managerId' => $this->input->post('empManger'),
             'addedBy' => $this->session->userdata('userId')
         );
         $this->form_validation->set_rules('agentCode', 'Agent Code', 'trim');
         $this->form_validation->set_rules('agentName', 'Agent Name', 'required');
-        $this->form_validation->set_rules('agentEmail', 'Agent Email', 'trim|valid_email|');
+        $this->form_validation->set_rules('agentEmail', 'Agent Email', 'trim|valid_email');
         $this->form_validation->set_rules('agentPhone', 'Agent Contact', 'trim|required|max_length[12]|numeric');
         $this->form_validation->set_rules('designationId', 'Select Designation', 'required');
         $this->form_validation->set_rules('departId', 'Select Department', 'required');
