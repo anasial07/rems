@@ -29,6 +29,7 @@ class Booking_model extends CI_Model{
 	}
 	public function individualInstallments(){
 	    $id=$this->session->userdata('userId');
+<<<<<<< HEAD
 	    $role=$this->session->userdata('role');
 		$this->db->select('*');
 		$this->db->from('installments');
@@ -46,6 +47,14 @@ class Booking_model extends CI_Model{
         $query = $this->db->get('bookings');
         return $query->num_rows();
     }
+=======
+		$this->db->select('*');
+		$this->db->from('installments');
+		$this->db->join('bookings', 'installments.bookingId = bookings.bookingId', 'left');
+		$id && $this->db->where('installments.installAddedBy', $id);
+		return $this->db->get()->result();
+	}
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
 	public function recentBookings(){
 		$this->db->select('*');
 		$this->db->from('bookings');

@@ -228,11 +228,14 @@
         </div>
     </div>
 </div>
+<<<<<<< HEAD
     </div>
 </div>
 <script src="https://www.amcharts.com/lib/4/core.js"></script>
 <script src="https://www.amcharts.com/lib/4/charts.js"></script>
 <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+=======
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
 <script>
     $('.payPlanDetail').click(function(){
         var planID = $(this).data('id');
@@ -253,6 +256,17 @@
                 var Installments = 100 - (downPayment + confirmPay + semiAnnual + possession);
                 $('#canvasBody').html(`
                     <table class="table">
+<<<<<<< HEAD
+=======
+                        <tr>
+                            <td>Plan Name</td>
+                            <td>${res[0].planName}</td>
+                        </tr>
+                        <tr>
+                            <td>Plan Year(s)</td>
+                            <td>${res[0].planYears}</td>
+                        </tr>
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
                         <tr class="bg-light">
                             <td class="fw-bold">
                                 Down Payment

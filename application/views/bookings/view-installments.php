@@ -1,7 +1,11 @@
+<<<<<<< HEAD
 <?php
     $rights=explode(',',$userPermissions);
     $role=$this->session->userdata('role');
 ?>
+=======
+<?php $rights=explode(',',$userPermissions); ?>
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
 <div class="page-wrapper px-4 mt-4">
     <div class="page-header mx-1">
         <div class="page-title">
@@ -61,6 +65,7 @@
                             ?>
                                 <tr>
                                     <td><?= sprintf("%02d", $sr++); ?></td>
+<<<<<<< HEAD
                                     <td>
                                         <i class='fas fa-receipt text-muted'></i>
                                         <?= 'INST-'.sprintf("%02d", $install->installmentId); ?>
@@ -74,6 +79,11 @@
                                         ?>
                                     </td>
                                     <td class="text-success fw-bold"><?= number_format($install->installAmount); ?></td>
+=======
+                                    <td><?= 'INST-'.sprintf("%02d", $install->installmentId); ?></td>
+                                    <td class="fw-bold"><?= $install->membershipNo; ?></td>
+                                    <td class="text-success"><?= number_format($install->installAmount); ?></td>
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
                                     
                                     <td><?php
                                     $instlPyMode=$install->installPayMode;
@@ -87,12 +97,16 @@
                                         $instIcon="wiretransfer.png";
                                     }else if($instlPyMode == 'Pay Order'){
                                         $instIcon="payOrder.png";
+<<<<<<< HEAD
                                     }else{
                                         $instIcon="tag.png";
+=======
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
                                     }
                                     echo "<img width='20' src='".base_url('assets/img/icons/'.$instIcon)."'> ";
                                     echo $instlPyMode;
                                     ?></td>
+<<<<<<< HEAD
                                     <td>
                                         <?php
                                             echo date('d M, Y',strtotime($install->installReceivedDate));
@@ -101,6 +115,9 @@
                                         }
                                         ?>
                                     </td>
+=======
+                                    <td><?= date('d M, Y',strtotime($install->installReceivedDate)); ?></td>
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
                                     <td class="text-center">
                                         <?php
                                         if($ATLSatus=='ATL'){ ?>

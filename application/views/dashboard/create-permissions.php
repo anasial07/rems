@@ -175,12 +175,15 @@
                                         <!--        <span class="checkmark"></span>-->
                                         <!--    </label>-->
                                         <!--</li>-->
+<<<<<<< HEAD
                                         <li>
                                             <label class="inputcheck">Delete
                                                 <input <?= in_array("deleteAgent", $myRights) ? 'checked' : ''; ?> type="checkbox" value="deleteAgent" name="user-permission[]">
                                                 <span class="checkmark"></span>
                                             </label>
                                         </li>
+=======
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
                                         <li>
                                             <label class="inputcheck">Agent Summary
                                                 <input <?= in_array("agentSummary", $myRights) ? 'checked' : ''; ?> type="checkbox" value="agentSummary" name="user-permission[]">
@@ -391,7 +394,11 @@
                                         <!--    </label>-->
                                         <!--</li>-->
                                         <li>
+<<<<<<< HEAD
                                             <label class="inputcheck">Verify User
+=======
+                                            <label class="inputcheck">Delete
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
                                                 <input <?= in_array("deleteUser", $myRights) ? 'checked' : ''; ?> type="checkbox" value="deleteUser" name="user-permission[]">
                                                 <span class="checkmark"></span>
                                             </label>

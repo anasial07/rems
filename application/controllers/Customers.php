@@ -76,7 +76,11 @@ class Customers extends CI_Controller {
 			'custmName' => ucwords(strtolower($this->input->post('custName'))),
 			'fatherName' => ucwords(strtolower($this->input->post('custFather'))),
 			'custmEmail' => strtolower($this->input->post('custEmail')),
+<<<<<<< HEAD
 			'custmDOB' => $custmDOB,
+=======
+			'custmDOB' => date('Y-m-d',strtotime($this->input->post('custDOB'))),
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
 			'primaryPhone' => $this->input->post('custPrimary'),
 			'secondaryPhone' => $this->input->post('custSecondary'),
 			'cityId' => $this->input->post('custCity'),

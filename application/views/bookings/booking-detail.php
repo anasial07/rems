@@ -33,7 +33,11 @@
                             <ul class="dropdown-menu">
                             <?php if(in_array('bookingForm', $rights)): ?>
                                 <li><a target="_blank" href="<?= base_url('GeneratePDF/bookingForm/').base_convert($info[0]->bookingId, 10, 36); ?>" class="dropdown-item">Booking Form</a></li>
+<<<<<<< HEAD
                             <?php endif; if(in_array('paymentPlan', $rights) && $info[0]->planYears>0): ?>
+=======
+                            <?php endif; if(in_array('paymentPlan', $rights)): ?>
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
                                 <li><a class="dropdown-item" target="_blank" href="<?= base_url('GeneratePDF/paymentPlan/').base_convert($info[0]->bookingId, 10, 36); ?>">Payment Plan</a></li>
                             <?php endif; if(in_array('issueFile', $rights)):
                                 if($info[0]->fileIssuanceDate==""){ ?>

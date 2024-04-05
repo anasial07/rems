@@ -1,7 +1,10 @@
 <?php $rights=explode(',',$userPermissions); ?>
+<<<<<<< HEAD
 <style>
     .checked{ color: orange; }
 </style>
+=======
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
 <div class="page-wrapper px-4 mt-4">
     <div class="page-header mx-1">
         <div class="page-title">

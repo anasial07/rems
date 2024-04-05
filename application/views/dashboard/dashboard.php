@@ -9,6 +9,7 @@
         min-height: 20.3rem;
     }
 </style>
+<<<<<<< HEAD
 <?php
     function formatAmount($amount){
         if($amount >= 1000000000){
@@ -24,6 +25,8 @@
     $dashBooking_total = formatAmount($bookingAmount);
     $dashInst_total = formatAmount($installAmount);
 ?>
+=======
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
 <div class="page-wrapper">
     <div class="content">
         <div class="row">
@@ -141,7 +144,11 @@
                             <?= date('d M, Y - l',strtotime($recent->purchaseDate)); ?>
                             <label class="float-end text-danger"><?= $recent->locCode; ?></label>
                         </p>
+<<<<<<< HEAD
                         <p class="text-muted" style="font-size:10px; margin-top:-21px;">Added by: <span class="text-primary"><?= ucwords($recent->userName); ?></span></p>
+=======
+                        <p class="text-muted" style="font-size:10px; margin-top:-21px;">Added by: <span class="text-primary"><?= $recent->userName; ?></span></p>
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
                     </div>
                 </div>
                 <?php endforeach; ?>

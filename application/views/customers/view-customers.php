@@ -11,6 +11,7 @@
 </style>
 <?php $rights=explode(',',$userPermissions); ?>
 <div class="page-wrapper px-4 mt-4">
+<<<<<<< HEAD
     <div class="row">
         <div class="page-header">
             <div class="col">
@@ -27,7 +28,18 @@
                 </a>
                 <?php endif; ?>
             </div>
+=======
+    <div class="page-header">
+        <div class="page-title">
+            <h4>Customer List</h4>
+            <h6>Add & Manage your Customers</h6>
         </div>
+        <?php if(in_array('createCustomer',$rights)): ?>
+        <div class="page-btn">
+            <a href="<?= base_url('customers/addCustomer'); ?>" class="btn btn-added"><img src="<?= base_url('assets/img/icons/plus.svg') ?>" alt="img">Add New Customer</a>
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
+        </div>
+        <?php endif; ?>
     </div>
     <div class="row px-3">
         <div class="card">
@@ -52,6 +64,7 @@
                     </ul>
                 </div>
             </div>
+<<<<<<< HEAD
                 <div class="table-responsive">
                     <table class="table datanew">
                         <thead>
@@ -159,6 +172,85 @@
                     </table>
                 </div>
             </div>
+=======
+        <div class="table-responsive">
+            <table class="table datanew">
+                <thead>
+                    <tr>
+                        <th>Sr</th>
+                        <th>Image | Name</th>
+                        <th>CNIC</th>
+                        <th>Phone</th>
+                        <th>City</th>
+                        <th class="text-center">Employee?</th>
+                        <th class="text-center">Status</th>
+                        <?php if(in_array('editCustomer', $rights) || in_array('deleteCustomer', $rights)): ?>
+                        <th class="text-center">Action</th>
+                        <?php endif; ?>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php
+                    $sr=1;
+                    foreach($customers as $customer):
+                    $status=$customer->custmStatus;
+                ?>
+                    <tr <?php if($status==0){ ?> style="background:#F7E4E7;" <?php } ?>>
+                        <td><?= sprintf("%02d", $sr++); ?></td>
+                        <td data-id="<?= $customer->customerId; ?>" data-bs-toggle="modal" data-bs-target="#customerDetail" class="productimgname customerInfo">
+                            <a href="javascript:void(0);">
+                                <img width="30" src="<?= base_url('uploads/customers/').$customer->custmPic; ?>" alt="" style="border-radius:5px;">
+                            </a>
+                            <a href="javascript:void(0);">
+                                <?php
+                                    echo $customer->custmName;
+                                    if($status==0){ echo "<p class='text-muted' style='font-size:10px;'>Deleted</p>"; }
+                                ?>
+                            </a>
+                        </td>
+                        <td><?= $customer->custmCNIC; ?></td>
+                        <td><?= $customer->primaryPhone; ?></td>
+                        <td><?= $customer->locName; ?></td>
+                        <td class="text-success text-center">
+                            <?php if($customer->isEmployee=='1'): ?>
+                                <span class="text-success">Yes</span>
+                            <?php else: ?>
+                                <span class="text-danger">No</span>
+                            <?php endif; ?>
+                        </td>
+                        <td class="text-center">
+                            <?php if($status==1){ $val="Delete"; ?>
+                                <span class="badges bg-lightgreen">Active</span>
+                            <?php }else{ $val="Recover"; ?>
+                                <span class="badges bg-lightred">Inactive</span>
+                            <?php } ?>
+                        </td>
+                        <?php if(in_array('editCustomer', $rights) || in_array('deleteCustomer', $rights)): ?>
+                        <td class="text-center">
+                            <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
+                                <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="customerInfo" data-id="<?= $customer->customerId; ?>" data-bs-toggle="modal" data-bs-target="#customerDetail">
+                                    <a class="dropdown-item"><img src="<?= base_url('assets/img/icons/eye1.svg'); ?>" class="me-2" alt="img">View Detail</a>
+                                </li>
+                                <?php if(in_array('editCustomer', $rights)): ?>
+                                    <li>
+                                        <a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Customer</a>
+                                    </li>
+                                <?php endif; if(in_array('deleteCustomer', $rights)): ?>
+                                    <li class="delCustomer" data-id="<?= $customer->customerId; ?>">
+                                        <a class="dropdown-item confirm-text"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img"><?= $val; ?> Customer</a>
+                                    </li>
+                                <?php endif; ?>
+                            </ul>
+                        </td>
+                        <?php endif; ?>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
         </div>
     </div>
 </div>

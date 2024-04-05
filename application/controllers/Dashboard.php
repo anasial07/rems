@@ -590,7 +590,11 @@ class Dashboard extends CI_Controller
 		$projID = $this->input->post('projectId');
 		$catId = $this->input->post('catId');
 		$subCatId = $this->input->post('subCatId');
+<<<<<<< HEAD
 		$typeName = ucwords(strtolower($this->input->post('typeName')));
+=======
+		$typeName = ucfirst(strtolower($this->input->post('typeName')));
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
 		$marlaSize = $this->input->post('marlaSize');
 		$dimenssion = $this->input->post('dimenssion');
 		$base_price = $this->input->post('base_price');

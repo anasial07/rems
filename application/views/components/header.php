@@ -31,6 +31,7 @@
                 .cursor{ cursor: pointer; }
             </style>
         </head>
+<<<<<<< HEAD
         <style>
             .myBadge{
                 border-radius:5px;
@@ -39,6 +40,8 @@
                 font-size:10px;
             }
         </style>
+=======
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
         <?php 
             $role=$this->session->userdata('role');
             $rights=explode(',',$userPermissions);
@@ -60,12 +63,21 @@
                     </a>
                 </div>
                 <a id="mobile_btn" class="mobile_btn" href="#sidebar">
+<<<<<<< HEAD
                     <span class="bar-icon">
                         <span></span>
                         <span></span>
                         <span></span>
                     </span>
                 </a>
+=======
+                        <span class="bar-icon">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </span>
+                    </a>
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
                 <ul class="nav user-menu">
                     <!-- <li class="nav-item dropdown has-arrow flag-nav">-->
                     <!--    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="javascript:void(0);" role="button">-->
@@ -96,8 +108,13 @@
                     </li>
                     <?php
                     if(in_array('viewNotification', $rights)):
+<<<<<<< HEAD
                         $today=date('Y-m-d');
                         $notiBook = $this->db->from('bookings')->where('DATE(createdBooking)', $today)->get()->num_rows();
+=======
+                        $today=date('d-m-Y');
+                        $notiBook=$this->db->from('bookings')->where('purchaseDate', $today)->get()->num_rows();
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
                     ?>
                     <li class="nav-item dropdown mt-1">
                         <a href="javascript:void(0);" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
@@ -173,7 +190,11 @@
                     </div>
                 </div>
                 <div class="sidebar" id="sidebar">
+<<<<<<< HEAD
                     <div class="sidebar-inner slimscroll bg-white">
+=======
+                    <div class="sidebar-inner slimscroll">
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
                         <div id="sidebar-menu" class="sidebar-menu">
                             <ul>
                                 <li class="active">
@@ -195,7 +216,11 @@
                                     <?php if(in_array('createDesignation',$rights) || in_array('viewDesignation',$rights)): ?>
                                         <li><a href="<?= base_url('dashboard/addDesignation'); ?>">Designations</a></li>
                                     <?php endif; if(in_array('createGeolocation',$rights) || in_array('viewGeolocation',$rights)): ?>
+<<<<<<< HEAD
                                         <li><a href="<?= base_url('dashboard/provinces'); ?>">Geolocations</a></li>
+=======
+                                        <li><a href="<?= base_url('dashboard/provinces'); ?>">Geolocation</a></li>
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
                                     <?php endif; if(in_array('createProject',$rights) || in_array('viewProject',$rights)): ?>
                                         <li><a href="<?= base_url('dashboard/addProject'); ?>">Projects</a></li>
                                     <?php endif; if(in_array('createPayplan',$rights) || in_array('viewPayplan',$rights)): ?>
@@ -220,11 +245,20 @@
                                 <li>
                                     <a href="<?= base_url('booking'); ?>"><img src="<?= base_url('assets/img/icons/places.svg'); ?>" alt="img">
                                         <span>Bookings</span>&emsp;&emsp;
+<<<<<<< HEAD
                                         <span class="text-primary">
                                             <?php
                                             $countBooking = $this->db->query('SELECT * FROM bookings')->num_rows();
                                                 if($countBooking>0){
                                                     echo "<i class='myBadge' style='background:#28C76F'>".sprintf('%02d',$countBooking)."</i>";
+=======
+                                        <span style="font-size:13px!important;">
+                                            <?php
+                                                $this->db->select('COUNT(*) as total_records')->from('bookings');
+                                                $result = $this->db->get()->row();
+                                                if($result->total_records>0){
+                                                    echo sprintf('%02d', $result->total_records);
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
                                                 }
                                             ?>
                                         </span>
@@ -233,6 +267,7 @@
                                 <?php endif; ?>
                                 
                                 <?php if(in_array('createInstallments',$rights) || in_array('viewInstallments',$rights)): ?>
+<<<<<<< HEAD
                                 <li><a href="<?= base_url('booking/viewInstallment'); ?>"><img src="<?= base_url('assets/img/icons/expense1.svg'); ?>" alt="img">
                                     <span>Insallments</span>&emsp;
                                         <span class="text-danger" style="font-size:13px!important;">
@@ -244,6 +279,9 @@
                                             ?>
                                         </span>
                                 </a></li>
+=======
+                                <li><a href="<?= base_url('booking/viewInstallment'); ?>"><img src="<?= base_url('assets/img/icons/expense1.svg'); ?>" alt="img"><span>Insallments</span></a></li>
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
                                 <?php endif; ?>
                                 
                                 <?php if(in_array('createUser',$rights) || in_array('viewUser',$rights)): ?>

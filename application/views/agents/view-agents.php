@@ -13,11 +13,18 @@
                 </div>
             </div>
             <div class="col text-end">
+<<<<<<< HEAD
                 <?php if(in_array('agentReport',$rights)): ?>
                 <a target="_blank" href="<?= base_url('GeneratePDF/agantReport'); ?>">
                     <button class="btn btn-danger">Agent Report</button>
                 </a>
                 <?php endif; if(in_array('createAgent',$rights)): ?>
+=======
+                <!--<a href="<?= base_url(''); ?>">-->
+                <!--    <button class="btn btn-danger">Agent Report</button>-->
+                <!--</a>-->
+                <?php if(in_array('createAgent',$rights)): ?>
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
                 <a href="<?= base_url('agents/addAgent'); ?>">
                     <button class="btn btn-primary">Add New Agent</button>
                 </a>
@@ -48,6 +55,7 @@
                     </ul>
                 </div>
             </div>
+<<<<<<< HEAD
                 <div class="table-responsive">
                     <table class="table datanew">
                         <thead>
@@ -132,6 +140,77 @@
                     </table>
                 </div>
             </div>
+=======
+        <div class="table-responsive">
+            <table class="table datanew">
+                <thead>
+                    <tr>
+                        <th>Sr</th>
+                        <th>Code | Name</th>
+                        <th>Team</th>
+                        <th>Post</th>
+                        <th>Phone</th>
+                        <th>Department</th>
+                        <th>Office</th>
+                        <th>City</th>
+                        <th>Joined</th>
+                        <th class="text-center">Status</th>
+                        <?php if(in_array('editAgent', $rights) || in_array('deleteAgent', $rights)): ?>
+                            <th class="text-center">Action</th>
+                        <?php endif; ?>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php
+                    $sr=1;
+                    foreach($agents as $agent):
+                    $status=$agent->agentStatus;
+                ?>
+                    <tr <?php if($status==0){ ?> style="background:#F7E4E7;" <?php } ?>>
+                        <td><?= sprintf("%02d", $sr++); ?></td>
+                        <td><?php
+                            echo $agent->agentCode." &middot; ".$agent->agentName;
+                            if($status==0){ echo "<p class='text-muted' style='font-size:10px;'>Deleted</p>"; }
+                            ?></td>
+                        <td>
+                            <?php echo ($agent->teamId != "") ? $agent->teamName : "<span class='text-danger'>N/A</span>"; ?>
+                        </td>
+                        <td><?= $agent->desigCode; ?></td>
+                        <td><?= $agent->agentPhone; ?></td>
+                        <td><?= $agent->departName; ?></td>
+                        <td><?= $agent->officeName; ?></td>
+                        <td><?= $agent->locName; ?></td>
+                        <td><?= date('M d, Y',strtotime($agent->doj)); ?></td>
+                        <td class="text-center">
+                            <?php if($status==1){ $val="Delete"; ?>
+                                <span class="badges bg-lightgreen">Active</span>
+                            <?php }else{ $val="Recover"; ?>
+                                <span class="badges bg-lightred">Inactive</span>
+                            <?php } ?>
+                        </td>
+                        <?php if(in_array('editAgent', $rights) || in_array('deleteAgent', $rights)): ?>
+                            <td class="text-center">
+                                <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
+                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <?php if(in_array('editAgent', $rights)): ?>
+                                    <li>
+                                        <a href="" class="dropdown-item"><img src="<?= base_url('assets/img/icons/edit.svg'); ?>" class="me-2" alt="img">Edit Agent</a>
+                                    </li>
+                                    <?php endif; if(in_array('deleteAgent', $rights)): ?>
+                                    <li class="delAgent" data-id="<?= $agent->agentId; ?>">
+                                        <a class="dropdown-item confirm-text"><img src="<?= base_url('assets/img/icons/delete1.svg'); ?>" class="me-2" alt="img"><?= $val; ?> Agent</a>
+                                    </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </td>
+                        <?php endif; ?>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
         </div>
     </div>
 </div>

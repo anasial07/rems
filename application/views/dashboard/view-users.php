@@ -74,6 +74,7 @@
                                         <a href="javascript:void(0);">
                                             <img width="30" src="<?= base_url('uploads/profiles/') . $empProfile; ?>" alt="" style="border-radius:5px;">
                                         </a>
+<<<<<<< HEAD
                                         <a>
                                             <?php
                                                 echo mb_strimwidth(ucwords($user->userName), 0, 12, "...");
@@ -91,6 +92,20 @@
                                         echo $user->departName;
                                         echo "<p class='text-info' style='font-size:10px; margin-top:-5px'>".$user->locName."</p>";
                                         ?></td>
+=======
+                                    </td>
+                                    <td>
+                                        <a <?php if(in_array('createPermission', $rights)){ ?> class="text-primary" href="<?= base_url('dashboard/addPermissions/') . $user->userId; ?>" <?php } ?>>
+                                            <?php
+                                                echo $user->empName;
+                                                if($status==0){ echo "<p class='text-muted' style='font-size:10px;'>Deleted</p>"; }    
+                                            ?>
+                                            </a>
+                                        </td>
+                                    <td><?= $user->userEmail; ?></td>
+                                    <td><?= $user->locName; ?></td>
+                                    <td><?= $user->departName; ?></td>
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
                                     <td class="text-danger"><?= ucfirst($user->role); ?></td>
                                     <td class="text-center">
                                         <?php if ($status == 1) { ?>

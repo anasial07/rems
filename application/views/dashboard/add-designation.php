@@ -45,7 +45,11 @@
             </div>
         </div>
         <?php endif; ?>
+<<<<<<< HEAD
         <div class="col-7">
+=======
+        <div class="col">
+>>>>>>> a027ff1302f86992f92d7b836705f8861eb92a08
             <div class="card mt-4">
                 <div class="card-body">
                     <div class="table-top">
